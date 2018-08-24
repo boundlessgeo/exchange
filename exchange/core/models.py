@@ -32,6 +32,7 @@ from django.db.models import Q
 from geonode.base.models import TopicCategory, License
 from geonode.base.enumerations import UPDATE_FREQUENCIES
 from django.conf import settings
+from django.utils.translation import ugettext as _
 
 
 class ThumbnailImage(SingletonModel):
@@ -208,3 +209,15 @@ class CSWRecordReference(models.Model):
     scheme = models.CharField(
         verbose_name='Service Type', choices=scheme_choices, max_length=100)
     url = models.URLField(max_length=512, blank=False)
+
+
+class ExchangeProfile(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
+    content_creator = models.BooleanField(
+        _('Content Creator'),
+        default=True,
+        help_text=_('User can upload layers and documents'))
+    content_manager = models.BooleanField(
+        _('Content Manager'),
+        default=True,
+        help_text=_('User can register remote services'))
