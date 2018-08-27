@@ -55,10 +55,13 @@ urlpatterns = patterns(
     url(r'^about/', views.about_page, name='about'),
     url(r'^capabilities/', views.capabilities, name='capabilities'),
     url(r'^logout/', views.logout, name='exchange_logout'),
-    url(r'^documents/upload/?$', login_required(views.ExchangeDocumentUploadView.as_view()), name='document_upload'),
+    url(r'^documents/upload/?$',
+        login_required(views.ExchangeDocumentUploadView.as_view()),
+        name='document_upload'),
     url(r'^layers/create/$', views.create_layer, name='layer_create'),
     url(r'^services/$', views.services, name='services'),
-    url(r'^services/register/$', views.register_service, name='register_service'),
+    url(r'^services/register/$',
+        views.register_service, name='register_service'),
 )
 
 if settings.ENABLE_SOCIAL_LOGIN is True:

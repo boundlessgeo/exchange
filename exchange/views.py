@@ -28,6 +28,9 @@ from django.contrib import messages
 from geonode.services.models import Service
 from geonode.services.forms import CreateServiceForm
 from geonode.services import enumerations
+import json
+from django.utils.translation import ugettext as _
+from geonode.documents.models import Document
 
 
 logger = logging.getLogger(__name__)
@@ -338,9 +341,11 @@ def layer_create(request, template='createlayer/layer_create.html'):
                 geometry_type = form.cleaned_data['geometry_type']
                 attributes = form.cleaned_data['attributes']
                 permissions = form.cleaned_data["permissions"]
-                layer = create_layer(name, title, request.user.username, geometry_type, attributes)
+                layer = create_layer(name, title, request.user.username,
+                                     geometry_type, attributes)
                 layer.set_permissions(json.loads(permissions))
-                return HttpResponseRedirect('/maps/new?layer=%s' % layer.typename)
+                return HttpResponseRedirect(
+                    '/maps/new?layer=%s' % layer.typename)
             except Exception as e:
                 error = '%s (%s)' % (e.message, type(e))
     else:
@@ -355,7 +360,7 @@ def layer_create(request, template='createlayer/layer_create.html'):
 
     return render_to_response(template, RequestContext(request, ctx))
 
-# This actually isn't being used, need to override in urls same as class override
+
 @login_required
 def services(request):
     """This view shows the list of all registered services"""
@@ -382,7 +387,10 @@ def register_service(request):
             service.full_clean()
             service.save()
             service.keywords.add(*service_handler.get_keywords())
-            service.set_permissions({'users': {''.join(request.user.username): ['services.change_service', 'services.delete_service']}})
+            service.set_permissions({'users': {
+                ''.join(request.user.username):
+                    ['services.change_service', 'services.delete_service']
+            }})
             if service_handler.indexing_method == enumerations.CASCADED:
                 service_handler.create_cascaded_store()
             request.session[service_handler.url] = service_handler
@@ -407,8 +415,10 @@ def register_service(request):
 
 class ExchangeDocumentUploadView(DocumentUploadView):
     def get_context_data(self, **kwargs):
-        context = super(ExchangeDocumentUploadView, self).get_context_data(**kwargs)
-        context['profile'] = ExchangeProfile.objects.get(user=self.request.user)
+        context = \
+            super(ExchangeDocumentUploadView, self).get_context_data(**kwargs)
+        context['profile'] = ExchangeProfile.objects.get(
+            user=self.request.user)
         return context
 
     def form_valid(self, form):
@@ -423,7 +433,8 @@ class ExchangeDocumentUploadView(DocumentUploadView):
 
         resource_id = self.request.POST.get('resource', None)
         if resource_id:
-            self.object.content_type = ResourceBase.objects.get(id=resource_id).polymorphic_ctype
+            self.object.content_type = ResourceBase.objects.get(
+                id=resource_id).polymorphic_ctype
             self.object.object_id = resource_id
         # by default, if RESOURCE_PUBLISHING=True then document.is_published
         # must be set to False
@@ -443,7 +454,8 @@ class ExchangeDocumentUploadView(DocumentUploadView):
 
         if getattr(settings, 'EXIF_ENABLED', False):
             try:
-                from geonode.contrib.exif.utils import exif_extract_metadata_doc
+                from geonode.contrib.exif.utils import \
+                    exif_extract_metadata_doc
                 exif_metadata = exif_extract_metadata_doc(self.object)
                 if exif_metadata:
                     date = exif_metadata.get('date', None)
@@ -451,7 +463,7 @@ class ExchangeDocumentUploadView(DocumentUploadView):
                     bbox = exif_metadata.get('bbox', None)
                     abstract = exif_metadata.get('abstract', None)
             except:
-                print "Exif extraction failed."
+                print("Exif extraction failed.")
 
         if getattr(settings, 'NLP_ENABLED', False):
             try:
@@ -461,7 +473,7 @@ class ExchangeDocumentUploadView(DocumentUploadView):
                     regions.extend(nlp_metadata.get('regions', []))
                     keywords.extend(nlp_metadata.get('keywords', []))
             except:
-                print "NLP extraction failed."
+                print("NLP extraction failed.")
 
         if abstract:
             self.object.abstract = abstract
@@ -488,10 +500,12 @@ class ExchangeDocumentUploadView(DocumentUploadView):
 
         if getattr(settings, 'SLACK_ENABLED', False):
             try:
-                from geonode.contrib.slack.utils import build_slack_message_document, send_slack_message
-                send_slack_message(build_slack_message_document("document_new", self.object))
+                from geonode.contrib.slack.utils import \
+                    build_slack_message_document, send_slack_message
+                send_slack_message(build_slack_message_document(
+                    "document_new", self.object))
             except:
-                print "Could not send slack message for new document."
+                print("Could not send slack message for new document.")
 
         return HttpResponseRedirect(
             reverse(
@@ -505,6 +519,7 @@ class ExchangeDocumentUploadView(DocumentUploadView):
 if 'osgeo_importer' in settings.INSTALLED_APPS:
     from osgeo_importer.views import FileAddView
     from osgeo_importer.importers import VALID_EXTENSIONS
+
     class ExchangeFileAddView(FileAddView):
         def render_to_response(self, context, **response_kwargs):
             # grab list of valid importer extensions for use in templates
@@ -512,7 +527,9 @@ if 'osgeo_importer' in settings.INSTALLED_APPS:
 
             if self.json:
                 context = {'errors': context['form'].errors,
-                           'profile': ExchangeProfile.objects.get(user=self.request.user)}
+                           'profile': ExchangeProfile.objects.get(
+                               user=self.request.user)}
                 return self.render_to_json_response(context, **response_kwargs)
 
-            return super(FileAddView, self).render_to_response(context, **response_kwargs)
+            return super(FileAddView, self).render_to_response(
+                context, **response_kwargs)
