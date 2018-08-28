@@ -36,9 +36,9 @@ $manage loaddata base_resources
 $manage loaddata /code/docker/exchange/docker_oauth_apps.json
 $manage loaddata /code/docker/exchange/anywhere.json
 $manage rebuild_index
-if [[ $DEV == True ]]; then
-  $manage importservice http://data-test.boundlessgeo.io/geoserver/wms bcs-hosted-data WMS I
-fi
+#if [[ $DEV == True ]]; then
+#  $manage importservice http://data-test.boundlessgeo.io/geoserver/wms bcs-hosted-data WMS I
+#fi
 $manage makemigrations --dry-run --verbosity 3
 pip freeze
 echo "Dev is set to $DEV"
