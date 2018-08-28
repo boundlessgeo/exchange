@@ -1,7 +1,7 @@
 [submodule "vendor/geonode"]
 	path = vendor/geonode
-	url = https://github.com/boundlessgeo/geonode.git
-	branch = exchange/1.4.x
+	url = https://github.com/geonode/geonode.git
+	branch = 2.7.x
 [submodule "vendor/maploom"]
 	path = vendor/maploom
 	url = https://github.com/boundlessgeo/MapLoom.git
@@ -18,3 +18,4 @@
 [submodule "vendor/geonode-elasticsearch"]
 	path = vendor/geonode-elasticsearch
 	url = https://github.com/boundlessgeo/geonode-elasticsearch
+	branch = geonode2.8.x
