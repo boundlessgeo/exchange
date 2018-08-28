@@ -45,7 +45,7 @@ body{
 {% block header %}{{ block.super }} {% endblock %}
 
 {% block middle %}
-        <iframe src="{% if map %}{% url 'maploom-map-view' map.id %}{% else %}{% url 'maploom-map-new' %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}{% endif %}" allowFullScreen="true" scrolling="auto" class="maploom"></iframe>
+        <iframe src="{% if map.id %}{% url 'maploom-map-view' map.id %}{% else %}{% url 'maploom-map-new' %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}{% endif %}" allowFullScreen="true" scrolling="auto" class="maploom"></iframe>
 {% endblock %}
 
 {% block footer %}{% endblock %}
