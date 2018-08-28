@@ -36,3 +36,4 @@ six==1.10.0
 cryptography==2.3
 elasticsearch==6.3.0
 elasticsearch-dsl==6.1.0
+requests==2.19.0
