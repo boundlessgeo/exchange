@@ -28,10 +28,7 @@ fi
 if [ "$plugins" ]; then
   export ADDITIONAL_APPS=$(IFS=,; echo "${plugins[*]}")
 fi
-until $manage migrate account --noinput; do
-  >&2 echo "db is unavailable - sleeping"
-  sleep 5
-done
+
 $manage migrate --noinput
 $manage collectstatic --noinput
 $manage loaddata default_users
