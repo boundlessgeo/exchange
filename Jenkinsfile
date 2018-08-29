@@ -82,7 +82,7 @@ node {
 
       stage('py.test'){
         sh """
-          docker-compose -f vendor/docker/bex/docker-compose.yml --project-dir=. exec -T exchange /bin/bash -c '/code/docker/exchange/run_tests.sh'
+          docker-compose -f vendor/docker/bex/docker-compose.yml --project-dir=. exec -T exchange /bin/bash -c '/code/vendor/docker/bex/docker/exchange/run_tests.sh'
         """
       }
 
