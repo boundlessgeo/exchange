@@ -46,7 +46,7 @@ node {
             "yamllint" : {
               bashDocker(
                 'quay.io/boundlessgeo/sonar-maven-py3-alpine',
-                'yamllint -d "{extends: relaxed, rules: {line-length: {max: 120}}}" $(find . -name "*.yml" -not -path "./vendor/*")'
+                'yamllint -d "{extends: relaxed, rules: {line-length: {max: 120}}}" $(find ./vendor/docker/bex -name "*.yml")'
               )
             },
             "flake8" : {
