@@ -43,12 +43,6 @@ node {
                 'pycodestyle exchange --ignore=E722,E731'
               )
             },
-            "yamllint" : {
-              bashDocker(
-                'quay.io/boundlessgeo/sonar-maven-py3-alpine',
-                'yamllint -d "{extends: relaxed, rules: {line-length: {max: 120}}}" $(find ./vendor/docker/bex -name "*.yml")'
-              )
-            },
             "flake8" : {
               bashDocker(
                 'quay.io/boundlessgeo/sonar-maven-py3-alpine',
