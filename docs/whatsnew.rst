@@ -1,20 +1,6 @@
-What’s New in Boundless Exchange v1.4.11
+What’s New in Boundless Exchange
 =========================================
 
-Welcome to the latest update of Boundless Exchange! This release includes OAuth authentication improvements, bounding box updates in MapLoom, and numerous bug fixes.
+Welcome to the latest update of Boundless Exchange! This release includes improved projection handling for ESRI remote services, as well as the added capability of MapBox basemap configuration via Exchange settings.
 
-Authentication
-^^^^^^^^^^^^^^
-
-Boundless Exchange uses OAuth to grant users and applications access to shared information, without giving access to the passwords. This release provides the following changes:
-
- * It is now possible for Boundless Anywhere to use the configured GeoAxis or Auth0 authentication provider in Exchange for secure token exchange and validation.
-
- * Support for Auth0 OpenID Connect (OIDC) conformity.
- 
- * Federated logout of third-party authentication providers.
-
-MapLoom
-^^^^^^^^^^^^^^^^
-
- * Layer bounding boxes are now automatically recalculated when editing vector features in MapLoom.
+Users can now dynamically define form constraints and default options/values that can be used to collect information associated with a feature. This means feature attributes can be uploaded, as well as modified or re-ordered. Visibility for the attribute can be turned off or on.

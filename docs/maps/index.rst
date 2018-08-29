@@ -15,7 +15,7 @@ Create a new blank map
 
 2. Click **Create Map** in the drop-down menu.
 
-  .. figure:: img/maps-menu.png
+  .. figure:: img/map-menu.png
 
 A new map environment will open, and you can begin working.
 
@@ -138,6 +138,21 @@ Remove a layer from the map
 
    .. figure:: img/confirm-remove.png
 
+Modify layer transparency
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The transparency of a layer can be adjusted for viewing the map beneath the layer. Click and drag the slide button to adjust the transparency. As the transparency increases, you will see more of the map. As opacity increases, the layer features will be more prominent.
+
+  .. figure:: img/transparency.png
+  
+  .. figure:: img/more-transparent.png
+  
+    *Example of increased transparency*
+  
+  .. figure:: img/more-opacity.png
+  
+    *Example of no transparency selected*
+
 Get feature information
 ^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -225,15 +240,26 @@ Save a map
 
 Saving a map allows you to maintain your preferences for the next use, as well as makes it available for other Exchange users.
 
-#. Click the Save this map button.
+1. Click the :guilabel:`Save this map` button.
 
   .. figure:: img/save-map.png
 
 2. Add a title and an abstract for your map so it is searchable by others. Click the Save button to save your changes. The name will be reflected in the title, and replace “New Map.”
 
+3. Select the Refresh Interval drop-down menu to choose a refresh rate for your map. This will help ensure your map is as current as possible.
+
   .. figure:: img/save-this-map.png
 
 The Map is now saved in the list of maps on the Maps page.
+
+For MapLoom version info, hover the mouse over the **i** info button in the lower left corner of the window.
+
+Share a saved map
+^^^^^^^^^^^^^^^^^
+
+A link will be created for your saved map. Copy the link to share with other users. 
+
+  .. figure:: img/share-map.png
 
 Create a copy of a map
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -267,45 +293,15 @@ Every map has its own details page, which provides more information about the ma
 
 Click the **View Details** link to open the details page.
 
-  .. figure:: img/view-details.png
+  .. figure:: img/view-details2.png
 
 The map details page provides a view of the map, and displays any associated comments or ratings.
 
-  .. figure:: img/details-page.png
+  .. figure:: img/map-details.png
 
 All associated layers and documents will be listed, with links to their respective details pages. Simply click the title of the associated file to open the page.
 
   .. figure:: img/associated.png
-
-Download data layers
-^^^^^^^^^^^^^^^^^^^^
-
-Here you can download the contents of a map that is stored in Exchange. It does not download data from other servers, however.
-
-#. Click the :guilabel:`Download Map` button.
-
-#. Select **Download Data Layers**.
-
-  .. figure:: img/download-map.png
-
-If multiple layers exist, you will be able to select one or more of the available layers.
-
-  .. figure:: img/download-map-layers.png
-
-3. Select the layer(s) you want to download individually, or the :guilabel:`Start downloading this map` button to begin downloading.
-
-Download Web Map Context
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-The Web Map Context (WMC) is an open geospatial consortium (OGC) standard for metadata describing a map service.
-
-#. Click the :guilabel:`Download Map` button.
-
-#. Select **Download Web Map Context** from the menu.
-
-   .. figure:: img/download-map.png
-
-A new tab will open with the XML for the web map context.
 
 Edit map metadata
 ^^^^^^^^^^^^^^^^^
