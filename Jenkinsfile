@@ -30,7 +30,7 @@ node {
         sh """
           docker pull 'quay.io/boundlessgeo/sonar-maven-py3-alpine'
           docker pull 'quay.io/boundlessgeo/bex-nodejs-bower-grunt:v0.10.x'
-          docker-compose down
+          docker-compose -f vendor/docker/bex/docker-compose.yml --project-dir=. down
           docker system prune -f
         """
       }
@@ -41,12 +41,6 @@ node {
               bashDocker(
                 'quay.io/boundlessgeo/sonar-maven-py3-alpine',
                 'pycodestyle exchange --ignore=E722,E731'
-              )
-            },
-            "yamllint" : {
-              bashDocker(
-                'quay.io/boundlessgeo/sonar-maven-py3-alpine',
-                'yamllint -d "{extends: relaxed, rules: {line-length: {max: 120}}}" $(find . -name "*.yml" -not -path "./vendor/*")'
               )
             },
             "flake8" : {
@@ -61,14 +55,14 @@ node {
       stage('Build Maploom'){
         bashDocker(
           'quay.io/boundlessgeo/bex-nodejs-bower-grunt:v0.10.x',
-          'rm -fr vendor/maploom/node_modules vendor/maploom/package-lock.json && . docker/devops/helper.sh && build-maploom'
+          'rm -fr vendor/maploom/node_modules vendor/maploom/package-lock.json && . vendor/docker/bex/docker/devops/helper.sh && build-maploom'
         )
       }
 
       stage('Build Images'){
         sh """
           docker rm -f \$(docker ps -aq) || echo "no containers to remove"
-          docker-compose up --build --force-recreate -d
+          docker-compose -f vendor/docker/bex/docker-compose.yml --project-dir=. up --build --force-recreate -d
         """
       }
 
@@ -82,13 +76,13 @@ node {
           }
         }
         sh """
-          docker-compose logs
+          docker-compose -f vendor/docker/bex/docker-compose.yml --project-dir=. logs
         """
       }
 
       stage('py.test'){
         sh """
-          docker-compose exec -T exchange /bin/bash -c '/code/docker/exchange/run_tests.sh'
+          docker-compose -f vendor/docker/bex/docker-compose.yml --project-dir=. exec -T exchange /bin/bash -c '/code/vendor/docker/bex/docker/exchange/run_tests.sh'
         """
       }
 
@@ -99,7 +93,7 @@ node {
                        -e SONAR_TOKEN=$SONAR_TOKEN \
                        -v \$(pwd -P):/code \
                        -w /code quay.io/boundlessgeo/sonar-maven-py3-alpine bash \
-                       -c '. docker/devops/helper.sh && sonar-scan'
+                       -c '. vendor/docker/bex/docker/devops/helper.sh && sonar-scan'
             """
         }
       }
@@ -110,7 +104,7 @@ node {
             docker run --rm -e CONNECT_FTP=$CONNECT_FTP \
                        -v \$(pwd -P):/code \
                        -w /code quay.io/boundlessgeo/sonar-maven-py3-alpine bash \
-                       -c '. docker/devops/helper.sh && \
+                       -c '. vendor/docker/bex/docker/devops/helper.sh && \
                            lftp -e "set ftp:ssl-allow no; \
                                     mkdir /site/wwwroot/docs/exchange/`py3-bex-version`; \
                                     mirror -R -e exchange/static/docs/html /site/wwwroot/docs/exchange/`py3-bex-version`; \
@@ -132,7 +126,7 @@ node {
       // Success or failure, always send notifications
       echo currentBuild.result
       sh """
-        docker-compose down
+        docker-compose -f vendor/docker/bex/docker-compose.yml --project-dir=. down
         docker system prune -f
         """
       notifyBuild(currentBuild.result)
