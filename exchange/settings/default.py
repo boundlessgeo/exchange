@@ -219,7 +219,6 @@ else:
 
 if GEONODE_CLIENT_ENABLED:
     INSTALLED_APPS = ('geonode-client',) + INSTALLED_APPS
-    LAYER_PREVIEW_LIBRARY = 'react'
     GEONODE_CLIENT_LAYER_PREVIEW_LIBRARY = 'react'
 
 # authorized exempt urls
@@ -402,7 +401,7 @@ CELERYD_PREFETCH_MULTIPLIER = 25
 CELERY_TASK_RESULT_EXPIRES = 18000  # 5 hours.
 CELERY_ENABLE_UTC = False
 CELERY_TIMEZONE = TIME_ZONE
-CELERY_IMPORTS += ('exchange.tasks',)
+
 
 # audit settings
 AUDIT_ENABLED = str2bool(os.getenv('AUDIT_ENABLED', 'True'))
@@ -512,8 +511,6 @@ if 'osgeo_importer' in INSTALLED_APPS:
         'OSGEO_IMPORTER_UPLOAD_RASTER_TO_GEOSERVER',
         'True'
     ))
-    # Tell celery to load its tasks
-    CELERY_IMPORTS += ('osgeo_importer.tasks',)
     # override GeoNode setting so importer UI can see when tasks finish
     CELERY_IGNORE_RESULT = False
     IMPORT_HANDLERS = [
