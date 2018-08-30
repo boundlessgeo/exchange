@@ -200,7 +200,6 @@ INSTALLED_APPS = (
 ) + ADDITIONAL_APPS + INSTALLED_APPS
 
 MIGRATION_MODULES = {
-    'account': 'exchange.3pm.account',
     'user_messages': 'exchange.3pm.user_messages',
 }
 
