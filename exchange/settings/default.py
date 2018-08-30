@@ -149,7 +149,7 @@ TEMPLATES = [
                 'django.core.context_processors.static',
                 'django.core.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
-                'account.context_processors.account',
+                # 'account.context_processors.account',
                 'geonode.context_processors.resource_urls',
                 'geonode.geoserver.context_processors.geoserver_urls',
                 'django_classification_banner.context_processors.'
@@ -341,6 +341,19 @@ if MAPBOX_BASEMAPS:
                 "group": "background"
             }
         )
+
+
+if 'geonode.geoserver' in INSTALLED_APPS:
+    LOCAL_GEOSERVER = {
+        "source": {
+            "ptype": "gxp_wmscsource",
+            "url": OGC_SERVER['default']['PUBLIC_LOCATION'] + "wms",
+            "restUrl": "/gs/rest"
+        }
+    }
+    baselayers = MAP_BASELAYERS
+    MAP_BASELAYERS = [LOCAL_GEOSERVER]
+    MAP_BASELAYERS.extend(baselayers)
 
 POSTGIS_URL = os.getenv(
     'POSTGIS_URL',
