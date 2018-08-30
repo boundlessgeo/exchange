@@ -29,6 +29,7 @@ if [ "$plugins" ]; then
   export ADDITIONAL_APPS=$(IFS=,; echo "${plugins[*]}")
 fi
 
+$manage makemigrations
 $manage migrate --noinput
 $manage collectstatic --noinput
 $manage loaddata default_users
