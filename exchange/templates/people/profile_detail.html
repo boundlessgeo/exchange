@@ -133,7 +133,7 @@
     <ul class="list-group">
       <li class="list-group-item"><a href="{% url "profile_edit" user.username %}"><i class="fa fa-edit"></i> {% trans "Edit profile" %}</a></li>
       {% if not GEOAXIS_ENABLED %}
-      <li class="list-group-item"><a href="{% url "account_password" %}"><i class="fa fa-lock"></i> {% trans "Change password" %}</a></li>
+      <li class="list-group-item"><a href="{% url "account_change_password" %}"><i class="fa fa-lock"></i> {% trans "Change password" %}</a></li>
       {% endif %}
     </ul>
     <ul class="list-group">
@@ -143,7 +143,7 @@
     </ul>
     <ul class="list-group">
       {% if USE_NOTIFICATIONS %}
-      <li class="list-group-item"><a href="{% url "notification_notice_settings" %}"><i class="fa fa-bell"></i> {% trans "Notifications" %}</a></li>
+      <li class="list-group-item"><a href="{% url "notice_settings" %}"><i class="fa fa-bell"></i> {% trans "Notifications" %}</a></li>
       {% endif %}
       {% if perms.announcements.can_manage %}
       <li class="list-group-item"><a href="{% url "announcements_list" %}"><i class="fa fa-bullhorn"></i> {% trans "Announcements" %}</a></li>
@@ -154,7 +154,7 @@
       {% if not REGISTRYURL and REGISTRY %}
       <li class="list-group-item"><a href="{% url "services" %}"><i class="fa fa-globe"></i> {% trans "Remote Services" %}</a></li>
       {% endif %}
-      <li class="list-group-item"><a href="{% url "account_invite_user" %}"><i class="fa fa-edit"></i> {% trans "Invite User" %}</a></li>
+      <li class="list-group-item"><a href="{% url "geonode.invitations:geonode-send-invite" %}"><i class="fa fa-edit"></i> {% trans "Invite User" %}</a></li>
       <li class="list-group-item"><a href="{{ GEOSERVER_BASE_URL }}"><i class="fa fa-gears"></i> {% trans "GeoServer" %}</a></li>
       {% endif %}
       {% if user.is_staff %}
