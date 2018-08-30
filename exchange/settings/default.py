@@ -27,7 +27,6 @@ from geonode.settings import (
     MIDDLEWARE_CLASSES,
     STATICFILES_DIRS,
     INSTALLED_APPS,
-    CELERY_IMPORTS,
     DATABASES
 )
 
@@ -189,7 +188,6 @@ INSTALLED_APPS = (
     'exchange.themes',
     'exchange.fileservice',
     'exchange.thumbnails',
-    'geonode',
     'geonode.contrib.geogig',
     'geonode.contrib.slack',
     'geonode.contrib.createlayer',
