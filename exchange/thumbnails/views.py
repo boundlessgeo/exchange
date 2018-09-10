@@ -6,19 +6,75 @@
 #
 
 
-from django.http import HttpResponse
-
-from base64 import b64decode
 import imghdr
+from base64 import b64decode
+
 import os
+from django.contrib.staticfiles import finders
+from django.http import HttpResponse
+from geonode.documents.models import Document
 
 from .models import Thumbnail, save_thumbnail
-from geonode.documents.models import Document
 
 # cache the missing thumbnail for missing images.
 TEST_DIR = os.path.dirname(__file__)
 MISSING_THUMB = open(
     os.path.join(TEST_DIR, 'static/missing_thumb.png'), 'r').read()
+
+IMGTYPES = ['jpg', 'jpeg', 'tif', 'tiff', 'png', 'gif']
+
+
+def render_document_thumbnail(doc):
+    from cStringIO import StringIO
+
+    size = 200, 150
+
+    try:
+        from PIL import Image, ImageOps
+    except ImportError, e:
+        # logger.error(
+        #     '%s: Pillow not installed, cannot generate thumbnails.' %
+        #     e)
+        return None
+
+    try:
+        # if wand is installed, than use it for pdf thumbnailing
+        from wand import image
+    except:
+        wand_available = False
+    else:
+        wand_available = True
+
+    if wand_available and doc.extension and doc.extension.lower(
+    ) == 'pdf' and doc.doc_file:
+        # logger.debug(
+        #     u'Generating a thumbnail for document: {0}'.format(
+        #         self.title))
+        try:
+            with image.Image(filename=doc.doc_file.path) as img:
+                img.sample(*size)
+                return img.make_blob('png')
+        except:
+            # logger.debug('Error generating the thumbnail with Wand, cascading to a default image...')
+            pass
+    # if we are still here, we use a default image thumb
+    if doc.extension and doc.extension.lower() in IMGTYPES and doc.doc_file:
+        img = Image.open(doc.doc_file.path)
+        img = ImageOps.fit(img, size, Image.ANTIALIAS)
+    else:
+        filename = finders.find('documents/{0}-placeholder.png'.format(
+            doc.extension.lower()
+        ), False) or \
+                   finders.find('documents/generic-placeholder.png', False)
+
+        if not filename:
+            return None
+
+        img = Image.open(filename)
+
+    imgfile = StringIO()
+    img.save(imgfile, format='PNG')
+    return imgfile.getvalue()
 
 
 def document_thumbnail(objectId):
@@ -27,7 +83,7 @@ def document_thumbnail(objectId):
     except Document.DoesNotExist:
         pass
     if doc:
-        img = doc._render_thumbnail()
+        img = render_document_thumbnail(doc)
         # save so not needed to generate next time
         save_thumbnail(
             'documents', objectId, 'image/png', img, True)
