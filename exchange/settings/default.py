@@ -681,3 +681,7 @@ ACCESS_TOKEN_NAME = os.getenv('ACCESS_TOKEN_NAME', 'x-token')
 
 IMPORT_TASK_SOFT_TIME_LIMIT = le(os.getenv('IMPORTER_TIMEOUT', '90'))
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+try:
+    from .local_settings import *
+except:
+    pass
