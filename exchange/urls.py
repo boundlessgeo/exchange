@@ -90,9 +90,6 @@ if 'nearsight' in settings.INSTALLED_APPS:
 # Use our Elasticsearch implementation for search
 urlpatterns += [url('', include(search_urls)), ]
 
-if 'geonode_anywhere' in settings.INSTALLED_APPS:
-    urlpatterns += [url(r"^anywhere/", include("geonode_anywhere.urls")), ]
-
 if 'worm' in settings.INSTALLED_APPS:
     urlpatterns += [url(r"^services/", include("worm.urls")), ]
 

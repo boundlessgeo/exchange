@@ -155,6 +155,10 @@ def capabilities(request):
         'geoserver': get_geoserver_version(),
     }
 
+    if settings.ANYWHERE_ENABLED:
+        from geonode_anywhere.views import get_capabilities
+        capabilities.update(get_capabilities())
+
     current_site = get_current_site(request)
     capabilities["site_name"] = current_site.name
 
