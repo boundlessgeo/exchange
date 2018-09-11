@@ -350,7 +350,7 @@ if WGS84_MAP_CRS:
 # Set ES_SEARCH to True
 # Run "python manage.py clear_haystack" (if upgrading from haystack)
 # Run "python manage.py rebuild_index"
-ES_SEARCH = strtobool(os.getenv('ES_SEARCH', 'False'))
+ES_SEARCH = strtobool(os.getenv('ES_SEARCH', 'True'))
 
 if ES_SEARCH:
     INSTALLED_APPS = ('elasticsearch_app', ) + INSTALLED_APPS
