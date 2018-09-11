@@ -16,6 +16,7 @@ from pip._vendor import pkg_resources
 from exchange.tasks import create_record, delete_record
 from django.core.urlresolvers import reverse
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth import login
 from social_django.utils import psa
 
 
