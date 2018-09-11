@@ -21,3 +21,6 @@
 [submodule "vendor/docker"]
 	path = vendor/docker
 	url = https://github.com/boundlessgeo/docker.git
+[submodule "vendor/exchange-mobile-extension"]
+	path = vendor/exchange-mobile-extension
+	url = https://github.com/boundlessgeo/exchange-mobile-extension.git
