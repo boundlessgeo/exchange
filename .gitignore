@@ -102,3 +102,9 @@ vendor/services
 
 # docs
 exchange/static/docs
+
+# celery beat schedule file
+celerybeat-schedule
+
+# vscode
+.vscode
