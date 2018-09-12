@@ -19,7 +19,7 @@
 #########################################################################
 
 from django.conf import settings
-from django.conf.urls import patterns, url, include
+from django.conf.urls import patterns, url, include, handler404
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 from geonode.urls import urlpatterns as geonode_urls
@@ -56,6 +56,9 @@ urlpatterns = patterns(
     url(r'^about/', views.about_page, name='about'),
     url(r'^capabilities/', views.capabilities, name='capabilities'),
     url(r'^logout/', views.logout, name='exchange_logout'),
+
+    # To prevent users to access messages
+    url(r'^messages/', handler404),
 )
 
 if settings.ENABLE_SOCIAL_LOGIN is True:
