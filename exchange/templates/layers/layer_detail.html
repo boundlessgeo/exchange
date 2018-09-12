@@ -318,7 +318,7 @@
       <div class="input-group">
           {% if resource.storeType != "remoteStore" %}
         <input type="text" class="form-control" readonly
-          value="{{ GEOSERVER_BASE_URL }}{{ resource.workspace }}/{{ resource.layer.name  }}/ows?service=wms&version=1.3.0&request=GetCapabilities" id="copy-input">
+          value="{{ GEOSERVER_BASE_URL }}{{ resource.workspace }}/ows?service=wms&version=1.3.0&request=GetCapabilities&typename={{ resource.layer.name  }}" id="copy-input">
           {% else %}
           {% if resource.service.type == 'REST' %}
           <input type="text" class="form-control" readonly
