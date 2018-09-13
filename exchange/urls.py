@@ -23,6 +23,8 @@ from django.conf.urls import patterns, url, include, handler404
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 from geonode.urls import urlpatterns as geonode_urls
+from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
 from exchange.maploom.urls import urlpatterns as maploom_urls
 from fileservice.urls import urlpatterns as fileservice_urls
 from storyscapes.urls import urlpatterns as story_urls
@@ -33,6 +35,12 @@ from . import views
 js_info_dict = {
     'packages': ('geonode.layers',),
 }
+
+# django admin titles customization
+admin.site.site_header = '%s %s' % (settings.SITENAME, _('Administration'))
+admin.site.index_title = '%s %s' % (settings.SITENAME, _('Administration'))
+admin.site.site_title = '%s %s' % (settings.SITENAME, _('Administration'))
+
 
 urlpatterns = patterns(
     '',
