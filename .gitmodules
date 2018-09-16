@@ -19,3 +19,6 @@
 	path = vendor/geonode-elasticsearch
 	url = https://github.com/boundlessgeo/geonode-elasticsearch
 	branch = geonode2.8.x
+[submodule "vendor/cartoview"]
+	path = vendor/cartoview
+	url = git@github.com:cartologic/cartoview.git
