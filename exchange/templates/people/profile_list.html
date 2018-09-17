@@ -22,9 +22,9 @@
 {{ block.super }}
 <script type="text/javascript">
   {% if ES_SEARCH %}
-  SEARCH_URL = '{% url 'elastic_search' resourcetype='profile' %}';
+  SEARCH_URL = '{% url 'elastic_search' resourcetype='profiles' %}';
   {% else %}
-  SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='profile' %}';
+  SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='profiles' %}';
   {% endif %}
 </script>
   {% with include_spatial='false' %}
