@@ -31,7 +31,7 @@ from storyscapes.urls import urlpatterns as story_urls
 from thumbnails.urls import urlpatterns as thumbnail_urls
 from elasticsearch_app.urls import urlpatterns as search_urls
 from . import views
-
+from cartoview.urls import urlpatterns as cartoview_urls
 js_info_dict = {
     'packages': ('geonode.layers',),
 }
@@ -113,6 +113,7 @@ if 'worm' in settings.INSTALLED_APPS:
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += geonode_urls
+urlpatterns += cartoview_urls
 urlpatterns += fileservice_urls
 urlpatterns += thumbnail_urls
 urlpatterns += maploom_urls

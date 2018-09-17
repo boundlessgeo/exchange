@@ -113,3 +113,4 @@ celerybeat-schedule
 local_settings.py
 exchange/static/maploom
 exchange/templates/maps/maploom.html
+apps
