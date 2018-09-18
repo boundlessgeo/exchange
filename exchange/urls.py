@@ -30,6 +30,8 @@ from fileservice.urls import urlpatterns as fileservice_urls
 from storyscapes.urls import urlpatterns as story_urls
 from thumbnails.urls import urlpatterns as thumbnail_urls
 from elasticsearch_app.urls import urlpatterns as search_urls
+from layers.urls import urlpatterns as layers_urls
+
 from . import views
 js_info_dict = {
     'packages': ('geonode.layers',),
@@ -67,6 +69,9 @@ urlpatterns = patterns(
     # To prevent users to access messages
     url(r'^messages/', handler404),
 )
+
+urlpatterns += layers_urls
+
 
 if settings.ENABLE_SOCIAL_LOGIN is True:
     urlpatterns += [
