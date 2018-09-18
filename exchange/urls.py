@@ -22,6 +22,7 @@ from django.conf import settings
 from django.conf.urls import patterns, url, include, handler404
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
+from django.views.generic import TemplateView
 from geonode.urls import urlpatterns as geonode_urls
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
@@ -123,5 +124,11 @@ if settings.CARTOVIEW_ENABLED:
 urlpatterns += fileservice_urls
 urlpatterns += thumbnail_urls
 urlpatterns += maploom_urls
+
+# override url named 'layer_browse' so all revers('layer_browse') directed to search page
+# NOTE: this url must be defined after geonode urls so url name assigned to search url
+urlpatterns += [
+    url(r'^search/\?type=layer$', TemplateView.as_view(template_name='search/search.html'), name='layer_browse')
+]
 
 handler500 = 'exchange.views.handler500'
