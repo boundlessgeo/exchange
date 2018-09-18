@@ -21,7 +21,6 @@
 import copy
 import os
 from ast import literal_eval as le
-import ast
 from kombu import Queue, Exchange
 from tzlocal import get_localzone
 
@@ -518,137 +517,6 @@ except ImportError:
 
 # Use https:// scheme in Gravatar URLs
 AVATAR_GRAVATAR_SSL = True
-
-# Celery Settings
-
-# TODO: disable pickle serialization when we can ensure JSON works everywhere
-# CELERY_ACCEPT_CONTENT = ['json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
-
-TIME_ZONE = get_localzone().zone
-BROKER_HEARTBEAT = 0
-
-# Avoid long running and retried tasks to be run over-and-over again.
-BROKER_TRANSPORT_OPTIONS = {
-    'fanout_prefix': True,
-    'fanout_patterns': True,
-    'socket_timeout': 60,
-    'visibility_timeout': 86400
-}
-CELERY_TASK_DEFAULT_QUEUE = "default"
-CELERY_TASK_DEFAULT_EXCHANGE = "default"
-CELERY_TASK_DEFAULT_EXCHANGE_TYPE = "direct"
-CELERY_TASK_DEFAULT_ROUTING_KEY = "default"
-ASYNC_SIGNALS = ast.literal_eval(os.environ.get('ASYNC_SIGNALS', 'True'))
-RABBITMQ_SIGNALS_BROKER_URL = 'amqp://localhost:5672'
-REDIS_SIGNALS_BROKER_URL = 'redis://localhost:6379/0'
-LOCAL_SIGNALS_BROKER_URL = 'memory://'
-if ASYNC_SIGNALS:
-    _BROKER_URL = os.environ.get('BROKER_URL', RABBITMQ_SIGNALS_BROKER_URL)
-    # _BROKER_URL =  = os.environ.get('BROKER_URL', REDIS_SIGNALS_BROKER_URL)
-
-    CELERY_RESULT_BACKEND = "rpc" + _BROKER_URL[4:]
-else:
-    _BROKER_URL = LOCAL_SIGNALS_BROKER_URL
-
-# Note:BROKER_URL is deprecated in favour of CELERY_BROKER_URL
-CELERY_BROKER_URL = _BROKER_URL
-
-CELERY_RESULT_PERSISTENT = False
-
-# Allow to recover from any unknown crash.
-CELERY_ACKS_LATE = True
-
-# Set this to False in order to run async
-CELERY_TASK_ALWAYS_EAGER = False if ASYNC_SIGNALS else True
-CELERY_TASK_IGNORE_RESULT = True
-
-# I use these to debug kombu crashes; we get a more informative message.
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_ACCEPT_CONTENT = ['json']
-
-# Set Tasks Queues
-# CELERY_TASK_DEFAULT_QUEUE = "default"
-# CELERY_TASK_DEFAULT_EXCHANGE = "default"
-# CELERY_TASK_DEFAULT_EXCHANGE_TYPE = "direct"
-# CELERY_TASK_DEFAULT_ROUTING_KEY = "default"
-CELERY_TASK_CREATE_MISSING_QUEUES = True
-GEONODE_EXCHANGE = Exchange("default", type="direct", durable=True)
-GEOSERVER_EXCHANGE = Exchange("geonode", type="topic", durable=False)
-CELERY_TASK_QUEUES = (
-    Queue('default', GEONODE_EXCHANGE, routing_key='default'),
-    Queue('geonode', GEONODE_EXCHANGE, routing_key='geonode'),
-    Queue('update', GEONODE_EXCHANGE, routing_key='update'),
-    Queue('cleanup', GEONODE_EXCHANGE, routing_key='cleanup'),
-    Queue('email', GEONODE_EXCHANGE, routing_key='email'),
-)
-
-if USE_GEOSERVER:
-    CELERY_TASK_QUEUES += (
-        Queue("broadcast", GEOSERVER_EXCHANGE, routing_key="#"),
-        Queue("email.events", GEOSERVER_EXCHANGE, routing_key="email"),
-        Queue("all.geoserver", GEOSERVER_EXCHANGE, routing_key="geoserver.#"),
-        Queue(
-            "geoserver.catalog",
-            GEOSERVER_EXCHANGE,
-            routing_key="geoserver.catalog"),
-        Queue(
-            "geoserver.data",
-            GEOSERVER_EXCHANGE,
-            routing_key="geoserver.catalog"),
-        Queue(
-            "geoserver.events",
-            GEOSERVER_EXCHANGE,
-            routing_key="geonode.geoserver"),
-        Queue(
-            "notifications.events",
-            GEOSERVER_EXCHANGE,
-            routing_key="notifications"),
-        Queue(
-            "geonode.layer.viewer",
-            GEOSERVER_EXCHANGE,
-            routing_key="geonode.viewer"),
-    )
-
-# CELERYBEAT_SCHEDULE = {
-#     ...
-#     'update_feeds': {
-#         'task': 'arena.social.tasks.Update',
-#         'schedule': crontab(minute='*/6'),
-#     },
-#     ...
-# }
-
-# Half a day is enough
-CELERY_TASK_RESULT_EXPIRES = 43200
-
-# Sometimes, Ask asks us to enable this to debug issues.
-# BTW, it will save some CPU cycles.
-CELERY_DISABLE_RATE_LIMITS = False
-CELERY_SEND_TASK_EVENTS = True
-CELERY_WORKER_DISABLE_RATE_LIMITS = False
-CELERY_WORKER_SEND_TASK_EVENTS = True
-
-# Allow our remote workers to get tasks faster if they have a
-# slow internet connection (yes Gurney, I'm thinking of you).
-CELERY_MESSAGE_COMPRESSION = 'gzip'
-
-# The default beiing 5000, we need more than this.
-CELERY_MAX_CACHED_RESULTS = 32768
-
-# NOTE: I don't know if this is compatible with upstart.
-CELERYD_POOL_RESTARTS = True
-
-CELERY_TRACK_STARTED = True
-CELERY_SEND_TASK_SENT_EVENT = True
-CELERY_TIMEZONE = TIME_ZONE
-CELERY_TASK_CREATE_MISSING_QUEUES = True
-
-# Disabled by default and I like it, because we use Sentry for this.
-#CELERY_SEND_TASK_ERROR_EMAILS = False
-
 SESSION_COOKIE_AGE = 60 * 60 * 24
 
 # Set default access to layers to all, user will need to deselect the checkbox
@@ -810,6 +678,7 @@ try:
 except:
     pass
 
+
 # cartoview settings
 CARTOVIEW_ENABLED = le(os.getenv('CARTOVIEW_ENABLED', "True"))
 if CARTOVIEW_ENABLED:
@@ -829,3 +698,133 @@ if CARTOVIEW_ENABLED:
 
     from cartoview.app_manager.settings import load_apps
     INSTALLED_APPS += load_apps(APPS_DIR)
+
+# Celery Settings
+
+# TODO: disable pickle serialization when we can ensure JSON works everywhere
+# CELERY_ACCEPT_CONTENT = ['json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+
+TIME_ZONE = get_localzone().zone
+BROKER_HEARTBEAT = 0
+
+# Avoid long running and retried tasks to be run over-and-over again.
+BROKER_TRANSPORT_OPTIONS = {
+    'fanout_prefix': True,
+    'fanout_patterns': True,
+    'socket_timeout': 60,
+    'visibility_timeout': 86400
+}
+CELERY_TASK_DEFAULT_QUEUE = "default"
+CELERY_TASK_DEFAULT_EXCHANGE = "default"
+CELERY_TASK_DEFAULT_EXCHANGE_TYPE = "direct"
+CELERY_TASK_DEFAULT_ROUTING_KEY = "default"
+ASYNC_SIGNALS = le(os.environ.get('ASYNC_SIGNALS', 'True'))
+RABBITMQ_SIGNALS_BROKER_URL = 'amqp://localhost:5672'
+REDIS_SIGNALS_BROKER_URL = 'redis://localhost:6379/0'
+LOCAL_SIGNALS_BROKER_URL = 'memory://'
+if ASYNC_SIGNALS:
+    _BROKER_URL = os.environ.get('BROKER_URL', RABBITMQ_SIGNALS_BROKER_URL)
+    # _BROKER_URL =  = os.environ.get('BROKER_URL', REDIS_SIGNALS_BROKER_URL)
+
+    CELERY_RESULT_BACKEND = "rpc" + _BROKER_URL[4:]
+else:
+    _BROKER_URL = LOCAL_SIGNALS_BROKER_URL
+
+# Note:BROKER_URL is deprecated in favour of CELERY_BROKER_URL
+CELERY_BROKER_URL = _BROKER_URL
+
+CELERY_RESULT_PERSISTENT = False
+
+# Allow to recover from any unknown crash.
+CELERY_ACKS_LATE = True
+
+# Set this to False in order to run async
+CELERY_TASK_ALWAYS_EAGER = False if ASYNC_SIGNALS else True
+CELERY_TASK_IGNORE_RESULT = True
+
+# I use these to debug kombu crashes; we get a more informative message.
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+
+# Set Tasks Queues
+# CELERY_TASK_DEFAULT_QUEUE = "default"
+# CELERY_TASK_DEFAULT_EXCHANGE = "default"
+# CELERY_TASK_DEFAULT_EXCHANGE_TYPE = "direct"
+# CELERY_TASK_DEFAULT_ROUTING_KEY = "default"
+CELERY_TASK_CREATE_MISSING_QUEUES = True
+GEONODE_EXCHANGE = Exchange("default", type="direct", durable=True)
+GEOSERVER_EXCHANGE = Exchange("geonode", type="topic", durable=False)
+CELERY_TASK_QUEUES = (
+    Queue('default', GEONODE_EXCHANGE, routing_key='default'),
+    Queue('geonode', GEONODE_EXCHANGE, routing_key='geonode'),
+    Queue('update', GEONODE_EXCHANGE, routing_key='update'),
+    Queue('cleanup', GEONODE_EXCHANGE, routing_key='cleanup'),
+    Queue('email', GEONODE_EXCHANGE, routing_key='email'),
+)
+
+if USE_GEOSERVER:
+    CELERY_TASK_QUEUES += (
+        Queue("broadcast", GEOSERVER_EXCHANGE, routing_key="#"),
+        Queue("email.events", GEOSERVER_EXCHANGE, routing_key="email"),
+        Queue("all.geoserver", GEOSERVER_EXCHANGE, routing_key="geoserver.#"),
+        Queue(
+            "geoserver.catalog",
+            GEOSERVER_EXCHANGE,
+            routing_key="geoserver.catalog"),
+        Queue(
+            "geoserver.data",
+            GEOSERVER_EXCHANGE,
+            routing_key="geoserver.catalog"),
+        Queue(
+            "geoserver.events",
+            GEOSERVER_EXCHANGE,
+            routing_key="geonode.geoserver"),
+        Queue(
+            "notifications.events",
+            GEOSERVER_EXCHANGE,
+            routing_key="notifications"),
+        Queue(
+            "geonode.layer.viewer",
+            GEOSERVER_EXCHANGE,
+            routing_key="geonode.viewer"),
+    )
+
+# CELERYBEAT_SCHEDULE = {
+#     ...
+#     'update_feeds': {
+#         'task': 'arena.social.tasks.Update',
+#         'schedule': crontab(minute='*/6'),
+#     },
+#     ...
+# }
+
+# Half a day is enough
+CELERY_TASK_RESULT_EXPIRES = 43200
+
+# Sometimes, Ask asks us to enable this to debug issues.
+# BTW, it will save some CPU cycles.
+CELERY_DISABLE_RATE_LIMITS = False
+CELERY_SEND_TASK_EVENTS = True
+CELERY_WORKER_DISABLE_RATE_LIMITS = False
+CELERY_WORKER_SEND_TASK_EVENTS = True
+
+# Allow our remote workers to get tasks faster if they have a
+# slow internet connection (yes Gurney, I'm thinking of you).
+CELERY_MESSAGE_COMPRESSION = 'gzip'
+
+# The default beiing 5000, we need more than this.
+CELERY_MAX_CACHED_RESULTS = 32768
+
+# NOTE: I don't know if this is compatible with upstart.
+CELERYD_POOL_RESTARTS = True
+
+CELERY_TRACK_STARTED = True
+CELERY_SEND_TASK_SENT_EVENT = True
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_CREATE_MISSING_QUEUES = True
+
+# Disabled by default and I like it, because we use Sentry for this.
+#CELERY_SEND_TASK_ERROR_EMAILS = False
