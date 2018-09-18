@@ -17,7 +17,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 #########################################################################
-
+from .celery_app import app as celery_app
 __version__ = '1.4.12.2'
 
 
