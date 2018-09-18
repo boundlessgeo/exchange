@@ -673,32 +673,6 @@ ACCESS_TOKEN_NAME = os.getenv('ACCESS_TOKEN_NAME', 'x-token')
 IMPORT_TASK_SOFT_TIME_LIMIT = le(os.getenv('IMPORTER_TIMEOUT', '90'))
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-try:
-    from .local_settings import *
-except:
-    pass
-
-
-# cartoview settings
-CARTOVIEW_ENABLED = le(os.getenv('CARTOVIEW_ENABLED', "True"))
-if CARTOVIEW_ENABLED:
-    from cartoview import settings as cartoview_settings
-    INSTALLED_APPS += cartoview_settings.CARTOVIEW_INSTALLED_APPS
-    APPS_DIR = os.path.abspath(os.path.join(APP_ROOT, "apps"))
-    PENDING_APPS = os.path.join(
-        os.path.join(APP_ROOT, "apps"), "pendingOperation.yml")
-    APPS_MENU = False
-    # NOTE: please comment the following line of you want to use geonode templates
-    # TEMPLATES[0]["DIRS"] = TEMPLATES[0][
-    #     "DIRS"] + cartoview_settings.CARTOVIEW_TEMPLATE_DIRS
-    TEMPLATES[0]["OPTIONS"][
-        'context_processors'] += cartoview_settings.CARTOVIEW_CONTEXT_PROCESSORS
-
-    STATICFILES_DIRS += cartoview_settings.CARTOVIEW_STATIC_DIRS
-
-    from cartoview.app_manager.settings import load_apps
-    INSTALLED_APPS += load_apps(APPS_DIR)
-
 # Celery Settings
 
 # TODO: disable pickle serialization when we can ensure JSON works everywhere
@@ -828,3 +802,28 @@ CELERY_TASK_CREATE_MISSING_QUEUES = True
 
 # Disabled by default and I like it, because we use Sentry for this.
 #CELERY_SEND_TASK_ERROR_EMAILS = False
+
+try:
+    from .local_settings import *
+except:
+    pass
+
+# cartoview settings
+CARTOVIEW_ENABLED = le(os.getenv('CARTOVIEW_ENABLED', "True"))
+if CARTOVIEW_ENABLED:
+    from cartoview import settings as cartoview_settings
+    INSTALLED_APPS += cartoview_settings.CARTOVIEW_INSTALLED_APPS
+    APPS_DIR = os.path.abspath(os.path.join(APP_ROOT, "apps"))
+    PENDING_APPS = os.path.join(
+        os.path.join(APP_ROOT, "apps"), "pendingOperation.yml")
+    APPS_MENU = False
+    # NOTE: please comment the following line of you want to use geonode templates
+    # TEMPLATES[0]["DIRS"] = TEMPLATES[0][
+    #     "DIRS"] + cartoview_settings.CARTOVIEW_TEMPLATE_DIRS
+    TEMPLATES[0]["OPTIONS"][
+        'context_processors'] += cartoview_settings.CARTOVIEW_CONTEXT_PROCESSORS
+
+    STATICFILES_DIRS += cartoview_settings.CARTOVIEW_STATIC_DIRS
+
+    from cartoview.app_manager.settings import load_apps
+    INSTALLED_APPS += load_apps(APPS_DIR)
