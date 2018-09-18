@@ -120,6 +120,17 @@ ACCOUNT_ACTIVATION_DAYS = le(os.getenv('ACCOUNT_ACTIVATION_DAYS', '7'))
 # path setup
 LOCAL_ROOT = os.path.abspath(os.path.dirname(__file__))
 APP_ROOT = os.path.join(LOCAL_ROOT, os.pardir)
+PROJECT_ROOT = APP_ROOT
+STATICFILES_DIRS += [
+    os.path.join(PROJECT_ROOT, "static"),
+]
+# django Media Section
+# uncomment the following if you want your files out of geonode folder
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, os.pardir, "uploaded")
+MEDIA_URL = "/uploaded/"
+LOCAL_MEDIA_URL = "/uploaded/"
+# static section
+STATIC_ROOT = os.path.join(PROJECT_ROOT, os.pardir, "static_root")
 
 # static files storage
 STATICFILES_DIRS = [
