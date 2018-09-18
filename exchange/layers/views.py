@@ -12,7 +12,7 @@ def layer_update_bounds(request, layername):
         layername,
         'base.view_resourcebase',
         _PERMISSION_MSG_VIEW)
-    update_gs_layer_bounds(layername.split(':')[1])
+    update_gs_layer_bounds(layername)
     layer.save()
     return HttpResponse(
         json.dumps({'data': '{} bbox has been updated.'.format(layername)}),
