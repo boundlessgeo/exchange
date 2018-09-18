@@ -129,11 +129,11 @@ STATICFILES_DIRS += [
 ]
 # django Media Section
 # uncomment the following if you want your files out of geonode folder
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, os.pardir, "uploaded")
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, "uploaded")
 MEDIA_URL = "/uploaded/"
 LOCAL_MEDIA_URL = "/uploaded/"
 # static section
-STATIC_ROOT = os.path.join(PROJECT_ROOT, os.pardir, "static_root")
+STATIC_ROOT = os.path.join(PROJECT_ROOT, "static_root")
 
 # static files storage
 STATICFILES_DIRS = [
