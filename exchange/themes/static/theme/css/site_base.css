@@ -370,3 +370,19 @@ h6 {
     max-width: inherit !important;
     max-height: inherit !important;
 }
+
+
+.comment .avatar img {
+    border-radius: 50%;
+}
+
+.comment small {
+    font-weight: bold;
+    color: #777;
+    margin-left: 10px;
+}
+
+.comment button, .comment p {
+    margin-left: 58px;
+    margin-top: -0.5em;
+}
