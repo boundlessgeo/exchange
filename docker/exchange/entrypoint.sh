@@ -39,7 +39,7 @@ $manage loaddata /code/docker/exchange/anywhere.json
 if [ "$cartoview" = true ]; then
   $manage loaddata app_stores_exchange.json
   $manage install_app -n cartoview_dashboard -av 1.4.1
-  $manage install_app -n cartoview_basic_viewer -av 1.8.1
+  $manage install_app -n cartoview_basic_viewer -av 1.8.2
 
 $manage rebuild_index
 #if [[ $DEV == True ]]; then
