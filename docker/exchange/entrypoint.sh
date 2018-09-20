@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-
+cartoview=${CARTOVIEW_ENABLED:-false}
 find /code -type f -name '*pyc' -exec rm {} +
 manage='python /code/manage.py'
 setup='python /code/setup.py'
@@ -36,6 +36,11 @@ $manage loaddata default_users
 $manage loaddata base_resources
 $manage loaddata /code/docker/exchange/docker_oauth_apps.json
 $manage loaddata /code/docker/exchange/anywhere.json
+if [ "$cartoview" = true ]; then
+  $manage loaddata app_stores_exchange.json
+  $manage install_app -n cartoview_dashboard -av 1.4.1
+  $manage install_app -n cartoview_basic_viewer -av 1.8.1
+
 $manage rebuild_index
 #if [[ $DEV == True ]]; then
 #  $manage importservice http://data-test.boundlessgeo.io/geoserver/wms bcs-hosted-data WMS I
