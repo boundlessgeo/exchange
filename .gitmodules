@@ -1,6 +1,6 @@
 [submodule "vendor/geonode"]
 	path = vendor/geonode
-	url = https://github.com/geonode/geonode.git
+	url = https://github.com/cartologic/geonode.git
 	branch = 2.7.x
 [submodule "vendor/maploom"]
 	path = vendor/maploom
