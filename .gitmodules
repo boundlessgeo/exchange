@@ -24,3 +24,10 @@
 [submodule "vendor/exchange-mobile-extension"]
 	path = vendor/exchange-mobile-extension
 	url = git@github.com:boundlessgeo/exchange-mobile-extension.git
+[submodule "vendor/django-ssl-pki"]
+	path = vendor/django-ssl-pki
+	url = git@github.com:boundlessgeo/django-ssl-pki.git
+[submodule "vendor/arcrest"]
+	path = vendor/arcrest
+	url = git@github.com:boundlessgeo/ArcREST.git
+	branch = ps/pki

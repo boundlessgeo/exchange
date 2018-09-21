@@ -1,0 +1,82 @@
+[
+  {
+    "fields": {
+      "opacity": 1.0,
+      "map": 89,
+      "group": null,
+      "name": "usa_population_density_block-groups:1",
+      "format": null,
+      "visibility": true,
+      "source_params": "{\"isVirtualService\": false, \"remote\": true, \"use_proxy\": true, \"ptype\": \"gxp_arcrestsource\", \"name\": \"usa_population_density\"}",
+      "layer_params": "{\"title\": \"Block Groups\", \"srs\": \"EPSG:900913\", \"bbox\": [-2208604343917.4595, -19550858.66862506, -829646405478.6083, null], \"queryable\": true}",
+      "ows_url": "https://services.arcgisonline.com/arcgis/rest/services/Demographics/USA_Population_Density/MapServer/",
+      "stack_order": 1,
+      "styles": null,
+      "fixed": false,
+      "local": false,
+      "transparent": false
+    },
+    "model": "maps.maplayer",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "opacity": 1.0,
+      "map": 89,
+      "group": null,
+      "name": "bcs_data:ne_50m_admin_0_countries",
+      "format": null,
+      "visibility": true,
+      "source_params": "{\"isVirtualService\": false, \"remote\": true, \"use_proxy\": true, \"ptype\": \"gxp_wmscsource\", \"name\": \"mapproxymapproxy-wms-proxy\"}",
+      "layer_params": "{\"title\": \"Natural Earth 50m Admin 0 Countries\", \"srs\": \"EPSG:900913\", \"bbox\": [-2208604343917.4595, -19550858.66862506, -829646405478.6083, null], \"queryable\": true}",
+      "ows_url": "https://mapproxy.boundless.test:8344/service",
+      "stack_order": 2,
+      "styles": null,
+      "fixed": false,
+      "local": false,
+      "transparent": false
+    },
+    "model": "maps.maplayer",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "opacity": 1.0,
+      "map": 89,
+      "group": null,
+      "name": "bcs_data:airports",
+      "format": null,
+      "visibility": true,
+      "source_params": "{\"isVirtualService\": false, \"remote\": true, \"use_proxy\": false, \"ptype\": \"gxp_wmscsource\", \"name\": \"data-test\"}",
+      "layer_params": "{\"title\": \"Airports\", \"selected\": true, \"srs\": \"EPSG:900913\", \"bbox\": [-2208604343917.4595, -19550858.66862506, -829646405478.6083, null], \"queryable\": true}",
+      "ows_url": "https://data-test.boundlessgeo.io/geoserver/wms",
+      "stack_order": 3,
+      "styles": null,
+      "fixed": false,
+      "local": false,
+      "transparent": false
+    },
+    "model": "maps.maplayer",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "opacity": 1.0,
+      "map": 89,
+      "group": null,
+      "name": "bcs_data:airports",
+      "format": null,
+      "visibility": true,
+      "source_params": "{\"isVirtualService\": false, \"remote\": true, \"use_proxy\": false, \"ptype\": \"gxp_wmscsource\", \"name\": \"data-test\"}",
+      "layer_params": "{\"title\": \"Airports\", \"selected\": true, \"srs\": \"EPSG:900913\", \"bbox\": [-2208604343917.4595, -19550858.66862506, -829646405478.6083, null], \"queryable\": true}",
+      "ows_url": "//data-test.boundlessgeo.io/geoserver/wms",
+      "stack_order": 4,
+      "styles": null,
+      "fixed": false,
+      "local": false,
+      "transparent": false
+    },
+    "model": "maps.maplayer",
+    "pk": 4
+  }
+]

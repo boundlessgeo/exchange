@@ -6,6 +6,8 @@ from . import ExchangeTest
 from exchange.tests.osgeo_importer_upload_test import UploaderMixin
 import json
 import logging
+import mock
+from django.test import RequestFactory
 logger = logging.getLogger(__name__)
 
 
@@ -79,6 +81,60 @@ class AutocompleteEmptyPageTest(ViewTestCase):
         self.doit()
 
 
+# TODO: Do we want to test these views here in Exchange?
+class LayerDetailTest(ViewTestCase):
+
+    def setUp(self):
+        super(LayerDetailTest, self).setUp()
+        from geonode.layers.utils import file_upload
+        self.layer = file_upload(
+            os.path.join(TESTDIR, 'test_point.shp'),
+            name='testlayer'
+        )
+        self.url = '/layers/geonode:testlayer'
+        self.service_name = 'data-test'
+        # TODO: Ingest from a remote service rather than file upload here
+
+    def test(self):
+        self.doit()
+
+    def mock_render_to_response(template, request_context):
+        # request_context will be a request_context object with our context
+        # analyze the viewer for use_proxy, so sneak it into our response
+        from django.shortcuts import render_to_response
+        response = render_to_response(template, request_context)
+        response.viewer = json.loads(request_context.get('viewer'))
+        return response
+
+    @pytest.mark.skip(reason='default data-test service no longer exists')
+    @mock.patch("geonode.layers.views.render_to_response",
+                side_effect=mock_render_to_response)
+    def test_use_proxy_exists(self, mock_render_to_response):
+        # mock up a layer to return
+        mock_layer = self.layer
+        mock_layer.storeType = 'remoteStore'
+        from geonode.services.models import Service
+        from django.shortcuts import get_object_or_404
+        mock_layer.service = get_object_or_404(Service, name=self.service_name)
+
+        with mock.patch("geonode.layers.views._resolve_layer") \
+                as mock_resolve_layer:
+            mock_resolve_layer.return_value = mock_layer
+            # layer detail view get
+            response = self.client.get(self.url)
+
+        found_service = False
+        sources = response.viewer['sources']
+        for source in sources:
+            if ('name' in sources[source] and
+                    self.service_name == sources[source]['name']):
+                found_service = True
+                self.assertIn('use_proxy', sources[source])
+                self.assertFalse(sources[source]['use_proxy'])
+                break
+        self.assertTrue(found_service)
+
+
 class LayerMetadataDetailTest(ViewTestCase):
 
     def setUp(self):
@@ -133,6 +189,54 @@ class MapMetadataDetailTest(ViewTestCase):
 
     def test(self):
         self.doit()
+
+
+class NewMapConfigTest(ViewTestCase):
+    def setUp(self):
+        super(NewMapConfigTest, self).setUp()
+        from geonode.layers.utils import file_upload
+        self.layer = file_upload(
+            os.path.join(TESTDIR, 'test_point.shp'),
+            name='testlayer'
+        )
+        self.url = '/layers/geonode:testlayer'
+        self.service_name = 'data-test'
+        # TODO: Ingest from a remote service rather than file upload here
+
+    def test(self):
+        self.doit()
+
+    @pytest.mark.skip(reason='default data-test service no longer exists')
+    def test_use_proxy_exists(self):
+        # mock up a layer to return
+        mock_layer = self.layer
+        mock_layer.storeType = 'remoteStore'
+        from geonode.services.models import Service
+        from django.shortcuts import get_object_or_404
+        mock_layer.service = get_object_or_404(Service, name=self.service_name)
+
+        with mock.patch("geonode.maps.views._resolve_layer") \
+                as mock_resolve_layer:
+            mock_resolve_layer.return_value = mock_layer
+            # mock a request to send
+            layer_name = 'geonode:testlayer'
+            request = RequestFactory().get(
+                self.url,
+                data={'layer': [layer_name]}
+            )
+            request.user = self.admin_user
+            request.session = []
+            from geonode.maps.views import new_map_config
+            response = json.loads(new_map_config(request))
+
+        found_service = False
+        for source in response['sources']:
+            if ('name' in response['sources'][source] and
+                    self.service_name == response['sources'][source]['name']):
+                found_service = True
+                self.assertIn('use_proxy', response['sources'][source])
+                self.assertFalse(response['sources'][source]['use_proxy'])
+        self.assertTrue(found_service)
 
 
 class GeoServerReverseProxyTest(ViewTestCase):

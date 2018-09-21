@@ -57,6 +57,10 @@ urlpatterns = patterns(
     url(r'^logout/', views.logout, name='exchange_logout'),
 )
 
+if 'ssl_pki' in settings.INSTALLED_APPS:
+    from ssl_pki.urls import urlpatterns as pki_urls
+    urlpatterns += pki_urls
+
 if settings.ENABLE_SOCIAL_LOGIN is True:
     urlpatterns += [
         url('', include('social_django.urls', namespace='social'))
@@ -89,6 +93,9 @@ if 'nearsight' in settings.INSTALLED_APPS:
 
 # Use our Elasticsearch implementation for search
 urlpatterns += [url('', include(search_urls)), ]
+
+if 'geonode_anywhere' in settings.INSTALLED_APPS:
+    urlpatterns += [url(r"^anywhere/", include("geonode_anywhere.urls")), ]
 
 if 'worm' in settings.INSTALLED_APPS:
     urlpatterns += [url(r"^services/", include("worm.urls")), ]

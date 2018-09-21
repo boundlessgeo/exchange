@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #########################################################################
 #
-# Copyright (C) 2016 Boundless Spatial
+# Copyright (C) 2018 Boundless Spatial
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,17 +18,4 @@
 #
 #########################################################################
 
-import os
-from celery import Celery
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'exchange.settings')
-os.environ.setdefault('VIA_CELERY', '1')
-
-from django.conf import settings  # noqa
-
-app = Celery(settings.CELERY_DEFAULT_EXCHANGE)
-
-# Using a string here means the worker will not have to
-# pickle the object when using Windows.
-app.config_from_object('django.conf:settings')
-app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
+default_app_config = 'exchange.sslpki.apps.SslPkiAppSupportConfig'

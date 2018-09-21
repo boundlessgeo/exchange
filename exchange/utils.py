@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #########################################################################
 #
-# Copyright (C) 2016 Boundless Spatial
+# Copyright (C) 2018 Boundless Spatial
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,17 +18,23 @@
 #
 #########################################################################
 
-import os
-from celery import Celery
+from geonode.utils import get_bearer_token
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'exchange.settings')
-os.environ.setdefault('VIA_CELERY', '1')
 
-from django.conf import settings  # noqa
-
-app = Celery(settings.CELERY_DEFAULT_EXCHANGE)
-
-# Using a string here means the worker will not have to
-# pickle the object when using Windows.
-app.config_from_object('django.conf:settings')
-app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
+def append_access_token(url, **kwargs):
+    """
+    :param url: URL
+    :type url: str
+    :param kwargs: Args for get_bearer_token
+    :type kwargs: dict
+    :return: Updated URL
+    """
+    access_token = get_bearer_token(**kwargs)
+    # no query params yet
+    if url.find('?') is -1:
+        url = url + '?access_token=' + access_token
+    else:
+        # TODO: if it already has an access_token, do we want to overwrite it?
+        if url.find('access_token') is -1:
+            url = url + '&access_token=' + access_token
+    return url
