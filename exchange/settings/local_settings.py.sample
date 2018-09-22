@@ -1,12 +1,16 @@
-from .default import *
 import os
+
 import dj_database_url
+
+from .default import (GEOGIG_DATASTORE_DIR, INSTALLED_APPS, GEOSERVER_DATA_DIR,
+                      str2bool)
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'exchange',
-        'USER': 'exchange',
-        'PASSWORD': 'password',
+        'USER': 'user',
+        'PASSWORD': 'pass',
         'HOST': 'localhost',
         'PORT': '5432',
         'CONN_TOUT': 900,
@@ -15,35 +19,97 @@ DATABASES = {
     'datastore': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'exchange_data',
-        'USER': 'exchange',
-        'PASSWORD': 'password',
+        'USER': 'user',
+        'PASSWORD': 'pass',
         'HOST': 'localhost',
         'PORT': '5432',
         'CONN_TOUT': 900,
     }
 }
-GEOSERVER_URL = os.getenv('GEOSERVER_URL', 'http://localhost:8080/geoserver/')
-GEOSERVER_LOCAL_URL = os.getenv('GEOSERVER_LOCAL_URL', GEOSERVER_URL)
+SITEURL = "http://localhost/"
 POSTGIS_URL = os.getenv(
-    'POSTGIS_URL', 'postgis://exchange:password@localhost:5432/exchange_data')
+    'POSTGIS_URL', 'postgis://user:pass@localhost:5432/exchange_data')
 DATABASES['exchange_imports'] = dj_database_url.parse(
     POSTGIS_URL, conn_max_age=600)
 DATABASES['exchange_imports'][
     'ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
-# celery settings
-CELERY_BROKER_URL = os.getenv('BROKER_URL',
-                              'amqp://guest:guest@localhost:5672/')
-CELERY_TASK_ALWAYS_EAGER = True
-CELERY_ALWAYS_EAGER = CELERY_TASK_ALWAYS_EAGER
-NOTIFICATION_QUEUE_ALL = not CELERY_ALWAYS_EAGER
-NOTIFICATION_LOCK_LOCATION = LOCAL_ROOT
-SKIP_CELERY_TASK = False
-CELERY_DEFAULT_EXCHANGE = 'exchange'
-CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
-CELERY_RESULT_BACKEND = 'rpc' + CELERY_BROKER_URL[4:]
-CELERY_RESULT_PERSISTENT = True
-CELERYD_PREFETCH_MULTIPLIER = 25
-CELERY_TASK_RESULT_EXPIRES = 18000  # 5 hours.
-CELERY_ENABLE_UTC = True
-CELERY_TIMEZONE = TIME_ZONE
+# geoserver settings
+GEOSERVER_URL = os.getenv('GEOSERVER_URL', 'http://localhost/geoserver/')
+GEOSERVER_LOCAL_URL = os.getenv('GEOSERVER_LOCAL_URL', GEOSERVER_URL)
+GEOSERVER_USER = os.getenv('GEOSERVER_USER', 'admin')
+GEOSERVER_PASSWORD = os.getenv('GEOSERVER_PASSWORD', 'geoserver')
+GEOSERVER_LOG = os.getenv('GEOSERVER_LOG',
+                          '/opt/geonode/geoserver_data/logs/geoserver.log')
+PG_DATASTORE = os.getenv('PG_DATASTORE', 'datastore')
+PG_GEOGIG = str2bool(os.getenv('PG_GEOGIG', 'True'))
+
+OGC_SERVER = {
+    'default': {
+        'BACKEND': 'geonode.geoserver',
+        'LOCATION': GEOSERVER_LOCAL_URL,
+        'LOGIN_ENDPOINT': 'j_spring_oauth2_geonode_login',
+        'LOGOUT_ENDPOINT': 'j_spring_oauth2_geonode_logout',
+        'PUBLIC_LOCATION': GEOSERVER_URL,
+        'USER': GEOSERVER_USER,
+        'PASSWORD': GEOSERVER_PASSWORD,
+        'MAPFISH_PRINT_ENABLED': True,
+        'PRINT_NG_ENABLED': True,
+        'GEONODE_SECURITY_ENABLED': True,
+        'GEOGIG_ENABLED': True,
+        'WMST_ENABLED': False,
+        'BACKEND_WRITE_ENABLED': True,
+        'WPS_ENABLED': True,
+        'LOG_FILE': GEOSERVER_LOG,
+        'GEOSERVER_DATA_DIR': GEOSERVER_DATA_DIR,
+        'GEOGIG_DATASTORE_DIR': GEOGIG_DATASTORE_DIR,
+        'DATASTORE': PG_DATASTORE,
+        'PG_GEOGIG': PG_GEOGIG,
+        'TIMEOUT': 10
+    }
+}
+
+GEOSERVER_BASE_URL = OGC_SERVER['default']['PUBLIC_LOCATION'] + 'wms'
+GEOGIG_DATASTORE_NAME = 'geogig-repo'
+
+GEOFENCE = {
+    'url':
+    os.getenv('GEOFENCE_URL', "{}/geofence".format(
+        GEOSERVER_LOCAL_URL.strip('/'))),
+    'username':
+    os.getenv('GEOFENCE_USERNAME', GEOSERVER_USER),
+    'password':
+    os.getenv('GEOFENCE_PASSWORD', GEOSERVER_PASSWORD)
+}
+X_FRAME_OPTIONS = 'ALLOWALL'
+
+# If django-osgeo-importer is enabled, give it the settings it needs...
+if 'osgeo_importer' in INSTALLED_APPS:
+    import pyproj
+    # Point django-osgeo-importer, if enabled, to the Exchange database
+    OSGEO_DATASTORE = 'datastore'
+    # Tell it to use the GeoNode compatible mode
+    OSGEO_IMPORTER_GEONODE_ENABLED = True
+    OSGEO_IMPORTER_UPLOAD_RASTER_TO_GEOSERVER = str2bool(
+        os.getenv('OSGEO_IMPORTER_UPLOAD_RASTER_TO_GEOSERVER', 'True'))
+    # override GeoNode setting so importer UI can see when tasks finish
+    CELERY_IGNORE_RESULT = True
+    IMPORT_HANDLERS = [
+        # If GeoServer handlers are enabled, you must have an instance of
+        # geoserver running.
+        # Warning: the order of the handlers here matters.
+        'osgeo_importer.handlers.FieldConverterHandler',
+        'osgeo_importer.handlers.geoserver.GeoserverPublishHandler',
+        'osgeo_importer.handlers.geoserver.GeoserverPublishCoverageHandler',
+        'osgeo_importer.handlers.geoserver.GeoServerTimeHandler',
+        'osgeo_importer.handlers.geoserver.GeoWebCacheHandler',
+        'osgeo_importer.handlers.geoserver.GeoServerBoundsHandler',
+        'osgeo_importer.handlers.geoserver.GenericSLDHandler',
+        'osgeo_importer.handlers.geonode.GeoNodePublishHandler',
+        'osgeo_importer.handlers.geoserver.GeoServerStyleHandler',
+        'osgeo_importer.handlers.geonode.GeoNodeMetadataHandler',
+        'exchange.importer.geonode_timeextent_handler.GeoNodeTimeExtentHandler',  # noqa
+        'exchange.importer.geonode_postimport_handler.GeoNodePostImportHandler',  # noqa
+    ]
+    PROJECTION_DIRECTORY = os.path.join(
+        os.path.dirname(pyproj.__file__), 'data/')
