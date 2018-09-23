@@ -21,10 +21,10 @@
 import copy
 import os
 from ast import literal_eval as le
-from kombu import Queue, Exchange
-from tzlocal import get_localzone
 
 import dj_database_url
+from kombu import Exchange, Queue
+from tzlocal import get_localzone
 
 from geonode.settings import *  # noqa
 from geonode.settings import (DATABASES, INSTALLED_APPS, MIDDLEWARE_CLASSES,
@@ -697,7 +697,7 @@ CELERY_TASK_DEFAULT_QUEUE = "default"
 CELERY_TASK_DEFAULT_EXCHANGE = "default"
 CELERY_TASK_DEFAULT_EXCHANGE_TYPE = "direct"
 CELERY_TASK_DEFAULT_ROUTING_KEY = "default"
-ASYNC_SIGNALS = le(os.environ.get('ASYNC_SIGNALS', 'True'))
+ASYNC_SIGNALS = le(os.environ.get('ASYNC_SIGNALS', 'False'))
 RABBITMQ_SIGNALS_BROKER_URL = 'amqp://localhost:5672'
 REDIS_SIGNALS_BROKER_URL = 'redis://localhost:6379/0'
 LOCAL_SIGNALS_BROKER_URL = 'memory://'
