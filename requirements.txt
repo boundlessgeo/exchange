@@ -9,7 +9,7 @@ git+https://github.com/venicegeo/nearsight@c30115bbe796ffca4e6e983a059127990d33b
 django-jsonfield==1.0.1
 django-jsonfield-compat==0.4.4
 numpy==1.13.3
-django-geonode-client==1.0.9
+https://github.com/hishamkaram/geonode-client/raw/master/py_build/django_geonode_client-1.0.10-py2-none-any.whl
 dj-database-url==0.4.2
 #celery[redis]==3.1.18
 django-storages==1.6.5

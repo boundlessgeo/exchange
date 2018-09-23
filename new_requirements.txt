@@ -19,7 +19,7 @@ billiard==3.5.0.3
 boto==2.48.0
 boto3==1.9.4
 botocore==1.12.4
--e git+git@github.com:cartologic/cartoview.git@3635ba6e9e8c43102e711a80a45ba52d8c2515d0#egg=cartoview&subdirectory=../../../vendor/cartoview
+-e git+git@github.com:cartologic/cartoview.git@bdb29161e580c7f039c8f3549c33e31c6b841135#egg=cartoview&subdirectory=../../../vendor/cartoview
 celery==4.1.0
 certifi==2018.1.18
 cffi==1.11.5
@@ -69,7 +69,7 @@ django-forms-bootstrap==3.1.0
 django-friendly-tag-loader==1.2.1
 django-geoexplorer==4.0.41
 django-geoexplorer-worldmap==4.0.47
-django-geonode-client==1.0.9
+https://github.com/hishamkaram/geonode-client/raw/master/py_build/django_geonode_client-1.0.10-py2-none-any.whl
 django-guardian==1.4.9
 django-haystack==2.8.1
 django-import-export==1.0.0
@@ -85,7 +85,6 @@ django-mptt==0.9.0
 django-multi-email-field==0.5.1
 django-nose==1.4.5
 django-oauth-toolkit==0.12.0
--e git+https://github.com/cartologic/django-osgeo-importer.git@a54fdde29c9126b1115eab95f9447942732f8d28#egg=django_osgeo_importer
 django-polymorphic==1.3.1
 django-reversion==2.0.13
 django-simple-history==1.9.0
@@ -114,12 +113,11 @@ GDAL==2.3.1
 geographiclib==1.49
 geoip2==2.8.0
 geolinks==0.2.0
--e git+https://github.com/cartologic/geonode.git@00471c2bd8d1ed5e174fdc7440a03d25c59dacd6#egg=GeoNode
 geonode-agon-ratings==0.3.8
 geonode-announcements==1.0.13
 geonode-avatar==2.1.8
 geonode-dialogos==0.9
--e git+https://github.com/boundlessgeo/geonode-elasticsearch@c73225a4545db92d66cfb8cbf53402b6e8e86edd#egg=geonode_elasticsearch_app&subdirectory=../../../vendor/geonode-elasticsearch
+-e git+https://github.com/boundlessgeo/geonode-elasticsearch@7723043207f083887efa6c0551ecceafe937a195#egg=geonode_elasticsearch_app&subdirectory=../../../vendor/geonode-elasticsearch
 geonode-user-messages==0.1.14
 geopy==1.14.0
 gisdata==0.5.4
