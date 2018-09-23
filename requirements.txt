@@ -3,6 +3,7 @@
 -e ./vendor/gsconfig
 -e ./vendor/django-osgeo-importer
 -e ./vendor/geonode-elasticsearch
+-e ./vendor/cartoview
 git+https://github.com/MapStory/composer.git@93300659c4f1a02c4eb2f17713d38779c47cc4e1#composer
 git+https://github.com/boundlessgeo/sphinx@ad78538babd53a7a860fe297fffaed7abc11d0f5#egg=Sphinx
 git+https://github.com/venicegeo/nearsight@c30115bbe796ffca4e6e983a059127990d33b6a8#egg=nearsight
