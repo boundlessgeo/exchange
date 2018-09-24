@@ -121,7 +121,7 @@ def get_geonode_version():
     if not geonode_version['version'].strip():
         version = get_version_geonode().split('.')
         pkg_version = '{0}.{1}.{2}'.format(version[0], version[1], version[2])
-        commit_hash = version[3]
+        commit_hash = version[3] if len(version) >= 4 else None
         return {'version': pkg_version, 'commit': commit_hash}
     else:
         return geonode_version
