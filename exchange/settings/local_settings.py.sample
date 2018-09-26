@@ -3,7 +3,7 @@ import os
 import dj_database_url
 
 from .default import (GEOGIG_DATASTORE_DIR, INSTALLED_APPS, GEOSERVER_DATA_DIR,
-                      str2bool)
+                      str2bool, GEOFENCE_SECURITY_ENABLED)
 
 DATABASES = {
     'default': {
@@ -56,6 +56,7 @@ OGC_SERVER = {
         'MAPFISH_PRINT_ENABLED': True,
         'PRINT_NG_ENABLED': True,
         'GEONODE_SECURITY_ENABLED': True,
+        'GEOFENCE_SECURITY_ENABLED': GEOFENCE_SECURITY_ENABLED,
         'GEOGIG_ENABLED': True,
         'WMST_ENABLED': False,
         'BACKEND_WRITE_ENABLED': True,

@@ -144,12 +144,14 @@ STATICFILES_DIRS = [
 # template settings
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'BACKEND':
+        'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-                    os.path.join(APP_ROOT, 'templates'),
-                    os.path.join(APP_ROOT, 'themes', 'templates')
-                ] + TEMPLATES[0]['DIRS'],
-        'APP_DIRS': True,
+            os.path.join(APP_ROOT, 'templates'),
+            os.path.join(APP_ROOT, 'themes', 'templates')
+        ] + TEMPLATES[0]['DIRS'],
+        'APP_DIRS':
+        True,
         'OPTIONS': {
             'context_processors': [
                 'django.contrib.auth.context_processors.auth',
@@ -275,6 +277,7 @@ OGC_SERVER = {
         'MAPFISH_PRINT_ENABLED': True,
         'PRINT_NG_ENABLED': True,
         'GEONODE_SECURITY_ENABLED': True,
+        'GEOFENCE_SECURITY_ENABLED': GEOFENCE_SECURITY_ENABLED,
         'GEOGIG_ENABLED': True,
         'WMST_ENABLED': False,
         'BACKEND_WRITE_ENABLED': True,
