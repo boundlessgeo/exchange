@@ -52,11 +52,11 @@
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav toolbar">
               {% block tabs %}
+              {% if user.is_authenticated %}
               {% url 'app_manager_base_url' as apps_url %}
               {% if apps_url %}
               <li><a href="{{apps_url}}">{% trans "Apps" %}</a></li> 
               {% endif %}
-              {% if user.is_authenticated %}
               <li id="nav_layers">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   {% trans "Data" %}
