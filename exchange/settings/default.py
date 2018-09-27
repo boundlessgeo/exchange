@@ -19,6 +19,7 @@
 #########################################################################
 
 import os
+import sys
 import copy
 import dj_database_url
 from ast import literal_eval as le
@@ -202,7 +203,7 @@ INSTALLED_APPS = (
     'solo',
     'composer',
     'social_django',
-    'exchange.services'
+    'exchange.remoteservices'
 ) + ADDITIONAL_APPS + INSTALLED_APPS
 
 MIGRATION_MODULES = {

@@ -21,7 +21,7 @@
 from django.conf.urls import patterns, url
 
 urlpatterns = patterns(
-    'exchange.services.views',
+    'exchange.remoteservices.views',
     url(r'^register/$', 'register_service', name="register_service"),
     url(r'^(?P<service_id>\d+)/rescan$', 'rescan_service',
         name='rescan_service'),

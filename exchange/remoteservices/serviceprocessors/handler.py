@@ -26,8 +26,10 @@ from django.utils.datastructures import OrderedDict
 from exchange.utils import get_bearer_token
 
 from geonode.services import enumerations
-from exchange.services.wms import ExchangeWmsServiceHandler
-from exchange.services.mapserver import ExchangeMapserverServiceHandler
+from exchange.remoteservices.serviceprocessors.wms \
+    import ExchangeWmsServiceHandler
+from exchange.remoteservices.serviceprocessors.mapserver \
+    import ExchangeMapserverServiceHandler
 
 try:
     if 'ssl_pki' not in settings.INSTALLED_APPS:

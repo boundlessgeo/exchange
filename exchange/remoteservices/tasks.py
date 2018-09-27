@@ -28,7 +28,8 @@ from django.db import transaction
 
 from geonode.services import enumerations
 from geonode.services import models
-from exchange.serviceprocessors.handler import get_service_handler
+from exchange.remoteservices.serviceprocessors.handler \
+    import get_service_handler
 
 logger = logging.getLogger(__name__)
 

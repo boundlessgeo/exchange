@@ -19,17 +19,18 @@
 #########################################################################
 
 from django.contrib.auth.decorators import login_required
-from exchange.services.forms import ExchangeCreateServiceForm
+from exchange.remoteservices.forms import ExchangeCreateServiceForm
 from geonode.services import enumerations
 from geonode.services.models import Service, HarvestJob
-from exchange.services import tasks
+from exchange.remoteservices import tasks
 import logging
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from exchange.utils import get_bearer_token
-from exchange.serviceprocessors.handler import get_service_handler
+from exchange.remoteservices.serviceprocessors.handler \
+    import get_service_handler
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator

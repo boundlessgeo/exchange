@@ -21,8 +21,9 @@
 from django.core.management.base import BaseCommand
 from optparse import make_option
 from geonode.services.models import Service
-from exchange.services.forms import ExchangeCreateServiceForm
-from exchange.services.serviceprocessors import get_service_handler
+from exchange.remoteservices.forms import ExchangeCreateServiceForm
+from exchange.remoteservices.serviceprocessors.handler \
+    import get_service_handler
 
 from geonode.people.utils import get_valid_user
 import sys
