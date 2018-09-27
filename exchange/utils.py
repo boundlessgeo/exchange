@@ -18,7 +18,40 @@
 #
 #########################################################################
 
-from geonode.utils import get_bearer_token
+from oauthlib.common import generate_token
+from oauth2_provider.models import AccessToken, get_application_model
+from geonode.people.utils import get_default_user, get_valid_user
+from geonode.people.models import Profile
+import datetime
+
+
+def get_bearer_token(app_name='GeoServer', valid_time=30,
+                     user_name=None, request=None):
+    '''
+    Create a bearer token for a given application
+    valid for the time specified in minutes
+    '''
+    if request and 'access_token' in request.session:
+        return request.session['access_token']
+
+    user = get_default_user()
+    if user_name:
+        try:
+            user = get_valid_user(user_name)
+        except Profile.DoesNotExist:
+            pass
+
+    Application = get_application_model()
+    app = Application.objects.get(name=app_name)
+    token = generate_token()
+    expires = datetime.datetime.now() + datetime.timedelta(minutes=valid_time)
+    AccessToken.objects.get_or_create(
+        user=user,
+        application=app,
+        expires=expires,
+        token=token
+    )
+    return token
 
 
 def append_access_token(url, **kwargs):

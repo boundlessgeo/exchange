@@ -55,6 +55,15 @@ urlpatterns = patterns(
     url(r'^about/', views.about_page, name='about'),
     url(r'^capabilities/', views.capabilities, name='capabilities'),
     url(r'^logout/', views.logout, name='exchange_logout'),
+
+    url(r'^layers/(?P<layername>[^/]*)$', views.layer_detail, name="layer_detail"),
+
+    url(r'^maps/new$', views.new_map, name="new_map"),
+    url(r'^maps/new/data$', views.new_map_json, name='new_map_json'),
+
+    url((r'^proxy/', 'proxy'), views.proxy),
+
+    (r'^services/', include('exchange.services.urls')),
 )
 
 if 'ssl_pki' in settings.INSTALLED_APPS:

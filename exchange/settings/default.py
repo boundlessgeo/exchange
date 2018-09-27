@@ -202,6 +202,7 @@ INSTALLED_APPS = (
     'solo',
     'composer',
     'social_django',
+    'exchange.services'
 ) + ADDITIONAL_APPS + INSTALLED_APPS
 
 MIGRATION_MODULES = {
