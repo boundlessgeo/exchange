@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #########################################################################
 #
-# Copyright (C) 2017 OSGeo
+# Copyright (C) 2017 OSGeo, (C) 2018 Boundless Spatial
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@ from geonode.services.views import _gen_harvestable_ids
 
 logger = logging.getLogger("geonode.core.layers.views")
 
+
 @login_required
 def register_service(request):
     service_register_template = "services/service_register.html"
@@ -49,7 +50,10 @@ def register_service(request):
             service.full_clean()
             service.save()
             service.keywords.add(*service_handler.get_keywords())
-            service.set_permissions({'users': {''.join(request.user.username): ['services.change_service', 'services.delete_service']}})
+            service.set_permissions({'users': {
+                ''.join(request.user.username):
+                    ['services.change_service', 'services.delete_service']
+            }})
             if service_handler.indexing_method == enumerations.CASCADED:
                 service_handler.create_cascaded_store()
             request.session[service_handler.url] = service_handler
@@ -107,8 +111,8 @@ def harvest_resources(request, service_id):
     if request.method == "GET":
         already_harvested = HarvestJob.objects.values_list(
             "resource_id", flat=True).filter(service=service)
-        not_yet_harvested = [
-            r for r in available_resources if str(r.id) not in already_harvested]
+        not_yet_harvested = [r for r in available_resources
+                             if str(r.id) not in already_harvested]
         not_yet_harvested.sort(key=lambda resource: resource.id)
         paginator = Paginator(
             not_yet_harvested, getattr(settings, "CLIENT_RESULTS_LIMIT", 100))
@@ -143,8 +147,10 @@ def harvest_resources(request, service_id):
                 resources_to_harvest.append(id)
                 tasks.harvest_resource.apply_async(
                     args=[harvest_job.id],
-                    kwargs={'headers': {'Authorization': "Bearer {0}".format(
-                         get_bearer_token(valid_time=30, request=request))}},
+                    kwargs={'headers': {
+                        'Authorization': "Bearer {0}".format(
+                            get_bearer_token(valid_time=30,
+                                             request=request))}},
                 )
             else:
                 logger.warning(

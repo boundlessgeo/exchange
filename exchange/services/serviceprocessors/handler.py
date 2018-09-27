@@ -41,7 +41,8 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
-def get_service_handler(base_url, service_type=enumerations.AUTO, headers=None):
+def get_service_handler(base_url, service_type=enumerations.AUTO,
+                        headers=None):
     """Return the appropriate remote service handler for the input URL.
 
     If the service type is not explicitly passed in it will be guessed from
@@ -52,10 +53,11 @@ def get_service_handler(base_url, service_type=enumerations.AUTO, headers=None):
         enumerations.WMS: {"OWS": True, "handler": ExchangeWmsServiceHandler},
         # enumerations.WFS: {"OWS": True, "handler": ServiceHandlerBase},
         # enumerations.TMS: {"OWS": False, "handler": ServiceHandlerBase},
-        enumerations.REST: {"OWS": False, "handler": ExchangeMapserverServiceHandler},
+        enumerations.REST: {"OWS": False,
+                            "handler": ExchangeMapserverServiceHandler},
         # enumerations.CSW: {"OWS": False, "handler": ServiceHandlerBase},
-        # enumerations.HGL: {"OWS": True, "handler": ServiceHandlerBase},  # TODO: verify this
-        # enumerations.OGP: {"OWS": False, "handler": ServiceHandlerBase},  # TODO: verify this
+        # enumerations.HGL: {"OWS": True, "handler": ServiceHandlerBase},
+        # enumerations.OGP: {"OWS": False, "handler": ServiceHandlerBase},
     })
     if service_type in (enumerations.AUTO, enumerations.OWS):
         if service_type == enumerations.AUTO:
@@ -77,9 +79,9 @@ def get_service_handler(base_url, service_type=enumerations.AUTO, headers=None):
     else:
         handler = handlers.get(service_type, {}).get("handler")
 
-        if (base_url.lower().startswith('https')
-                and (callable(has_ssl_config)
-                     and has_ssl_config(base_url, via_query=True))):
+        if (base_url.lower().startswith('https') and
+                (callable(has_ssl_config) and
+                 has_ssl_config(base_url, via_query=True))):
             # has_ssl_config needs to query db, as call may be from task
             # worker, whose hostnameport_pattern_cache may be out of sync
             base_url = pki_route(base_url)

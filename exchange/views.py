@@ -38,6 +38,7 @@ from geonode.maps.models import Map, MapLayer, MapSnapshot
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import F
 
 if 'geonode.geoserver' in settings.INSTALLED_APPS:
     from geonode.geoserver.helpers import ogc_server_settings
@@ -273,8 +274,8 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         config['bbox'] = [float(coord) for coord in bbox]
         service = layer.service
         source_url = service.base_url
-        use_proxy = (callable(uses_proxy_route)
-                     and uses_proxy_route(service.base_url))
+        use_proxy = (callable(uses_proxy_route) and
+                     uses_proxy_route(service.base_url))
         components = urlsplit(service.base_url)
         query_params = None
         if components.query:
@@ -421,11 +422,12 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     links_view = [item for idx, item in enumerate(links) if
                   item.url and 'wms' in item.url or 'gwc' in item.url]
     links_download = [item for idx, item in enumerate(links) if
-                      item.url and 'wms' not in item.url and 'gwc' not in item.url]
+                      item.url and 'wms' not in item.url and
+                      'gwc' not in item.url]
     for item in links_view:
         if item.url and access_token:
-            item.url = "%s&access_token=%s&time=%s" % (
-            item.url, access_token, "0/9999")
+            item.url = "%s&access_token=%s&time=%s" % \
+                       (item.url, access_token, "0/9999")
     for item in links_download:
         if item.url and access_token:
             item.url = "%s&access_token=%s" % (item.url, access_token)
@@ -563,44 +565,51 @@ def new_map_config(request):
 
                 if layer.storeType == "remoteStore":
                     service = layer.service
-                    # Probably not a good idea to send the access token to every remote service.
-                    # This should never match, so no access token should be sent to remote services.
+                    # Probably not a good idea to send the access token
+                    # to every remote service. This should never match,
+                    # so no access token should be sent to remote services.
                     ogc_server_url = urlsplit(
                         ogc_server_settings.PUBLIC_LOCATION).netloc
                     service_url = urlsplit(service.base_url).netloc
 
-                    reprojected_bbox = bbox_to_projection(bbox,
-                                                          source_srid=layer.srid,
-                                                          target_srid=3857)
+                    reprojected_bbox = bbox_to_projection(
+                        bbox,
+                        source_srid=layer.srid,
+                        target_srid=3857
+                    )
                     bbox = reprojected_bbox[:4]
                     config['bbox'] = [float(coord) for coord in bbox]
 
-                    if access_token and ogc_server_url == service_url and 'access_token' not in service.base_url:
-                        url = service.base_url + '?access_token=' + access_token
+                    if access_token and ogc_server_url == service_url and \
+                            'access_token' not in service.base_url:
+                        url = service.base_url + '?access_token={}'.format(
+                            access_token)
                     else:
                         url = service.base_url
-                    use_proxy = (callable(uses_proxy_route)
-                                 and uses_proxy_route(service.base_url))
+                    use_proxy = (callable(uses_proxy_route) and
+                                 uses_proxy_route(service.base_url))
                     if layer.alternate is not None:
                         config["layerid"] = layer.alternate
-                    maplayer = MapLayer(map=map_obj,
-                                        name=layer.typename,
-                                        ows_url=layer.ows_url,
-                                        layer_params=json.dumps(config,
-                                                                cls=DjangoJSONEncoder),
-                                        visibility=True,
-                                        source_params=json.dumps({
-                                            "ptype": service.ptype,
-                                            "remote": True,
-                                            "url": url,
-                                            "name": service.name,
-                                            "use_proxy": use_proxy}))
+                    maplayer = MapLayer(
+                        map=map_obj,
+                        name=layer.typename,
+                        ows_url=layer.ows_url,
+                        layer_params=json.dumps(config, cls=DjangoJSONEncoder),
+                        visibility=True,
+                        source_params=json.dumps({
+                            "ptype": service.ptype,
+                            "remote": True,
+                            "url": url,
+                            "name": service.name,
+                            "use_proxy": use_proxy})
+                    )
                 else:
                     ogc_server_url = urlsplit(
                         ogc_server_settings.PUBLIC_LOCATION).netloc
                     layer_url = urlsplit(layer.ows_url).netloc
 
-                    if access_token and ogc_server_url == layer_url and 'access_token' not in layer.ows_url:
+                    if access_token and ogc_server_url == layer_url and \
+                            'access_token' not in layer.ows_url:
                         url = layer.ows_url + '?access_token=' + access_token
                     else:
                         url = layer.ows_url
@@ -669,7 +678,8 @@ def new_map(request, template='maps/map_new.html'):
     if isinstance(config, HttpResponse):
         return config
     else:
-        return render_to_response(template, RequestContext(request, context_dict))
+        return render_to_response(template, RequestContext(request,
+                                                           context_dict))
 
 
 def new_map_json(request):
@@ -695,7 +705,7 @@ def new_map_json(request):
         map_obj.set_default_permissions()
 
         # If the body has been read already, use an empty string.
-        # See https://github.com/django/django/commit/58d555caf527d6f1bdfeab14527484e4cca68648
+        # See https://github.com/django/django/commit/58d555caf527d6f1bdfeab14527484e4cca68648 # noqa
         # for a better exception to catch when we move to Django 1.7.
         try:
             body = request.body
@@ -726,12 +736,16 @@ def proxy(request):
     host = None
 
     if ogc_server_settings is not None:
-        hostname = (ogc_server_settings.hostname,) if ogc_server_settings else ()
+        if ogc_server_settings:
+            hostname = (ogc_server_settings.hostname,)
+        else:
+            hostname = ()
         PROXY_ALLOWED_HOSTS += hostname
         host = ogc_server_settings.netloc
 
     if 'url' not in request.GET:
-        return HttpResponse("The proxy service requires a URL-encoded URL as a parameter.",
+        return HttpResponse("The proxy service requires a "
+                            "URL-encoded URL as a parameter.",
                             status=400,
                             content_type="text/plain"
                             )
@@ -741,8 +755,8 @@ def proxy(request):
     headers = {}
 
     # Fix up any possible non-absolute URLs that have no scheme, or even domain
-    if ((callable(protocol_relative_url) and protocol_relative_url(raw_url))
-            or not url.scheme):
+    if ((callable(protocol_relative_url) and
+         protocol_relative_url(raw_url)) or not url.scheme):
         if url.netloc and callable(protocol_relative_to_scheme):
             # Fix up any '//' protocol relative URLs coming from JS map viewers
             # Use request.scheme to reference origin scheme context
@@ -756,9 +770,8 @@ def proxy(request):
         url = urlsplit(raw_url)
 
     if not settings.DEBUG:
-        if not (validate_host(url.hostname, PROXY_ALLOWED_HOSTS)
-                or (callable(has_ssl_config)
-                    and has_ssl_config(url.geturl()))):
+        if not (validate_host(url.hostname, PROXY_ALLOWED_HOSTS) or
+                (callable(has_ssl_config) and has_ssl_config(url.geturl()))):
             return HttpResponse(
                 "DEBUG is set to False but the host of the path provided to "
                 "the proxy service is not in the PROXY_ALLOWED_HOSTS setting "
@@ -808,7 +821,8 @@ def proxy(request):
         logger.debug("Routing through pki proxy: {0}".format(resource_url))
         return pki_request(request, resource_url=resource_url)
 
-    if settings.SESSION_COOKIE_NAME in request.COOKIES and is_safe_url(url=raw_url, host=host):
+    if settings.SESSION_COOKIE_NAME in request.COOKIES and \
+            is_safe_url(url=raw_url, host=host):
         headers["Cookie"] = request.META["HTTP_COOKIE"]
 
     if request.method in ("POST", "PUT") and "CONTENT_TYPE" in request.META:
@@ -826,11 +840,13 @@ def proxy(request):
 
     # If we get a redirect, let's add a useful message.
     if resp.status_code in (301, 302, 303, 307):
-        response = HttpResponse(('This proxy does not support redirects. The server in "%s" '
-                                 'asked for a redirect to "%s"' % (raw_url, resp.headers['Location'])),
-                                status=resp.status_code,
-                                content_type=content_type
-                                )
+        response = HttpResponse(
+            ('This proxy does not support redirects. The server in "%s" '
+             'asked for a redirect to "%s"' %
+             (raw_url, resp.headers['Location'])),
+            status=resp.status_code,
+            content_type=content_type
+        )
 
         response['Location'] = resp.headers['Location']
     else:

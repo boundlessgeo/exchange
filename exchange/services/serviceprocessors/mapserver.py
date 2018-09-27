@@ -19,13 +19,15 @@
 
 """Utilities for enabling ESRI REST Mapserver remote services in geonode."""
 
-from geonode.services.serivceprocessors.mapserver import MapserverServiceHandler
+from geonode.services.serivceprocessors.mapserver \
+    import MapserverServiceHandler
 from geonode.services.serivceprocessors.mapserver import _get_valid_name
 import logging
 from arcrest.ags import MapService as ArcMapService
 from geonode.services.enumerations import CASCADED, INDEXED
 from geonode.layers.utils import create_thumbnail
 from geonode.base.models import Link
+from django.conf import settings
 
 try:
     if 'ssl_pki' not in settings.INSTALLED_APPS:

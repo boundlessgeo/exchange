@@ -56,7 +56,8 @@ urlpatterns = patterns(
     url(r'^capabilities/', views.capabilities, name='capabilities'),
     url(r'^logout/', views.logout, name='exchange_logout'),
 
-    url(r'^layers/(?P<layername>[^/]*)$', views.layer_detail, name="layer_detail"),
+    url(r'^layers/(?P<layername>[^/]*)$',
+        views.layer_detail, name="layer_detail"),
 
     url(r'^maps/new$', views.new_map, name="new_map"),
     url(r'^maps/new/data$', views.new_map_json, name='new_map_json'),

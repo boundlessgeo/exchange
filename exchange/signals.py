@@ -18,8 +18,8 @@ except ImportError:
 @receiver(post_save, sender=HostnamePortSslConfig)
 def update_use_proxy_basemap_layers(sender, **kwargs):
     for layer in settings.MAP_BASELAYERS:
-        if (callable(uses_proxy_route)
-                and "url" in layer["source"]
-                and uses_proxy_route(layer["source"]["url"])
-                and settings.PROXY_BASEMAP is True):
+        if (callable(uses_proxy_route) and
+                "url" in layer["source"] and
+                uses_proxy_route(layer["source"]["url"]) and
+                settings.PROXY_BASEMAP is True):
             layer["source"]["user_proxy"] = True

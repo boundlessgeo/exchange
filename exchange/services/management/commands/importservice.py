@@ -34,8 +34,10 @@ class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
 
         make_option('-o', '--owner', dest="owner", default=None,
-                    help="Name of the user account which should own the imported layers"),
-        make_option('-r', '--registerlayers', dest="registerlayers", default=False,
+                    help="Name of the user account which "
+                         "should own the imported layers"),
+        make_option('-r', '--registerlayers', dest="registerlayers",
+                    default=False,
                     help="Register all layers found in the service"),
         make_option('-u', '--username', dest="username", default=None,
                     help="Username required to login to this service if any"),
@@ -53,10 +55,6 @@ class Command(BaseCommand):
         user = options.get('user')
         owner = get_valid_user(user)
         limit = options.get('limit')
-        register_layers = options.get('registerlayers')
-        username = options.get('username')
-        password = options.get('password')
-        perm_spec = options.get('permspec')
 
         register_service = True
         # First Check if this service already exists based on the URL
@@ -66,7 +64,7 @@ class Command(BaseCommand):
         except Service.DoesNotExist:
             service = None
         if service is not None:
-            print "This is an existing Service"
+            print("This is an existing Service")
             register_service = False
             # Then Check that the name is Unique
         try:
@@ -74,35 +72,45 @@ class Command(BaseCommand):
         except Service.DoesNotExist:
             service = None
         if service is not None:
-            print "This is an existing service using this name.\nPlease specify a different name."
+            print("This is an existing service using this name.\n"
+                  "Please specify a different name.")
         if register_service:
             if method == 'I':
-                form = ExchangeCreateServiceForm(data={'url':base_url, 'type':type})
+                form = ExchangeCreateServiceForm(data={
+                    'url': base_url, 'type': type
+                })
                 if form.is_valid():
                     service_handler = form.cleaned_data["service_handler"]
-                    service = service_handler.create_geonode_service(owner=owner)
+                    service = service_handler.create_geonode_service(
+                        owner=owner
+                    )
                     service.full_clean()
                     service.save()
                     service.keywords.add(*service_handler.get_keywords())
                     service.set_default_permissions()
 
-                    service_handler = get_service_handler(service.base_url, service.type)
+                    service_handler = get_service_handler(
+                        service.base_url, service.type
+                    )
                     available_resources = service_handler.get_resources()
-                    print "Service created with id of %d" % service.id
-                    print " Harvesting..."
+                    print("Service created with id of %d" % service.id)
+                    print(" Harvesting...")
                     processed = 0
                     for resource in available_resources:
                         if processed < limit:
                             try:
-                                service_handler.harvest_resource(resource.id, service)
+                                service_handler.harvest_resource(
+                                    resource.id, service
+                                )
                                 processed = processed + 1
                             except:
-                                print " - Failed Harvesting Resource Id: {}".format(resource.id)
+                                print(" - Failed Harvesting Resource Id: {}"
+                                      .format(resource.id))
                         else:
                             break
                 else:
-                    print form.errors
+                    print(form.errors)
             else:
-                print "Indexing is only available."
+                print("Indexing is only available.")
 
-        print 'Done'
+        print('Done')

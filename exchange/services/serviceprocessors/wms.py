@@ -28,6 +28,7 @@ from geonode.services.enumerations import CASCADED, INDEXED
 from geonode.layers.utils import create_thumbnail
 from geonode.base.models import Link
 from urllib import quote
+from django.conf import settings
 
 try:
     if 'ssl_pki' not in settings.INSTALLED_APPS:
