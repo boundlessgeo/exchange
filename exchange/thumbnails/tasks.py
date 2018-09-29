@@ -4,7 +4,7 @@ from celery.task import task
 
 from django.db.models.signals import post_save
 from django.conf import settings
-from geonode.utils import get_bearer_token
+from exchange.utils import get_bearer_token
 from geonode.layers.models import Layer
 from geonode.maps.models import Map
 from geonode.geoserver.helpers import ogc_server_settings
