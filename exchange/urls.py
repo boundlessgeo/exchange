@@ -56,9 +56,6 @@ urlpatterns = patterns(
     url(r'^capabilities/', views.capabilities, name='capabilities'),
     url(r'^logout/', views.logout, name='exchange_logout'),
 
-    url(r'^layers/(?P<layername>[^/]*)$',
-        views.layer_detail, name="layer_detail"),
-
     url(r'^maps/new$', views.new_map, name="new_map"),
     url(r'^maps/new/data$', views.new_map_json, name='new_map_json'),
 
@@ -96,6 +93,12 @@ if 'osgeo_importer' in settings.INSTALLED_APPS:
     # Add django-osgeo-importer URLs
     from osgeo_importer.urls import urlpatterns as osgeo_importer_urls
     urlpatterns += osgeo_importer_urls
+
+# Layer detail override needs to come after the layer upload override
+urlpatterns += [
+    url(r'^layers/(?P<layername>[^/]*)$',
+        views.layer_detail, name="layer_detail"),
+]
 
 if 'nearsight' in settings.INSTALLED_APPS:
     from nearsight.urls import urlpatterns as nearsight_urls
