@@ -5,6 +5,7 @@
 [submodule "vendor/maploom"]
 	path = vendor/maploom
 	url = https://github.com/boundlessgeo/MapLoom.git
+	branch = 1.4-geonode2.8
 [submodule "vendor/sphinx-theme"]
 	path = vendor/sphinx-theme
 	url = https://github.com/boundlessgeo/sphinx-theme
