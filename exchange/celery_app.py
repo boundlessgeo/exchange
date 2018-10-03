@@ -22,7 +22,6 @@ import os
 from celery import Celery
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'exchange.settings')
-os.environ.setdefault('VIA_CELERY', '1')
 
 from django.conf import settings  # noqa
 
