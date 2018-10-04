@@ -22,4 +22,4 @@ def update_use_proxy_basemap_layers(sender, **kwargs):
                 "url" in layer["source"] and
                 uses_proxy_route(layer["source"]["url"]) and
                 settings.PROXY_BASEMAP is True):
-            layer["source"]["user_proxy"] = True
+            layer["source"]["use_proxy"] = True
