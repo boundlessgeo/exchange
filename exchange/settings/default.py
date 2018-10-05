@@ -203,7 +203,7 @@ INSTALLED_APPS = (
     'solo',
     'composer',
     'social_django',
-    'exchange.remoteservices'
+    'exchange.remoteservices',
 ) + ADDITIONAL_APPS + INSTALLED_APPS
 
 MIGRATION_MODULES = {
@@ -422,8 +422,11 @@ DJANGO_IGNORED_WARNINGS = {
 
 def filter_django_warnings(record):
     for ignored in DJANGO_IGNORED_WARNINGS:
-        if record.args and ignored in record.args[0]:
-            return False
+        if hasattr(record, 'args'):
+            if type(record.args) is list:
+                if len(record.args) > 0:
+                    if ignored in record.args[0]:
+                        return False
     return True
 
 
