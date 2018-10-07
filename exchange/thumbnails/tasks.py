@@ -486,7 +486,7 @@ def generate_thumbnail_task(instance_id, class_name):
                 instance_id)
             if (hasattr(instance, 'storeType') and
                     instance.storeType == 'remoteStore'):
-                save_thumbnail(obj_type, instance.remote_service_typename,
+                save_thumbnail(obj_type, instance.typename,
                                'image/png', thumb_png, True)
             else:
                 save_thumbnail(obj_type, instance_id,
