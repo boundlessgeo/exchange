@@ -17,7 +17,7 @@ services:
       - exchange
   exchange:
     container_name: exchange
-    env_file: .env
+    env_file: ./env/exchange.env
     image: bex/exchange:latest
     build:
       context: .
@@ -26,8 +26,8 @@ services:
       interval: 15s
       timeout: 10s
       retries: 10
-    ports:
-      - 8000:8000
+    # ports:
+    #   - 8000:8000
     depends_on:
       - db
       - geoserver
@@ -36,28 +36,30 @@ services:
     volumes:
       - $PWD:/code:rw  # needed for running tests and coverage
       - bex_data:/app/data
+  data-dir-conf:
+    image: geonode/geoserver_data:latest
+    restart: on-failure
+    container_name: gsconf4cartoview
+    command: /bin/true
+    volumes:
+      - geoserver-data-dir:/geoserver_data/data
   geoserver:
-    container_name: geoserver
-    build: ./docker/geoserver
-    image: bex/geoserver:latest
-    healthcheck:
-      test: ["CMD-SHELL", "curl --silent --fail localhost:8080/geoserver/web/ || exit 1"]
-      interval: 15s
-      timeout: 10s
-      retries: 5
-    ports:
-      - '8080:8080'
+    image: cartoview/geoserver_docker:tomcat #will be changed to exchange
     depends_on:
       - db
+      - data-dir-conf
+    restart: always
     volumes:
-      - bex_data:/app/data:rw
+      - "geoserver-data-dir:/geoserver_data"
+    env_file:
+      - ./env/geoserver.env
   db:
     container_name: db
     build: ./docker/postgis
     image: bex/postgis:latest
     mem_limit: 1024m
-    ports:
-      - 5433:5432
+    # ports:
+    #   - 5433:5432
     healthcheck:
       test: ["CMD-SHELL", "pg_isready || exit 1"]
       interval: 15s
@@ -73,9 +75,9 @@ services:
   task_queue:
     container_name: task_queue
     image: rabbitmq:3.7-management-alpine
-    ports:
-      - 5672:5672
-      - 15672:15672  # rabbitmq management plugin
+    # ports:
+    #   - 5672:5672
+    #   - 15672:15672  # rabbitmq management plugin
     healthcheck:
       test: ["CMD-SHELL", "rabbitmqctl status || exit 1"]
       interval: 15s
@@ -99,8 +101,8 @@ services:
       nofile:
         soft: 65536
         hard: 65536
-    ports:
-      - "9200:9200"
+    # ports:
+    #   - "9200:9200"
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
       interval: 15s
@@ -113,3 +115,4 @@ volumes:  # volumes with no displayed path/relationship to the host
   db_data:
   search_data:
   queue_data:
+  geoserver-data-dir:
