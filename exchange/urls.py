@@ -34,6 +34,7 @@ from elasticsearch_app.urls import urlpatterns as search_urls
 from layers.urls import urlpatterns as layers_urls
 
 from . import views
+from exchange.services.views import edit_service
 js_info_dict = {
     'packages': ('geonode.layers',),
 }
@@ -61,6 +62,8 @@ urlpatterns = patterns(
 
     url(r'^services/(?P<pk>\d+)/publish$',
         views.publish_service, name='publish_service'),
+
+    url(r'^services/(?P<service_id>\d+)/edit$', edit_service, name='edit_service'),
 
     url(r'^auth-failed/', views.AuthErrorPage.as_view(), name='auth_failed'),
     url(r'^about/', views.about_page, name='about'),
