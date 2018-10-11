@@ -59,7 +59,7 @@ urlpatterns = patterns(
     url(r'^maps/new$', views.new_map, name="new_map"),
     url(r'^maps/new/data$', views.new_map_json, name='new_map_json'),
 
-    url((r'^proxy/', 'proxy'), views.proxy),
+    url(r'^proxy/', views.proxy),
 
     (r'^services/', include('exchange.remoteservices.urls')),
 )
