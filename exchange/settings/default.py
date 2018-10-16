@@ -231,8 +231,9 @@ else:
     }
 
 if GEONODE_CLIENT_ENABLED:
-    INSTALLED_APPS = ('geonode-client',) + INSTALLED_APPS
-    LAYER_PREVIEW_LIBRARY = 'react'
+    INSTALLED_APPS = ('geonode-client', ) + INSTALLED_APPS
+    GEONODE_CLIENT_LAYER_PREVIEW_LIBRARY = 'react'
+    GEONODE_CLIENT_HOOKSET = "geonode.client.hooksets.ReactHookSet"
 
 # authorized exempt urls
 ADDITIONAL_AUTH_EXEMPT_URLS = os.getenv(
