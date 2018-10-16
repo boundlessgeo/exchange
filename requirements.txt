@@ -9,9 +9,8 @@ git+https://github.com/venicegeo/nearsight@master#egg=nearsight
 django-jsonfield==1.0.1
 django-jsonfield-compat==0.4.4
 numpy==1.13.3
-django-geonode-client==1.0.9
+https://github.com/hishamkaram/geonode-client/raw/master/py_build/django_geonode_client-1.0.11-py2-none-any.whl
 dj-database-url==0.4.2
-celery[redis]==3.1.18
 django-storages==1.6.5
 boto==2.48.0
 waitress==0.9.0
@@ -31,6 +30,9 @@ django-flat-theme==1.1.4
 flake8==3.5.0
 social-auth-app-django==1.2.0
 mock==2.0.0
-Django==1.8.18
 six==1.10.0
 cryptography==2.3
+elasticsearch==6.3.0
+elasticsearch-dsl==6.1.0
+requests==2.19.0
+django-friendly-tag-loader==1.2.1
