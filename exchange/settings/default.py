@@ -207,6 +207,7 @@ INSTALLED_APPS = (
     'geonode.contrib.geogig',
     'geonode.contrib.slack',
     'geonode.contrib.createlayer',
+    'friendlytagloader',
     'django_classification_banner',
     'exchange.maploom',
     'solo',
