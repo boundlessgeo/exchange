@@ -146,9 +146,14 @@ STATICFILES_DIRS = [
 # template settings
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(APP_ROOT, 'templates')],
-        'APP_DIRS': True,
+        'BACKEND':
+        'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(APP_ROOT, 'templates'),
+            os.path.join(APP_ROOT, 'themes', 'templates')
+        ] + TEMPLATES[0]['DIRS'],
+        'APP_DIRS':
+        True,
         'OPTIONS': {
             'context_processors': [
                 'django.contrib.auth.context_processors.auth',
