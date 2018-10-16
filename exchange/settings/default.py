@@ -344,17 +344,28 @@ MAPBOX_BASEMAPS = os.getenv(
 if MAPBOX_BASEMAPS:
     MAPBOX_BASEMAPS = list(map(str.strip, MAPBOX_BASEMAPS.split(',')))
     for layer in MAPBOX_BASEMAPS:
-        MAP_BASELAYERS.append(
-            {
-                "source": {
-                    "ptype": "gxp_mapboxsource"
-                },
-                "name": layer,
-                "visibility": False,
-                "fixed": True,
-                "group": "background"
-            }
-        )
+        MAP_BASELAYERS.append({
+            "source": {
+                "ptype": "gxp_mapboxsource"
+            },
+            "name": layer,
+            "visibility": False,
+            "fixed": True,
+            "group": "background"
+        })
+
+if 'geonode.geoserver' in INSTALLED_APPS:
+    LOCAL_GEOSERVER = {
+        "source": {
+            "ptype": "gxp_wmscsource",
+            "url": OGC_SERVER['default']['PUBLIC_LOCATION'] + "wms",
+            "restUrl": "/gs/rest"
+        }
+    }
+    baselayers = MAP_BASELAYERS
+    MAP_BASELAYERS = [LOCAL_GEOSERVER]
+    MAP_BASELAYERS.extend(baselayers)
+
 
 POSTGIS_URL = os.getenv(
     'POSTGIS_URL',
