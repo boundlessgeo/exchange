@@ -159,7 +159,7 @@ TEMPLATES = [
                 'django.core.context_processors.static',
                 'django.core.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
-                'account.context_processors.account',
+                # 'account.context_processors.account',
                 'geonode.context_processors.resource_urls',
                 'geonode.geoserver.context_processors.geoserver_urls',
                 'django_classification_banner.context_processors.'
