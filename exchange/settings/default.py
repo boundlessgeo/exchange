@@ -27,7 +27,6 @@ from geonode.settings import (
     MIDDLEWARE_CLASSES,
     STATICFILES_DIRS,
     INSTALLED_APPS,
-    CELERY_IMPORTS,
     DATABASES
 )
 
@@ -375,19 +374,33 @@ if ES_SEARCH:
     HAYSTACK_FACET_COUNTS = False
 
 # amqp settings
-BROKER_URL = os.getenv('BROKER_URL', 'amqp://guest:guest@localhost:5672/')
-CELERY_ALWAYS_EAGER = False
-NOTIFICATION_QUEUE_ALL = not CELERY_ALWAYS_EAGER
-NOTIFICATION_LOCK_LOCATION = LOCAL_ROOT
-SKIP_CELERY_TASK = False
-CELERY_DEFAULT_EXCHANGE = 'exchange'
-CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
-CELERY_RESULT_BACKEND = 'rpc' + BROKER_URL[4:]
-CELERYD_PREFETCH_MULTIPLIER = 25
-CELERY_TASK_RESULT_EXPIRES = 18000  # 5 hours.
-CELERY_ENABLE_UTC = False
-CELERY_TIMEZONE = TIME_ZONE
-CELERY_IMPORTS += ('exchange.tasks',)
+CELERY_TASK_DEFAULT_QUEUE = "default"
+CELERY_TASK_DEFAULT_EXCHANGE = "default"
+CELERY_TASK_DEFAULT_EXCHANGE_TYPE = "direct"
+CELERY_TASK_DEFAULT_ROUTING_KEY = "default"
+ASYNC_SIGNALS = le(os.environ.get('ASYNC_SIGNALS', 'True'))
+RABBITMQ_SIGNALS_BROKER_URL = 'amqp://localhost:5672'
+REDIS_SIGNALS_BROKER_URL = 'redis://localhost:6379/0'
+LOCAL_SIGNALS_BROKER_URL = 'memory://'
+if ASYNC_SIGNALS:
+    _BROKER_URL = os.environ.get('BROKER_URL', RABBITMQ_SIGNALS_BROKER_URL)
+    # _BROKER_URL =  = os.environ.get('BROKER_URL', REDIS_SIGNALS_BROKER_URL)
+
+    CELERY_RESULT_BACKEND = "rpc" + _BROKER_URL[4:]
+else:
+    _BROKER_URL = LOCAL_SIGNALS_BROKER_URL
+
+# Note:BROKER_URL is deprecated in favour of CELERY_BROKER_URL
+CELERY_BROKER_URL = _BROKER_URL
+
+CELERY_RESULT_PERSISTENT = False
+
+# Allow to recover from any unknown crash.
+CELERY_ACKS_LATE = True
+
+# Set this to False in order to run async
+CELERY_TASK_ALWAYS_EAGER = False if ASYNC_SIGNALS else True
+
 
 # audit settings
 AUDIT_ENABLED = str2bool(os.getenv('AUDIT_ENABLED', 'True'))
@@ -497,8 +510,6 @@ if 'osgeo_importer' in INSTALLED_APPS:
         'OSGEO_IMPORTER_UPLOAD_RASTER_TO_GEOSERVER',
         'True'
     ))
-    # Tell celery to load its tasks
-    CELERY_IMPORTS += ('osgeo_importer.tasks',)
     # override GeoNode setting so importer UI can see when tasks finish
     CELERY_IGNORE_RESULT = False
     IMPORT_HANDLERS = [
