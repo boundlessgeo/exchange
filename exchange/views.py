@@ -6,6 +6,8 @@ from django.shortcuts import render, render_to_response, redirect
 from django.template import RequestContext
 from django.views.generic.base import TemplateView
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from geonode.version import get_git_commit
+
 from exchange.version import get_version
 from geonode import get_version as get_version_geonode
 from geonode.maps.views import _resolve_map
@@ -98,14 +100,10 @@ def get_exchange_version():
 
 
 def get_geonode_version():
-    geonode_version = get_pip_version('GeoNode')
-    if not geonode_version['version'].strip():
-        version = get_version_geonode().split('.')
-        pkg_version = '{0}.{1}.{2}'.format(version[0], version[1], version[2])
-        commit_hash = version[3]
-        return {'version': pkg_version, 'commit': commit_hash}
-    else:
-        return geonode_version
+    version = get_version_geonode().split('.')
+    pkg_version = '{0}.{1}.{2}'.format(version[0], version[1], version[2])
+    commit_hash = get_git_commit()
+    return {'version': pkg_version, 'commit': commit_hash}
 
 
 def about_page(request, template='about.html'):
@@ -126,7 +124,7 @@ def about_page(request, template='about.html'):
         'name': 'GeoNode',
         'website': 'http://geonode.org/',
         'repo': 'https://github.com/GeoNode/geonode',
-        'boundless_repo': 'https://github.com/boundlessgeo/geonode',
+        'boundless_repo': 'https://github.com/cartologic/geonode',
         'version': geonode_version['version'],
         'commit': geonode_version['commit']
     }, {
