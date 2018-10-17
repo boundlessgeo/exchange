@@ -213,7 +213,7 @@ INSTALLED_APPS = (
     'solo',
     'composer',
     'social_django',
-) + ADDITIONAL_APPS + INSTALLED_APPS
+) + ADDITIONAL_APPS + INSTALLED_APPS + ('exchange.services',)
 
 MIGRATION_MODULES = {
     'user_messages': 'exchange.3pm.user_messages',

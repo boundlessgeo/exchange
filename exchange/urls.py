@@ -24,6 +24,7 @@ from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 from geonode.urls import urlpatterns as geonode_urls
 from exchange.maploom.urls import urlpatterns as maploom_urls
+from exchange.services.views import edit_service
 from fileservice.urls import urlpatterns as fileservice_urls
 from thumbnails.urls import urlpatterns as thumbnail_urls
 from elasticsearch_app.urls import urlpatterns as search_urls
@@ -50,6 +51,7 @@ urlpatterns = patterns(
 
     url(r'^services/(?P<pk>\d+)/publish$',
         views.publish_service, name='publish_service'),
+    url(r'^services/(?P<service_id>\d+)/edit$', edit_service, name='edit_service'),
 
     url(r'^auth-failed/', views.AuthErrorPage.as_view(), name='auth_failed'),
     url(r'^about/', views.about_page, name='about'),
