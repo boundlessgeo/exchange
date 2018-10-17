@@ -22,12 +22,13 @@ from django.conf import settings
 from django.conf.urls import patterns, url, include
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
+from elasticsearch_app.urls import urlpatterns as search_urls
 from geonode.urls import urlpatterns as geonode_urls
+
 from exchange.maploom.urls import urlpatterns as maploom_urls
 from exchange.services.views import edit_service
 from fileservice.urls import urlpatterns as fileservice_urls
 from thumbnails.urls import urlpatterns as thumbnail_urls
-from elasticsearch_app.urls import urlpatterns as search_urls
 from . import views
 
 js_info_dict = {
@@ -51,7 +52,8 @@ urlpatterns = patterns(
 
     url(r'^services/(?P<pk>\d+)/publish$',
         views.publish_service, name='publish_service'),
-    url(r'^services/(?P<service_id>\d+)/edit$', edit_service, name='edit_service'),
+    url(r'^services/(?P<service_id>\d+)/edit$',
+        edit_service, name='edit_service'),
 
     url(r'^auth-failed/', views.AuthErrorPage.as_view(), name='auth_failed'),
     url(r'^about/', views.about_page, name='about'),
@@ -74,6 +76,7 @@ if settings.ENABLE_SOCIAL_LOGIN is True and settings.ANYWHERE_ENABLED is True:
 if 'osgeo_importer' in settings.INSTALLED_APPS:
     # Replace the default Exchange 'layers/upload'
     from osgeo_importer.views import FileAddView
+
     urlpatterns += [
         url(
             r'^layers/upload$',
@@ -83,10 +86,12 @@ if 'osgeo_importer' in settings.INSTALLED_APPS:
     ]
     # Add django-osgeo-importer URLs
     from osgeo_importer.urls import urlpatterns as osgeo_importer_urls
+
     urlpatterns += osgeo_importer_urls
 
 if 'nearsight' in settings.INSTALLED_APPS:
     from nearsight.urls import urlpatterns as nearsight_urls
+
     urlpatterns += nearsight_urls
 
 # Use our Elasticsearch implementation for search

@@ -16,7 +16,7 @@ def update_gs_layer_bounds(layername):
     xml = ("<featureType>"
            "<enabled>true</enabled>"
            "</featureType>")
-    url = ('%s/workspaces/%s/datastores/%s/featuretypes/%s.xml?recalculate=nativebbox,latlonbbox'
+    url = ('%s/workspaces/%s/datastores/%s/featuretypes/%s.xml?recalculate=nativebbox,latlonbbox'  # noqa
            % (ogc_server_settings.internal_rest,
               layer.workspace, layer.store, layer.name))
     headers = {'Content-Type': 'application/xml'}

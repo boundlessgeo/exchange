@@ -31,7 +31,7 @@ def render_document_thumbnail(doc):
 
     try:
         from PIL import Image, ImageOps
-    except ImportError, e:
+    except ImportError:
         # logger.error(
         #     '%s: Pillow not installed, cannot generate thumbnails.' %
         #     e)
@@ -55,7 +55,6 @@ def render_document_thumbnail(doc):
                 img.sample(*size)
                 return img.make_blob('png')
         except:
-            # logger.debug('Error generating the thumbnail with Wand, cascading to a default image...')
             pass
     # if we are still here, we use a default image thumb
     if doc.extension and doc.extension.lower() in IMGTYPES and doc.doc_file:
@@ -63,8 +62,7 @@ def render_document_thumbnail(doc):
         img = ImageOps.fit(img, size, Image.ANTIALIAS)
     else:
         filename = finders.find('documents/{0}-placeholder.png'.format(
-            doc.extension.lower()
-        ), False) or \
+            doc.extension.lower()), False) or \
                    finders.find('documents/generic-placeholder.png', False)
 
         if not filename:

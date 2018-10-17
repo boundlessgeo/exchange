@@ -24,10 +24,12 @@ def get_caveats():
 
 
 def get_provenances():
-    default = [('Commodity', 'Commodity'), ('Crowd-sourced data', 'Crowd-sourced data'),
+    default = [('Commodity', 'Commodity'),
+               ('Crowd-sourced data', 'Crowd-sourced data'),
                ('Derived by trusted agents ', 'Derived by trusted agents '),
-               ('Open Source', 'Open Source'), ('Structured Observations (SOM)',
-                                                'Structured Observations (SOM)'), ('Unknown', 'Unknown')]
+               ('Open Source', 'Open Source'),
+               ('Structured Observations (SOM)', 'Structured Observations (SOM)'),  # flake8
+               ('Unknown', 'Unknown')]
 
     provenance_choices = [(x, str(x)) for x in getattr(settings, 'REGISTRY_PROVENANCE_CHOICES', [])]
 
@@ -55,11 +57,12 @@ class ServiceForm(services_forms.ServiceForm):
     maintenance_frequency = forms.ChoiceField(
         label=_("Maintenance Frequency"), choices=UPDATE_FREQUENCIES,
         widget=forms.Select(attrs={'cols': 60, 'class': 'inputText'}))
-    fees = forms.CharField(label=_('Fees'), max_length=1000, widget=forms.TextInput(
-        attrs={
-            'size': '60',
-            'class': 'inputText'
-        }))
+    fees = forms.CharField(label=_('Fees'), max_length=1000,
+                           widget=forms.TextInput(
+                               attrs={
+                                   'size': '60',
+                                   'class': 'inputText'
+                               }))
     poc_name = forms.CharField(
         label=_('Point of Contact'),
         max_length=255,
