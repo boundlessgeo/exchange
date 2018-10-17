@@ -8,6 +8,7 @@ from django.conf import settings
 from geonode.layers.models import Layer
 from geonode.maps.models import Map
 from geonode.geoserver.helpers import ogc_server_settings
+from geonode.services.enumerations import REST_MAP, REST_IMG, GN_WMS, WMS
 from geonode.utils import forward_mercator
 from requests import session
 from requests.adapters import HTTPAdapter, Retry
@@ -300,9 +301,9 @@ def get_thumbnails(instance):
         map = True
     elif (hasattr(instance, 'storeType') and
             instance.storeType == 'remoteStore'):
-        if instance.remote_service.type == 'REST':
+        if instance.remote_service.type in(REST_MAP, REST_IMG):
             rest = True
-        elif instance.remote_service.type == 'WMS':
+        elif instance.remote_service.type in (GN_WMS, WMS):
             wms = True
     else:
         internal = True
