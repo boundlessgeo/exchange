@@ -30,7 +30,7 @@ Upload a layer
 
 **Note:** Some file types require multiple files to create a complete layer. If you are uploading an ESRI Shapefile, be sure to include the .dbf, .prj, .shp, and .shx files.
 
-    .. figure:: img/choose-files.png
+    .. figure:: img/add-layer.png
 
 3. Click on your file under **Manage Your Data**. Verify the file information is correct, and select **Create Layer**.
 
@@ -38,11 +38,17 @@ Upload a layer
 
 4. Verify the title of your layer is correct. A unique identifier will be added to the end of your layer. Select a Category from the drop-down menu. The category field is mandatory, and should best fit the type of data you are importing.
 
-  Provide a brief abstract for your data. Other users will be able to find your data based on this text.
-
-  Click the :guilabel:`Next Step` button when you are finished.
-
   .. figure:: img/summary-info.png
+  
+  Select a Default Style from the drop-down menu.
+
+  If the layer upload includes one or more sld files, you can select one from the list; otherwise, the layer will be given a default style, which can be edited within the map.
+
+  .. figure:: img/default-style.png
+
+  Provide a brief description of your data. Other users will be able to find your data based on this text.
+
+  Click **Continue** when you are finished.
 
 Configure time attributes
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -91,11 +97,11 @@ To remove ambiguity, repeat a code to represent the maximum number of digits. Fo
 
 5. Select a time attribute option for your layer.
 
-    .. figure:: img/time-attributes.png
+    .. figure:: img/time.png
 
     **Yes -** If your layer has an attribute for time configuration, and you’d like to enable the playback feature, select Yes. Configure the time attribute by selecting which data field is the Start Date. Selecting an end date is optional.
 
-    .. figure:: img/time-config.png
+    .. figure:: img/configure-time.png
 
     **No -** Select No if your data does not include temporal information.
 
@@ -123,7 +129,7 @@ Determine who is able to view your layer. Selecting :guilabel:`Everyone` allows 
 
 8. Review the configuration, and click the :guilabel:`Start Import` button to begin the import.
 
-    .. figure:: img/start-import.png
+    .. figure:: img/review-config.png
 
 9. Click the :guilabel:`View Layer` button to make your layer visible to other users.
 
@@ -146,7 +152,7 @@ Each layer has an information page associated to it, which has several options f
   * About – Provides information on the owner, Point of Contact and Metadata Author
   * Maps using this layer – Indicates which maps are using this layer
 
-1. To access Layer Information, click the :guilabel:`Data` link on the Exchange toolbar, and select **Layers** from the drop-down menu. This will open the Explore Layers page. Here you will see a list of all of the available layers. Each layer has a thumbnail image, as well as the title, author, and any associated keywords.
+1. To access Layer Information, click the :guilabel:`Data` link on the Exchange toolbar, and select **Layers** from the drop-down menu. This will open the Explore Layers page. Here you will see a list of all of the available layers. Each layer has a thumbnail image, as well as the title, author, and any associated keywords. If a style was associated to the layer during import, it will display in the legend.
 
 2. Click the **View Details** link below the layer you want to access.
 
