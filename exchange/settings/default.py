@@ -831,5 +831,15 @@ if CARTOVIEW_ENABLED:
 
     STATICFILES_DIRS += cartoview_settings.CARTOVIEW_STATIC_DIRS
 
-    from cartoview.app_manager.settings import load_apps
-    INSTALLED_APPS += load_apps(APPS_DIR)
+    from cartoview import app_manager
+    from past.builtins import execfile
+    app_manager_settings = os.path.join(
+        os.path.dirname(app_manager.__file__), "settings.py")
+    execfile(os.path.realpath(app_manager_settings))
+    load_apps(APPS_DIR)
+    INSTALLED_APPS += CARTOVIEW_APPS
+    for settings_file in APPS_SETTINGS:
+        try:
+            execfile(settings_file)
+        except Exception as e:
+            pass
