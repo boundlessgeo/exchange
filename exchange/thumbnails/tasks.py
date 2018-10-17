@@ -300,9 +300,9 @@ def get_thumbnails(instance):
         map = True
     elif (hasattr(instance, 'storeType') and
             instance.storeType == 'remoteStore'):
-        if instance.service.type == 'REST':
+        if instance.remote_service.type == 'REST':
             rest = True
-        elif instance.service.type == 'WMS':
+        elif instance.remote_service.type == 'WMS':
             wms = True
     else:
         internal = True
@@ -340,7 +340,7 @@ def get_thumbnails(instance):
                 layer = Layer.objects.get(typename=layer.name)
                 if (hasattr(layer, 'storeType') and
                         layer.storeType == 'remoteStore' and
-                        layer.service.type == 'WMS'):
+                        layer.remote_service.type == 'WMS'):
                     wms_layers.append(layer)
             except:
                 logger.debug('could not find layer %s', layer.name)
@@ -486,7 +486,7 @@ def generate_thumbnail_task(instance_id, class_name):
                 instance_id)
             if (hasattr(instance, 'storeType') and
                     instance.storeType == 'remoteStore'):
-                save_thumbnail(obj_type, instance.service_typename,
+                save_thumbnail(obj_type, instance.typename,
                                'image/png', thumb_png, True)
             else:
                 save_thumbnail(obj_type, instance_id,
