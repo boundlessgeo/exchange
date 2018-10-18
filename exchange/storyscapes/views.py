@@ -1,21 +1,18 @@
-from .models.base import Story
-from django.http import HttpResponse
 import json
 import logging
-
-from geonode.maps.models import Map, MapSnapshot
-from geonode.maps.views import clean_config
-
-from .models.base import StoryChapter
+from builtins import basestring
 
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
+from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW
+from geonode.maps.models import Map, MapSnapshot
+from geonode.maps.views import clean_config
 from geonode.utils import resolve_object
 
-from geonode.layers.views import (
-    _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW)
+from .models.base import Story, StoryChapter
 
 _PERMISSION_MSG_LOGIN = 'You must be logged in to save this story'
 _PERMISSION_MSG_SAVE = 'You are not permitted to save or edit this story'

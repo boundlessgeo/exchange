@@ -1,14 +1,16 @@
-from django.db import transaction
-from django.http import HttpResponse
-from exchange.storyscapes.models.marker import Marker
-from .forms import MarkerForm
-from exchange.storyscapes.utils import unicode_csv_dict_reader
-from geonode.utils import resolve_object
-from geonode.maps.models import Map
-from geonode.utils import json_response
-
 import csv
 import json
+from builtins import basestring
+
+from django.db import transaction
+from django.http import HttpResponse
+
+from exchange.storyscapes.models.marker import Marker
+from exchange.storyscapes.utils import unicode_csv_dict_reader
+from geonode.maps.models import Map
+from geonode.utils import json_response, resolve_object
+
+from .forms import MarkerForm
 
 
 def _annotations_get(req, mapid):

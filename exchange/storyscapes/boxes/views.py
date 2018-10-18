@@ -124,6 +124,8 @@ def _boxes_post(req, mapid):
     error_format = None
 
     def id_collector(form):
+        if req.FILES:
+            return None
         created.append(form.instance.id)
 
     if not req.FILES:
@@ -137,8 +139,6 @@ def _boxes_post(req, mapid):
         fp = iter(req.FILES.values()).next()
         # ugh, builtin csv reader chokes on unicode
         data = unicode_csv_dict_reader(fp)
-
-        def id_collector(f): return None  # noqa
         form_mode = 'csv'
         content_type = 'text/html'
         ids = list(
