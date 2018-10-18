@@ -41,11 +41,13 @@ def _annotations_get(req, mapid):
         eidx = cols.index('end_time')
         # default csv writer chokes on unicode
 
-        def encode(v): return v.encode(
-            'utf-8') if isinstance(v, basestring) else str(v)  # noqa
+        def encode(v):
+            # noqa
+            return v.encode('utf-8') if isinstance(v, basestring) else str(v)
 
-        def get_value(a, c): return getattr(
-            a, c) if c not in ('start_time', 'end_time') else ''
+        def get_value(a, c):
+            return getattr(
+                a, c) if c not in ('start_time', 'end_time') else ''
         for a in ann:
             vals = [encode(get_value(a, c)) for c in cols]
             vals[sidx] = a.start_time_str
@@ -83,10 +85,16 @@ def _annotations_post(req, mapid):
     action = 'upsert'
     # default for json to unpack properties for each 'row'
 
-    def get_props(r): return r['properties']
+    def get_props(r):
+        if req.FILES:
+            return r
+        return r['properties']
     # operation to run on completion
 
-    def finish(): return None
+    def finish(ids=None):
+        if req.FILES and ids:
+            return Marker.objects.filter(id__in=ids).delete()
+        return None
     # track created annotations
     created = []
     # csv or client to account for differences
@@ -96,6 +104,8 @@ def _annotations_post(req, mapid):
     error_format = None
 
     def id_collector(form):
+        if req.FILES:
+            return None
         created.append(form.instance.id)
 
     if not req.FILES:
@@ -109,17 +119,11 @@ def _annotations_post(req, mapid):
         fp = iter(req.FILES.values()).next()
         # ugh, builtin csv reader chokes on unicode
         data = unicode_csv_dict_reader(fp)
-
-        def id_collector(f): return None  # noqa
         form_mode = 'csv'
         content_type = 'text/html'
-
-        def get_props(r): return r
         ids = list(Marker.objects.filter(
             map=mapobj).values_list('id', flat=True))
         # delete existing, we overwrite
-
-        def finish(): return Marker.objects.filter(id__in=ids).delete()
         overwrite = True
 
         def error_format(row_errors):
@@ -147,7 +151,10 @@ def _annotations_post(req, mapid):
         if error_format:
             return HttpResponse(error_format(errors), status=400)
     else:
-        finish()
+        if req.FILES:
+            finish(ids)
+        else:
+            finish()
         transaction.commit()
         body = {'success': True}
         if created:
