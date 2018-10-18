@@ -809,10 +809,10 @@ CELERY_TASK_CREATE_MISSING_QUEUES = True
 # Disabled by default and I like it, because we use Sentry for this.
 # CELERY_SEND_TASK_ERROR_EMAILS = False
 
-# try:
-#     from .local_settings import *
-# except:
-#     pass
+try:
+    from .local_settings import *  # noqa
+except Exception:
+    pass
 
 # cartoview settings
 CARTOVIEW_ENABLED = le(os.getenv('CARTOVIEW_ENABLED', "True"))
