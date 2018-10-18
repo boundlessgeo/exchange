@@ -63,7 +63,8 @@ urlpatterns = patterns(
     url(r'^services/(?P<pk>\d+)/publish$',
         views.publish_service, name='publish_service'),
 
-    url(r'^services/(?P<service_id>\d+)/edit$', edit_service, name='edit_service'),
+    url(r'^services/(?P<service_id>\d+)/edit$',
+        edit_service, name='edit_service'),
 
     url(r'^auth-failed/', views.AuthErrorPage.as_view(), name='auth_failed'),
     url(r'^about/', views.about_page, name='about'),
@@ -128,10 +129,14 @@ urlpatterns += fileservice_urls
 urlpatterns += thumbnail_urls
 urlpatterns += maploom_urls
 
-# override url named 'layer_browse' so all revers('layer_browse') directed to search page
-# NOTE: this url must be defined after geonode urls so url name assigned to search url
+# override url named 'layer_browse' so all revers('layer_browse') directed to
+# search page
+# NOTE: this url must be defined after geonode urls so url name assigned
+# to search url
 urlpatterns += [
-    url(r'^search/\?type=layer$', TemplateView.as_view(template_name='search/search.html'), name='layer_browse')
+    url(r'^search/\?type=layer$',
+        TemplateView.as_view(template_name='search/search.html'),
+        name='layer_browse')
 ]
 
 handler500 = 'exchange.views.handler500'

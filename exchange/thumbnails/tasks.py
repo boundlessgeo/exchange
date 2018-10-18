@@ -140,7 +140,7 @@ def make_thumb_request(remote, baseurl, params=None):
             'Aborting.',
             resp.status_code)
         logger.debug('content: %s', resp.content)
-    except Exception as e:
+    except Exception:
         logger.exception('Error occured making thumbnail')
     return None
 

@@ -52,7 +52,6 @@ def save_story(request, storyid):
 
 
 def new_chapter_json(request):
-
     '''
     Exracted from geonode.maps.views.new_map_json
     :param request:

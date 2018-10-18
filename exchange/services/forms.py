@@ -1,8 +1,9 @@
 from django import forms
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+
 from geonode.base.enumerations import UPDATE_FREQUENCIES
-from geonode.base.models import TopicCategory, License
+from geonode.base.models import License, TopicCategory
 from geonode.services import forms as services_forms
 
 from .models import Service
@@ -24,12 +25,16 @@ def get_caveats():
 
 
 def get_provenances():
-    default = [('Commodity', 'Commodity'), ('Crowd-sourced data', 'Crowd-sourced data'),
+    default = [('Commodity', 'Commodity'),
+               ('Crowd-sourced data', 'Crowd-sourced data'),
                ('Derived by trusted agents ', 'Derived by trusted agents '),
-               ('Open Source', 'Open Source'), ('Structured Observations (SOM)',
-                                                'Structured Observations (SOM)'), ('Unknown', 'Unknown')]
+               ('Open Source', 'Open Source'),
+               ('Structured Observations (SOM)',
+                'Structured Observations (SOM)'),
+               ('Unknown', 'Unknown')]
 
-    provenance_choices = [(x, str(x)) for x in getattr(settings, 'REGISTRY_PROVENANCE_CHOICES', [])]
+    provenance_choices = [(x, str(x)) for x in getattr(
+        settings, 'REGISTRY_PROVENANCE_CHOICES', [])]
 
     return provenance_choices + default
 
@@ -55,11 +60,11 @@ class ServiceForm(services_forms.ServiceForm):
     maintenance_frequency = forms.ChoiceField(
         label=_("Maintenance Frequency"), choices=UPDATE_FREQUENCIES,
         widget=forms.Select(attrs={'cols': 60, 'class': 'inputText'}))
-    fees = forms.CharField(label=_('Fees'), max_length=1000, widget=forms.TextInput(
-        attrs={
-            'size': '60',
-            'class': 'inputText'
-        }))
+    fees = forms.CharField(label=_('Fees'), max_length=1000,
+                           widget=forms.TextInput(attrs={
+                               'size': '60',
+                               'class': 'inputText'
+                           }))
     poc_name = forms.CharField(
         label=_('Point of Contact'),
         max_length=255,

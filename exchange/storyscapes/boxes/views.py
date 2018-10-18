@@ -51,11 +51,13 @@ def _boxes_get(req, mapid):
         sidx = cols.index('start_time')
         eidx = cols.index('end_time')
         # default csv writer chokes on unicode
-        encode = lambda v: (v.encode('utf-8') if isinstance(v,
+
+        def encode(v): return (v.encode('utf-8') if isinstance(v,
                             basestring) else str(v))  # noqa
-        get_value = lambda a, c: (getattr(a, c) if c
-                                  not in ('start_time', 'end_time'
-                                          ) else '')
+
+        def get_value(a, c): return (getattr(a, c) if c
+                                     not in ('start_time', 'end_time'
+                                             ) else '')
         for a in box:
             vals = [encode(get_value(a, c)) for c in cols]
             vals[sidx] = a.start_time_str
@@ -90,7 +92,7 @@ def _boxes_get(req, mapid):
         return results
 
     return json_response({'type': 'FeatureCollection',
-                         'features': encode(box)})
+                          'features': encode(box)})
 
 
 def _boxes_post(req, mapid):
@@ -100,9 +102,11 @@ def _boxes_post(req, mapid):
     # default action
     action = 'upsert'
     # default for json to unpack properties for each 'row'
-    get_props = lambda r: r['properties']
+
+    def get_props(r): return r['properties']
     # operation to run on completion
-    finish = lambda: None
+
+    def finish(): return None
     # track created boxes
     created = []
     # csv or client to account for differences
@@ -125,14 +129,17 @@ def _boxes_post(req, mapid):
         fp = iter(req.FILES.values()).next()
         # ugh, builtin csv reader chokes on unicode
         data = unicode_csv_dict_reader(fp)
-        id_collector = lambda f: None  # noqa
+
+        def id_collector(f): return None  # noqa
         form_mode = 'csv'
         content_type = 'text/html'
-        get_props = lambda r: r
+
+        def get_props(r): return r
         ids = list(
             Frame.objects.filter(map=mapobj).values_list('id', flat=True))
         # delete existing, we overwrite
-        finish = lambda: Frame.objects.filter(id__in=ids).delete()
+
+        def finish(): return Frame.objects.filter(id__in=ids).delete()
         overwrite = True
 
         def error_format(row_errors):

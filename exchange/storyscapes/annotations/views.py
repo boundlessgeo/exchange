@@ -40,9 +40,11 @@ def _annotations_get(req, mapid):
         sidx = cols.index('start_time')
         eidx = cols.index('end_time')
         # default csv writer chokes on unicode
-        encode = lambda v: v.encode(
+
+        def encode(v): return v.encode(
             'utf-8') if isinstance(v, basestring) else str(v)  # noqa
-        get_value = lambda a, c: getattr(
+
+        def get_value(a, c): return getattr(
             a, c) if c not in ('start_time', 'end_time') else ''
         for a in ann:
             vals = [encode(get_value(a, c)) for c in cols]
@@ -80,9 +82,11 @@ def _annotations_post(req, mapid):
     # default action
     action = 'upsert'
     # default for json to unpack properties for each 'row'
-    get_props = lambda r: r['properties']
+
+    def get_props(r): return r['properties']
     # operation to run on completion
-    finish = lambda: None
+
+    def finish(): return None
     # track created annotations
     created = []
     # csv or client to account for differences
@@ -105,14 +109,17 @@ def _annotations_post(req, mapid):
         fp = iter(req.FILES.values()).next()
         # ugh, builtin csv reader chokes on unicode
         data = unicode_csv_dict_reader(fp)
-        id_collector = lambda f: None  # noqa
+
+        def id_collector(f): return None  # noqa
         form_mode = 'csv'
         content_type = 'text/html'
-        get_props = lambda r: r
+
+        def get_props(r): return r
         ids = list(Marker.objects.filter(
             map=mapobj).values_list('id', flat=True))
         # delete existing, we overwrite
-        finish = lambda: Marker.objects.filter(id__in=ids).delete()
+
+        def finish(): return Marker.objects.filter(id__in=ids).delete()
         overwrite = True
 
         def error_format(row_errors):

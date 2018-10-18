@@ -26,8 +26,10 @@ os.environ['SPHINX_BUILD'] = 'exchange/static/docs'
 cmdclass = {'build_sphinx': BuildDoc}
 version = __import__('exchange').semantic_version()
 
+
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
+
 
 setup(
     name="geonode-exchange",

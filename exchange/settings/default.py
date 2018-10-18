@@ -315,16 +315,16 @@ MAP_BASELAYERS = [{
     "fixed": True,
     "group": "background"
 },
-                  {
-                      "source": {
-                          "ptype": "gxp_osmsource"
-                      },
-                      "type": "OpenLayers.Layer.OSM",
-                      "name": "mapnik",
-                      "visibility": True,
-                      "fixed": True,
-                      "group": "background"
-                  }]
+    {
+    "source": {
+        "ptype": "gxp_osmsource"
+    },
+    "type": "OpenLayers.Layer.OSM",
+    "name": "mapnik",
+    "visibility": True,
+    "fixed": True,
+    "group": "background"
+}]
 
 MAPBOX_BASEMAPS = os.getenv('MAPBOX_BASEMAP_NAMES', "")
 
@@ -807,12 +807,12 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_CREATE_MISSING_QUEUES = True
 
 # Disabled by default and I like it, because we use Sentry for this.
-#CELERY_SEND_TASK_ERROR_EMAILS = False
+# CELERY_SEND_TASK_ERROR_EMAILS = False
 
-try:
-    from .local_settings import *
-except:
-    pass
+# try:
+#     from .local_settings import *
+# except:
+#     pass
 
 # cartoview settings
 CARTOVIEW_ENABLED = le(os.getenv('CARTOVIEW_ENABLED', "True"))
@@ -823,11 +823,13 @@ if CARTOVIEW_ENABLED:
     PENDING_APPS = os.path.join(
         os.path.join(APP_ROOT, "apps"), "pendingOperation.yml")
     APPS_MENU = False
-    # NOTE: please comment the following line of you want to use geonode templates
+    # NOTE: please comment the following line of you want to use geonode
+    # templates
     # TEMPLATES[0]["DIRS"] = TEMPLATES[0][
     #     "DIRS"] + cartoview_settings.CARTOVIEW_TEMPLATE_DIRS
     TEMPLATES[0]["OPTIONS"][
-        'context_processors'] += cartoview_settings.CARTOVIEW_CONTEXT_PROCESSORS
+        'context_processors'] += \
+        cartoview_settings.CARTOVIEW_CONTEXT_PROCESSORS
 
     STATICFILES_DIRS += cartoview_settings.CARTOVIEW_STATIC_DIRS
 

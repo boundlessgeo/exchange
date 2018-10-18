@@ -20,6 +20,8 @@
 from .celery_app import app as celery_app
 __version__ = '1.4.12.2'
 
+__all__ = ('celery_app',)
+
 
 def get_version():
     import exchange.version

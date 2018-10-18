@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.template import loader
+from django.utils.translation import ugettext as _
 
 from exchange.services import forms
 from exchange.services.models import Service
@@ -15,8 +16,10 @@ def edit_service(request, service_id):
     Edit an existing Service
     """
     service = get_object_or_404(Service, pk=service_id)
+
     classification_dict = getattr(settings, "CLASSIFICATION_LEVELS", {})
-    if request.user != service.owner and not request.user.has_perm('change_service', obj=service):
+    if request.user != service.owner and not request.user.has_perm(
+            'change_service', obj=service):
         return HttpResponse(
             loader.render_to_string(
                 '401.html', context={
@@ -38,4 +41,5 @@ def edit_service(request, service_id):
     return render(request,
                   "services/service_edit_extension.html",
                   context={"service": service,
-                           "service_form": service_form, "classification_levels": classification_dict})
+                           "service_form": service_form,
+                           "classification_levels": classification_dict})

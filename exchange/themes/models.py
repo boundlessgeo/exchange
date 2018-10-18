@@ -42,6 +42,7 @@ class Theme(models.Model):
         null=False,
         blank=True
     )
+
     default_theme = models.BooleanField(default=False, editable=False)
     active_theme = models.BooleanField(default=False)
     title = models.CharField(
