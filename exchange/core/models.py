@@ -36,7 +36,7 @@ from django.conf import settings
 
 class ThumbnailImage(SingletonModel):
     thumbnail_image = models.ImageField(
-        upload_to=os.path.join(settings.MEDIA_ROOT, 'thumbs'),
+        upload_to=os.path.join(settings.MEDIA_URL, 'thumbs'),
     )
 
     def save(self, *args, **kwargs):
