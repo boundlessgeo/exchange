@@ -44,11 +44,19 @@ services:
     volumes:
       - geoserver-data-dir:/geoserver_data/data
   geoserver:
+    container_name: geoserver
     image: cartoview/geoserver_docker:tomcat #will be changed to exchange
     depends_on:
       - db
       - data-dir-conf
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:8080/geoserver/web/ || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    # ports:
+    #   - '8080:8080'
     volumes:
       - "geoserver-data-dir:/geoserver_data"
     env_file:
