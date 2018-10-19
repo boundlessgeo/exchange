@@ -56,6 +56,7 @@ except ValueError:
     else:
         ALLOWED_HOSTS = re.split(r' *[,|:|;] *', os.getenv('ALLOWED_HOSTS'))
 
+ALLOWED_HOSTS = ['*']
 ANYWHERE_ENABLED = str2bool(os.getenv('ANYWHERE_ENABLED', False))
 SITENAME = os.getenv('SITENAME', 'exchange')
 WSGI_APPLICATION = "exchange.wsgi.application"
