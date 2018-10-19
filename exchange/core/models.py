@@ -25,7 +25,6 @@ from io import BytesIO
 from django.core.files.base import ContentFile
 from resizeimage import resizeimage
 from django import forms
-import os
 import uuid
 import datetime
 from django.db.models import Q
@@ -34,9 +33,14 @@ from geonode.base.enumerations import UPDATE_FREQUENCIES
 from django.conf import settings
 
 
+def get_thumb_image_path(instance, filename):
+    image_path = ["thumbs", filename]
+    return "/".join(image_path)
+
+
 class ThumbnailImage(SingletonModel):
     thumbnail_image = models.ImageField(
-        upload_to=os.path.join(settings.MEDIA_ROOT, 'thumbs'),
+        upload_to=get_thumb_image_path,
     )
 
     def save(self, *args, **kwargs):
