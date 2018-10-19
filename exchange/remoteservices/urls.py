@@ -23,6 +23,7 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns(
     'exchange.remoteservices.views',
     url(r'^register/$', 'register_service', name="register_service"),
+    url(r'^(?P<service_id>\d+)/edit$', 'edit_service', name='edit_service'),
     url(r'^(?P<service_id>\d+)/rescan$', 'rescan_service',
         name='rescan_service'),
     url(r'^(?P<service_id>\d+)/harvest$', 'harvest_resources',

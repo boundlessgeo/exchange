@@ -569,9 +569,9 @@ if 'osgeo_importer' in INSTALLED_APPS:
         'osgeo_importer.handlers.geoserver.GeoServerTimeHandler',
         'osgeo_importer.handlers.geoserver.GeoWebCacheHandler',
         'osgeo_importer.handlers.geoserver.GeoServerBoundsHandler',
+        'osgeo_importer.handlers.geoserver.GeoServerStyleHandler',
         'osgeo_importer.handlers.geoserver.GenericSLDHandler',
         'osgeo_importer.handlers.geonode.GeoNodePublishHandler',
-        'osgeo_importer.handlers.geoserver.GeoServerStyleHandler',
         'osgeo_importer.handlers.geonode.GeoNodeMetadataHandler',
         'exchange.importer.geonode_timeextent_handler.GeoNodeTimeExtentHandler',  # noqa
         'exchange.importer.geonode_postimport_handler.GeoNodePostImportHandler',  # noqa

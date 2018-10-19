@@ -20,6 +20,7 @@
 
 from django.contrib.auth.decorators import login_required
 from exchange.remoteservices.forms import ExchangeCreateServiceForm
+from geonode.services.forms import ServiceForm
 from geonode.services import enumerations
 from geonode.services.models import Service, HarvestJob
 from exchange.remoteservices import tasks
@@ -28,6 +29,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render_to_response
 from exchange.utils import get_bearer_token
 from exchange.remoteservices.serviceprocessors.handler \
     import get_service_handler
@@ -35,6 +37,7 @@ from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from geonode.services.views import _gen_harvestable_ids
+from django.template import RequestContext
 
 logger = logging.getLogger("geonode.core.layers.views")
 
@@ -65,7 +68,7 @@ def register_service(request):
                 _("Service registered successfully")
             )
             result = HttpResponseRedirect(
-                reverse("harvest_resources",
+                reverse("edit_service",
                         kwargs={"service_id": service.id})
             )
         else:
@@ -75,6 +78,33 @@ def register_service(request):
         result = render(
             request, service_register_template, {"form": form})
     return result
+
+
+@login_required
+def edit_service(request, service_id):
+    """
+    Edit an existing Service
+    """
+    service_obj = get_object_or_404(Service, pk=service_id)
+
+    if request.method == "POST":
+        service_form = ServiceForm(
+            request.POST, instance=service_obj, prefix="service")
+        if service_form.is_valid():
+            service_obj = service_form.save(commit=False)
+            service_obj.keywords.clear()
+            service_obj.keywords.add(*service_form.cleaned_data['keywords'])
+            service_obj.save()
+            return HttpResponseRedirect(reverse(
+                "harvest_resources", kwargs={"service_id": service_id}))
+    else:
+        service_form = ServiceForm(
+            instance=service_obj, prefix="service")
+
+    return render_to_response("services/service_edit.html",
+                              RequestContext(request,
+                                             {"service": service_obj,
+                                              "service_form": service_form}))
 
 
 def _get_service_handler(request, service):
