@@ -20,7 +20,13 @@ def update_gs_layer_bounds(layername):
            % (ogc_server_settings.internal_rest,
               layer.workspace, layer.store, layer.name))
     headers = {'Content-Type': 'application/xml'}
-    req = requests.put(url, data=xml, headers=headers, auth=(gs_user, gs_password))
+    req = requests.put(
+        url,
+        data=xml,
+        headers=headers,
+        auth=(
+            gs_user,
+            gs_password))
     if req.status_code != 200:
         logger.error('Request status code was: %s' % req.status_code)
         logger.error('Response was: %s' % req.text)

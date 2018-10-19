@@ -28,10 +28,12 @@ def get_provenances():
                ('Crowd-sourced data', 'Crowd-sourced data'),
                ('Derived by trusted agents ', 'Derived by trusted agents '),
                ('Open Source', 'Open Source'),
-               ('Structured Observations (SOM)', 'Structured Observations (SOM)'),  # flake8
+               ('Structured Observations (SOM)',
+                'Structured Observations (SOM)'),  # flake8
                ('Unknown', 'Unknown')]
 
-    provenance_choices = [(x, str(x)) for x in getattr(settings, 'REGISTRY_PROVENANCE_CHOICES', [])]
+    provenance_choices = [(x, str(x)) for x in getattr(
+        settings, 'REGISTRY_PROVENANCE_CHOICES', [])]
 
     return provenance_choices + default
 

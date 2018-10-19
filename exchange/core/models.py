@@ -69,28 +69,28 @@ class ThumbnailImageForm(forms.Form):
 
 
 def get_classifications():
-        return [(x, str(x)) for x in getattr(
-            settings, 'CLASSIFICATION_LEVELS', [])]
+    return [(x, str(x)) for x in getattr(
+        settings, 'CLASSIFICATION_LEVELS', [])]
 
 
 def get_caveats():
-        return [(x, str(x)) for x in getattr(settings, 'CAVEATS', [])]
+    return [(x, str(x)) for x in getattr(settings, 'CAVEATS', [])]
 
 
 def get_provenances():
-        default = [('Commodity', 'Commodity'),
-                   ('Crowd-sourced data', 'Crowd-sourced data'),
-                   ('Derived by trusted agents ',
-                    'Derived by trusted agents '),
-                   ('Open Source', 'Open Source'),
-                   ('Structured Observations (SOM)',
-                    'Structured Observations (SOM)'),
-                   ('Unknown', 'Unknown')]
+    default = [('Commodity', 'Commodity'),
+               ('Crowd-sourced data', 'Crowd-sourced data'),
+               ('Derived by trusted agents ',
+                'Derived by trusted agents '),
+               ('Open Source', 'Open Source'),
+               ('Structured Observations (SOM)',
+                'Structured Observations (SOM)'),
+               ('Unknown', 'Unknown')]
 
-        provenance_choices = [(x, str(x)) for x in getattr(
-            settings, 'PROVENANCE_CHOICES', [])]
+    provenance_choices = [(x, str(x)) for x in getattr(
+        settings, 'PROVENANCE_CHOICES', [])]
 
-        return provenance_choices + default
+    return provenance_choices + default
 
 
 class CSWRecord(models.Model):

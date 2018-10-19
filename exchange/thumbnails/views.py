@@ -63,7 +63,7 @@ def render_document_thumbnail(doc):
     else:
         filename = finders.find('documents/{0}-placeholder.png'.format(
             doc.extension.lower()), False) or \
-                   finders.find('documents/generic-placeholder.png', False)
+            finders.find('documents/generic-placeholder.png', False)
 
         if not filename:
             return None

@@ -16,6 +16,7 @@ def edit_service(request, service_id):
     Edit an existing Service
     """
     service = get_object_or_404(Service, pk=service_id)
+
     classification_dict = getattr(settings, "CLASSIFICATION_LEVELS", {})
     if request.user != service.owner and \
             not request.user.has_perm('change_service', obj=service):
