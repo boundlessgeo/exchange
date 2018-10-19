@@ -126,6 +126,7 @@ node {
       // Success or failure, always send notifications
       echo currentBuild.result
       sh """
+        docker-compose -f vendor/docker/bex/docker-compose.yml --project-dir=. logs
         docker-compose -f vendor/docker/bex/docker-compose.yml --project-dir=. down
         docker system prune -f
         """
