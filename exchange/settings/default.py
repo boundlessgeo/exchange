@@ -20,6 +20,7 @@
 
 import copy
 import os
+import re
 from ast import literal_eval as le
 
 import dj_database_url
@@ -44,6 +45,16 @@ def isValid(v):
     else:
         return False
 
+
+try:
+    # try to parse python notation, default in dockerized env
+    ALLOWED_HOSTS = le(os.getenv('ALLOWED_HOSTS'))
+except ValueError:
+    # fallback to regular list of values separated with misc chars
+    if os.getenv('ALLOWED_HOSTS') is None:
+        ALLOWED_HOSTS = ['localhost', 'django', 'geonode']
+    else:
+        ALLOWED_HOSTS = re.split(r' *[,|:|;] *', os.getenv('ALLOWED_HOSTS'))
 
 ANYWHERE_ENABLED = str2bool(os.getenv('ANYWHERE_ENABLED', False))
 SITENAME = os.getenv('SITENAME', 'exchange')
@@ -209,7 +220,7 @@ INSTALLED_APPS = (
     'exchange.storyscapes',
     'composer',
     'social_django',
-) + ADDITIONAL_APPS + INSTALLED_APPS + ('exchange.services',)
+) + ADDITIONAL_APPS + INSTALLED_APPS + ('exchange.services', )
 
 MIGRATION_MODULES = {
     'user_messages': 'exchange.3pm.user_messages',
@@ -304,27 +315,29 @@ GEOFENCE = {
     os.getenv('GEOFENCE_PASSWORD', GEOSERVER_PASSWORD)
 }
 
-MAP_BASELAYERS = [{
-    "source": {
-        "ptype": "gxp_olsource"
-    },
-    "type": "OpenLayers.Layer",
-    "args": ["No background"],
-    "name": "background",
-    "visibility": False,
-    "fixed": True,
-    "group": "background"
-},
+MAP_BASELAYERS = [
     {
-    "source": {
-        "ptype": "gxp_osmsource"
+        "source": {
+            "ptype": "gxp_olsource"
+        },
+        "type": "OpenLayers.Layer",
+        "args": ["No background"],
+        "name": "background",
+        "visibility": False,
+        "fixed": True,
+        "group": "background"
     },
-    "type": "OpenLayers.Layer.OSM",
-    "name": "mapnik",
-    "visibility": True,
-    "fixed": True,
-    "group": "background"
-}]
+    {
+        "source": {
+            "ptype": "gxp_osmsource"
+        },
+        "type": "OpenLayers.Layer.OSM",
+        "name": "mapnik",
+        "visibility": True,
+        "fixed": True,
+        "group": "background"
+    },
+]
 
 MAPBOX_BASEMAPS = os.getenv('MAPBOX_BASEMAP_NAMES', "")
 
@@ -515,11 +528,6 @@ FILESERVICE_CONFIG = {
     'streaming_supported':
     False
 }
-
-try:
-    from local_settings import *  # noqa
-except ImportError:
-    pass
 
 # Use https:// scheme in Gravatar URLs
 AVATAR_GRAVATAR_SSL = True
@@ -810,8 +818,8 @@ CELERY_TASK_CREATE_MISSING_QUEUES = True
 # CELERY_SEND_TASK_ERROR_EMAILS = False
 
 try:
-    from .local_settings import *  # noqa
-except Exception:
+    from local_settings import *  # noqa
+except ImportError:
     pass
 
 # cartoview settings
