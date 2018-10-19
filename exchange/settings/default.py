@@ -752,3 +752,40 @@ ACCESS_TOKEN_NAME = os.getenv(
 IMPORT_TASK_SOFT_TIME_LIMIT = le(os.getenv('IMPORTER_TIMEOUT', '90'))
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+try:
+    from local_settings import *  # noqa
+except ImportError:
+    pass
+
+# cartoview settings
+CARTOVIEW_ENABLED = le(os.getenv('CARTOVIEW_ENABLED', "True"))
+if CARTOVIEW_ENABLED:
+    from cartoview import settings as cartoview_settings
+    INSTALLED_APPS += cartoview_settings.CARTOVIEW_INSTALLED_APPS
+    APPS_DIR = os.path.abspath(os.path.join(APP_ROOT, "apps"))
+    PENDING_APPS = os.path.join(
+        os.path.join(APP_ROOT, "apps"), "pendingOperation.yml")
+    APPS_MENU = False
+    # NOTE: please comment the following line of you want to use geonode
+    # templates
+    # TEMPLATES[0]["DIRS"] = TEMPLATES[0][
+    #     "DIRS"] + cartoview_settings.CARTOVIEW_TEMPLATE_DIRS
+    TEMPLATES[0]["OPTIONS"][
+        'context_processors'] += \
+        cartoview_settings.CARTOVIEW_CONTEXT_PROCESSORS
+
+    STATICFILES_DIRS += cartoview_settings.CARTOVIEW_STATIC_DIRS
+
+    from cartoview import app_manager
+    from past.builtins import execfile
+    app_manager_settings = os.path.join(
+        os.path.dirname(app_manager.__file__), "settings.py")
+    execfile(os.path.realpath(app_manager_settings))
+    load_apps(APPS_DIR)
+    INSTALLED_APPS += CARTOVIEW_APPS
+    for settings_file in APPS_SETTINGS:
+        try:
+            execfile(settings_file)
+        except Exception as e:
+            pass
