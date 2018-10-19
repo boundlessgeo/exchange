@@ -26,3 +26,6 @@
 [submodule "vendor/exchange-mobile-extension"]
 	path = vendor/exchange-mobile-extension
 	url = git@github.com:boundlessgeo/exchange-mobile-extension.git
+[submodule "vendor/cartoview"]
+	path = vendor/cartoview
+	url = git@github.com:cartologic/cartoview.git
