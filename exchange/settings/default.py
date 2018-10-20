@@ -346,7 +346,7 @@ if MAPBOX_BASEMAPS:
             }
         )
 
-PROXY_BASEMAP = str2bool(os.getenv('PROXY_BASEMAP', 'True'))
+PROXY_BASEMAP = str2bool(os.getenv('PROXY_BASEMAP', 'False'))
 
 POSTGIS_URL = os.getenv(
     'POSTGIS_URL',
@@ -480,7 +480,7 @@ LOGGING['loggers']['django.db.backends'] = {
 # Authentication Settings
 
 # ssl_pki
-SSL_PKI_ENABLED = str2bool(os.getenv('SSL_PKI_ENABLED', 'True'))
+SSL_PKI_ENABLED = str2bool(os.getenv('SSL_PKI_ENABLED', 'False'))
 if SSL_PKI_ENABLED:
     INSTALLED_APPS = INSTALLED_APPS + (
         'ordered_model',
@@ -752,7 +752,10 @@ MAP_CLIENT_USE_CROSS_ORIGIN_CREDENTIALS = str2bool(os.getenv(
 ))
 SOCIAL_AUTH_LOGIN_ERROR_URL = '/auth-failed'
 
-PROXY_URL = '/proxy/?url='
+PROXY_URL = os.getenv(
+    'PROXY_URL',
+    ''
+)
 
 ACCESS_TOKEN_NAME = os.getenv(
     'ACCESS_TOKEN_NAME',
