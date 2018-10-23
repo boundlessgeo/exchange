@@ -19,3 +19,4 @@ To access the Django administration site, log in to Exchange using your administ
    groups
    layers
    osgeo_importer
+   pki
