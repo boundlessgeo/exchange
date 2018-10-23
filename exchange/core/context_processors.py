@@ -72,6 +72,8 @@ def resource_variables(request):
             settings, 'MAP_CLIENT_USE_CROSS_ORIGIN_CREDENTIALS', False
         ),
         ES_SEARCH=getattr(settings, 'ES_SEARCH', False),
+        PROXY_BASEMAP=getattr(settings, 'PROXY_BASEMAP', False),
+        GOOGLE_ANALYTICS_ID=getattr(settings, 'GOOGLE_ANALYTICS_ID', False),
     )
 
     return defaults

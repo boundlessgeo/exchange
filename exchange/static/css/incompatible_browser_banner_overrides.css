@@ -1,0 +1,33 @@
+.navbar-fixed-top, .navbar-fixed-bottom {
+    top: 20px !important;
+}
+
+.alert, .alert-warning {
+	margin-top: 20px !important;
+}
+
+#wrap {
+    padding-top: 19px !important;
+}
+
+#incompatible-browser-banner-top {
+    border:0;
+    display: table;
+    font-size: 15px;
+    height: 10px;
+    left:0;
+    position:fixed;
+    right:0;
+    text-align: center;
+    top:0;
+    margin:0;
+    width: 100%;
+    z-index: 1031;
+}
+
+.incompatible-browser-banner-text {
+    display: table-cell;
+    vertical-align: middle;
+    color: white;
+    background-color: red;
+}

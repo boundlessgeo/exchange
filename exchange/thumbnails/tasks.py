@@ -1,10 +1,10 @@
 import logging
 import time
 from celery.task import task
-import datetime
 
 from django.db.models.signals import post_save
 from django.conf import settings
+from exchange.utils import get_bearer_token
 from geonode.layers.models import Layer
 from geonode.maps.models import Map
 from geonode.geoserver.helpers import ogc_server_settings
@@ -16,9 +16,15 @@ from .models import save_thumbnail
 from PIL import Image
 import io
 from urlparse import urlparse
-from oauthlib.common import generate_token
-from oauth2_provider.models import AccessToken, get_application_model
-from geonode.people.utils import get_default_user
+
+try:
+    if 'ssl_pki' not in settings.INSTALLED_APPS:
+        raise ImportError
+    from ssl_pki.models import has_ssl_config
+    from ssl_pki.ssl_session import https_client
+except ImportError:
+    has_ssl_config = None
+    https_client = None
 
 try:
     xrange
@@ -59,18 +65,6 @@ retry = Retry(
 )
 http_client.mount('http://', HTTPAdapter(max_retries=retry))
 http_client.mount('https://', HTTPAdapter(max_retries=retry))
-
-
-def get_admin_token():
-    Application = get_application_model()
-    app = Application.objects.get(name="GeoServer")
-    token = generate_token()
-    AccessToken.objects.get_or_create(
-        user=get_default_user(),
-        application=app,
-        expires=datetime.datetime.now() + datetime.timedelta(days=3),
-        token=token)
-    return token
 
 
 # combines image content
@@ -115,29 +109,40 @@ def make_thumb_request(remote, baseurl, params=None):
         thumbnail_create_url = baseurl + p
         p = urlparse(thumbnail_create_url)
 
-        logger.debug(
+        logger.info(
             'Thumbnail: Requesting thumbnail for %s. ',
             thumbnail_create_url
         )
-        if (remote):
-            logger.debug('fetching %s with no auth' % thumbnail_create_url)
-            resp = http_client.get(thumbnail_create_url)
+
+        if remote:
+            # Check for SSL configs; use https_client
+            if thumbnail_create_url.lower().startswith('https') \
+                    and has_ssl_config is not None and \
+                    has_ssl_config(thumbnail_create_url, via_query=True):
+                # has_ssl_config needs to query db, as call may be from task
+                # worker, whose hostnameport_pattern_cache may be out of sync
+                logger.info('Fetching %s with https_client'
+                            % thumbnail_create_url)
+                resp = https_client.get(thumbnail_create_url)
+            else:
+                logger.info('Fetching %s with no auth' % thumbnail_create_url)
+                resp = http_client.get(thumbnail_create_url)
         else:
             # Log in to geoserver with token
-            token = get_admin_token()
+            token = get_bearer_token()
             thumbnail_create_url = '%s&access_token=%s' % (
                 thumbnail_create_url,
                 token)
-            logger.debug('fetching %s with token' % (thumbnail_create_url))
+            logger.debug('fetching %s with token' % thumbnail_create_url)
             resp = http_client.get(thumbnail_create_url)
 
         if 200 <= resp.status_code <= 299:
             if 'ServiceException' not in resp.content:
                 return resp.content
 
-        logger.debug(
-            'Thumbnail: Encountered unexpected status code: %d.  '
-            'Aborting.',
+        logger.info(
+            'Thumbnail: Encountered service exception or unexpected '
+            'status code (%d).  Aborting.',
             resp.status_code)
         logger.debug('content: %s', resp.content)
     except Exception as e:
@@ -473,7 +478,7 @@ def generate_thumbnail_task(instance_id, class_name):
         logger.debug('Could not find instance')
         return
 
-    logger.debug(
+    logger.info(
         'Thumbnail: Generating thumbnail for \'%s\' of type %s.',
         instance_id, class_name)
     if(instance_id is not None and is_automatic(obj_type, instance_id)):
@@ -481,7 +486,7 @@ def generate_thumbnail_task(instance_id, class_name):
         thumb_png = get_thumbnails(instance)
 
         if(thumb_png is not None):
-            logger.debug(
+            logger.info(
                 'Thumbnail: Thumbnail successfully generated for \'%s\'.',
                 instance_id)
             if (hasattr(instance, 'storeType') and

@@ -59,13 +59,70 @@
             color: #FF8F4C;
         }
     {% endif %}
+    #incompatible-browser-banner-top {
+        border:0;
+        display: table;
+        font-size: 15px;
+        height: 10px;
+        left:0;
+        position:fixed;
+        right:0;
+        text-align: center;
+        top:0;
+        margin:0;
+        width: 100%;
+        z-index: 1031;
+    }
+
+    .incompatible-browser-banner-text {
+        display: table-cell;
+        vertical-align: middle;
+        color: white;
+        background-color: red;
+    }
   </style>
 {% endblock %}
 
 {% block header %}
+    <span id="incompatible-browser-banner-top">
+      <p class="incompatible-browser-banner-text"><b>Internet Explorer is not compatible with all features in Exchange. Please use Chrome or Firefox.</b></p>
+    </span>
     {% if classification_banner_enabled %}
-        <link href="{% static "css/django_classification_banner_overrides.css"%}" rel="stylesheet"/>
+        <script type="text/javascript">
+            if((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) //IF IE > 10
+            {
+              // load our multiple_banner CSS file in the case of both banners being present
+              var multiple_banner_css = document.createElement('link');
+              multiple_banner_css.href='{% static "css/multiple_banner_overrides.css"%}';
+              multiple_banner_css.rel='stylesheet';
+              document.getElementsByTagName('head')[0].appendChild(multiple_banner_css);
+            } else {
+              // hide the banner if the browser is supported
+              var element = document.getElementById('incompatible-browser-banner-top');
+              element.style.display = 'none';
+              // Only load the django-classification-banner CSS if not in IE
+              var classification_banner_css = document.createElement('link');
+              classification_banner_css.href='{% static "css/django_classification_banner_overrides.css"%}';
+              classification_banner_css.rel='stylesheet';
+              document.getElementsByTagName('head')[0].appendChild(classification_banner_css);
+            }
+        </script>
         {% classification_banner %}
+    {% else %}
+        <script type="text/javascript">
+            if((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) //IF IE > 10
+            {
+              // load our incompatible_browser CSS file if page loads in IE without classification banner
+              var incompatible_browser_css = document.createElement('link');
+              incompatible_browser_css.href='{% static "css/incompatible_browser_banner_overrides.css"%}';
+              incompatible_browser_css.rel='stylesheet';
+              document.getElementsByTagName('head')[0].appendChild(incompatible_browser_css);
+            } else {
+              // hide the banner if the browser is supported
+              var element = document.getElementById('incompatible-browser-banner-top');
+              element.style.display = 'none';
+            }
+        </script>
     {% endif %}
     {{ block.super }}
 {% endblock %}

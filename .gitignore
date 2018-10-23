@@ -39,6 +39,7 @@ htmlcov/
 .coverage
 .coverage.*
 .cache
+.pytest_cache
 nosetests.xml
 coverage.xml
 *.cover
@@ -102,3 +103,6 @@ vendor/services
 
 # docs
 exchange/static/docs
+
+# local test settings
+exchange/settings/local_settings.py

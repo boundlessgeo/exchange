@@ -2,6 +2,8 @@
 -e ./vendor/geonode
 -e ./vendor/gsconfig
 -e ./vendor/django-osgeo-importer
+-e ./vendor/arcrest/src
+-e ./vendor/django-ssl-pki
 -e ./vendor/geonode-elasticsearch
 git+https://github.com/MapStory/composer.git@master#composer
 git+https://github.com/boundlessgeo/sphinx@bex#egg=Sphinx
@@ -35,3 +37,15 @@ Django==1.8.18
 six==1.10.0
 cryptography==2.3
 urllib3==1.23
+
+# For pki app
+# should be with [secure] for pyOpenSSL, cryptography, etc. for modern SSL
+# urllib3[secure]==1.22
+# minimum of requests 2.12 needed, though not sure if it is urllib3-bug-free
+requests==2.18.4
+# more robust SSL in urllib3 with pyOpenSSL
+# pyOpenSSL==17.5.0
+# PKI component validations and db field encryption
+# cryptography==2.1.4
+# for user-ordering of wildcard hostname:port mappings
+django-ordered-model==1.4.3

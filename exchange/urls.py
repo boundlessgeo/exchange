@@ -55,7 +55,18 @@ urlpatterns = patterns(
     url(r'^about/', views.about_page, name='about'),
     url(r'^capabilities/', views.capabilities, name='capabilities'),
     url(r'^logout/', views.logout, name='exchange_logout'),
+
+    url(r'^maps/new$', views.new_map, name="new_map"),
+    url(r'^maps/new/data$', views.new_map_json, name='new_map_json'),
+
+    url(r'^proxy/', views.proxy),
+
+    (r'^services/', include('exchange.remoteservices.urls')),
 )
+
+if 'ssl_pki' in settings.INSTALLED_APPS:
+    from ssl_pki.urls import urlpatterns as pki_urls
+    urlpatterns += pki_urls
 
 if settings.ENABLE_SOCIAL_LOGIN is True:
     urlpatterns += [
@@ -83,12 +94,21 @@ if 'osgeo_importer' in settings.INSTALLED_APPS:
     from osgeo_importer.urls import urlpatterns as osgeo_importer_urls
     urlpatterns += osgeo_importer_urls
 
+# Layer detail override needs to come after the layer upload override
+urlpatterns += [
+    url(r'^layers/(?P<layername>[^/]*)$',
+        views.layer_detail, name="layer_detail"),
+]
+
 if 'nearsight' in settings.INSTALLED_APPS:
     from nearsight.urls import urlpatterns as nearsight_urls
     urlpatterns += nearsight_urls
 
 # Use our Elasticsearch implementation for search
 urlpatterns += [url('', include(search_urls)), ]
+
+if 'geonode_anywhere' in settings.INSTALLED_APPS:
+    urlpatterns += [url(r"^anywhere/", include("geonode_anywhere.urls")), ]
 
 if 'worm' in settings.INSTALLED_APPS:
     urlpatterns += [url(r"^services/", include("worm.urls")), ]
