@@ -104,3 +104,4 @@ vendor/services
 exchange/static/docs
 .vscode
 local_settings.py
+exchange/apps
