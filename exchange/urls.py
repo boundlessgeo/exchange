@@ -102,6 +102,9 @@ if 'worm' in settings.INSTALLED_APPS:
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += geonode_urls
+if settings.CARTOVIEW_ENABLED:
+    from cartoview.urls import urlpatterns as cartoview_urls
+    urlpatterns += cartoview_urls
 urlpatterns += fileservice_urls
 urlpatterns += thumbnail_urls
 urlpatterns += maploom_urls
