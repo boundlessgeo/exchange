@@ -68,15 +68,15 @@ Once the SSL had been configured, the hostname can be mapped to make all availab
 
   1. my.first.domain - Enabled
   2. my.second.domain - Enabled
-  3. *.domain - Enabled
+  3. \*.domain\ - Enabled
 
   Any requests for "my.first.domain" will map to the settings present in first entry, even though they also match the third entry in the list. However, in a list like this:
 
   1. my.first.domain - Disabled
   2. my.second.domain - Enabled
-  3. *.domain - Enabled
+  3. \*.domain\ - Enabled
 
-  Any requests for "my.first.domain" will map to the settings present in third entry. This means that a wildcard mapping like "*.*" should be used sparingly and as low down on the list as possible.
+  Any requests for "my.first.domain" will map to the settings present in third entry. This means that a wildcard mapping like ( * ) should be used sparingly and as low down on the list as possible.
 
   Use the Move arrows to move the matchings to the preferred order of precedence. Once the hostnames are configured, and in the desired match order, the user should be able to register the remote services without issue.
 
