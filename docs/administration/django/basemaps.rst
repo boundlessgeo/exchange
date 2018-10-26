@@ -11,6 +11,6 @@ Additional basemaps can be added for use in Exchange by publishing them from the
 
 2. Click the checkbox next to the basemap name(s) you want to see in Exchange.
 
-3. Select Publish Selected Basemaps from the action drop-down menu. Published basemaps will have a green checkmark under the Is Published column. The maps will now be available in the list of layers in Exchange, and can be made visible/not visible as with any other map layer.
+3. Select Enable Selected Basemaps from the action drop-down menu. Enabled basemaps will have a green checkmark under the Is Enabled column. The maps will now be available in the list of layers in Exchange, and can be made visible/not visible as with any other map layer.
 
   .. figure:: img/basemap-layers.png
