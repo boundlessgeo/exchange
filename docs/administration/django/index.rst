@@ -15,6 +15,7 @@ To access the Django administration site, log in to Exchange using your administ
    audit
    announcements
    avatars
+   basemaps
    documents
    groups
    layers
