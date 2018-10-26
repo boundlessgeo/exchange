@@ -8,7 +8,7 @@ The documentation has also undergone some structural changes to make it more int
 
 New Features:
 
-  * Boundless Exchange can now register and consume remote services that are protected with the Public Key Infrastructure (PKI) security mechanism.
+  * Boundless Exchange can now register and consume remote services that are protected with the Public Key Infrastructure (PKI) security mechanism
   * An Exchange administrator will now be able to configure base maps that can be used in map viewers
 
 Bug fixes addressed include:
