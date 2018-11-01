@@ -42,7 +42,7 @@ urllib3==1.23
 # should be with [secure] for pyOpenSSL, cryptography, etc. for modern SSL
 # urllib3[secure]==1.22
 # minimum of requests 2.12 needed, though not sure if it is urllib3-bug-free
-requests==2.18.4
+requests==2.20.0
 # more robust SSL in urllib3 with pyOpenSSL
 # pyOpenSSL==17.5.0
 # PKI component validations and db field encryption
