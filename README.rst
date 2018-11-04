@@ -1,3 +1,5 @@
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fboundlessgeo%2Fexchange.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fboundlessgeo%2Fexchange?ref=badge_shield)
+
 ==================
 Boundless Exchange
 ==================
@@ -34,3 +36,7 @@ The development team recommends using **Docker Engine 1.12.0+** (docker-compose)
 environment. See the `README`_ in the docker directory for detailed instructions.
 
 .. _README: docker/README.md
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fboundlessgeo%2Fexchange.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fboundlessgeo%2Fexchange?ref=badge_large)
