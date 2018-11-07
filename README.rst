@@ -33,4 +33,4 @@ resource providers.
 The development team recommends using **Docker Engine 1.12.0+** (docker-compose) for setting up your development
 environment. See the `README`_ in the docker directory for detailed instructions.
 
-.. _README: vendor/docker/bex/README.md
+.. _README: https://github.com/boundlessgeo/docker/blob/master/bex/README.md
