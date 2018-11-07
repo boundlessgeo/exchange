@@ -25,12 +25,3 @@ resource providers.
 
 
 `Get Boundless Exchange <http://boundlessgeo.com/buy-boundless-exchange/>`_
-
-------------
-
-**Development Environment Setup**
-
-The development team recommends using **Docker Engine 1.12.0+** (docker-compose) for setting up your development
-environment. See the `README`_ in the docker directory for detailed instructions.
-
-.. _README: https://github.com/boundlessgeo/docker/blob/master/bex/README.md
