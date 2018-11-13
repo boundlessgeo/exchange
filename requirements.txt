@@ -5,9 +5,9 @@
 -e ./vendor/arcrest/src
 -e ./vendor/django-ssl-pki
 -e ./vendor/geonode-elasticsearch
-git+https://github.com/MapStory/composer.git@master#composer
-git+https://github.com/boundlessgeo/sphinx@bex#egg=Sphinx
-git+https://github.com/venicegeo/nearsight@master#egg=nearsight
+git+https://github.com/MapStory/composer.git@93300659c4f1a02c4eb2f17713d38779c47cc4e1#composer
+git+https://github.com/boundlessgeo/sphinx@ad78538babd53a7a860fe297fffaed7abc11d0f5#egg=Sphinx
+git+https://github.com/venicegeo/nearsight@c30115bbe796ffca4e6e983a059127990d33b6a8#egg=nearsight
 django-jsonfield==1.0.1
 django-jsonfield-compat==0.4.4
 numpy==1.13.3
