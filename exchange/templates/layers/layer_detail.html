@@ -474,8 +474,11 @@
           {% empty %}
             <li>{% trans "This layer is not currently used in any maps." %}</li>
           {% endfor %}
+          {% if perms.maps.add_map == False and user.is_staff == False and user.is_superuser == False %}
+            <li>{% trans "You are not a Content Creator, so you may not create a map. Please contact an Administator if you believe you should be a Content Creator." %}</li>
+          {% endif %}
           <li style="margin-top:10px;">
-              <a href="{% url "new_map" %}?layer={{resource.service_typename}}" class="btn btn-primary btn-block">{% trans "Create a Map" %}</a>
+              <a href="{% url "new_map" %}?layer={{resource.service_typename}}" class="btn btn-primary btn-block" id="new-map-button">{% trans "Create a Map" %}</a>
           </li>
         </ul>
     </li>
@@ -639,5 +642,14 @@
               .tooltip('fixTitle');
         });
       });
+    </script>
+    <script>
+      // disable layer creation button and add attribute button if user is not a content creator
+      if ('{{ perms.maps.add_map }}' != 'True') {
+          // staff and superusers should be able to regardless
+          if ('{{ user.is_staff }}' != 'True' && '{{ user.is_superuser }}' != 'True') {
+              $('#new-map-button').attr('disabled', true);
+          }
+      }
     </script>
 {% endblock extra_script %}

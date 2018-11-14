@@ -1,0 +1,52 @@
+{% extends "services/services_base.html" %}
+{% load i18n %}
+
+{% block title %} Services -- {{ block.super }} {% endblock %}
+
+{% block body_outer %}
+<div class="page-header">
+  <a href="{% url "register_service" %}" class="btn btn-primary pull-right" id="service_register_button">{% trans "Register a new Service" %}</a>
+  <h2>{% trans "Remote Services" %}</h2>
+  {% if perms.services.add_service == False and user.is_staff == False and user.is_superuser == False %}
+    <p>{% trans "You are not a Service Manager, so you may not register a service. Please contact an Administator if you believe you should be a Service Manager." %}</p>
+  {% endif %}
+</div>
+<div class="twocol">
+{% if services %}
+<table class="table table-striped">
+  <thead>
+  	<th>Title</th>
+  	<th>URL</th>
+    <th>Type</th>
+    <th>Publisher</th>
+    <th>Published</th>
+  </thead>
+  {% for service in services %}
+  <tr>
+      <td><a href='{% url "service_detail" service.id %}'>{{ service.title }}</a></td>
+      <td><a href='{{ service.base_url }}' target="_blank" rel="noopener noreferrer">{{ service.base_url|truncatechars:60 }}</a></td>
+      <td>{{ service.type }}</td>
+      <td><a href='{% url "service_detail" service.id %}'>{{ service.owner.username }}</a></td>
+      <td><span class="badge">{{ service.layer_set.count }}</span></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<h4>No services registered</h4>
+{% endif %}
+</div>
+{% endblock %}
+{% block extra_script %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function () {
+    // disable service registration button if user is not a service manager
+    if ('{{ perms.services.add_service }}' != 'True') {
+        // staff and superusers should be able to regardless
+        if ('{{ user.is_staff }}' != 'True' && '{{ user.is_superuser }}' != 'True') {
+            $('#service_register_button').attr('disabled', true);
+        }
+    }
+})
+</script>
+{% endblock %}

@@ -66,10 +66,16 @@
                   <li><a href="{% url "search" %}?type=layer">{% trans "Layers" %}</a></li>
                   <li><a href="{% url "document_browse" %}">{% trans "Documents" %}</a></li>
                   <li role="separator" class="divider"></li>
-                  <li><a href="{% url "layer_upload" %}">{% trans "Upload Layer" %}</a></li>
-                  <li><a href="{% url "layer_create" %}">{% trans "Create Layer" %}</a></li>
-                  <li><a href="{% url "document_upload" %}">{% trans "Upload Document" %}</a></li>
+                  {% if perms.layers.add_layer == True or user.is_staff == True or user.is_superuser == True %}
+                  <li><a href="{% url "layer_upload" %}" id="upload-layer">{% trans "Upload Layer" %}</a></li>
+                  <li><a href="{% url "layer_create" %}" id="create-layer">{% trans "Create Layer" %}</a></li>
+                  {% endif %}
+                  {% if perms.documents.add_document == True or user.is_staff == True or user.is_superuser == True %}
+                  <li><a href="{% url "document_upload" %}" id="upload-document">{% trans "Upload Document" %}</a></li>
+                  {% endif %}
+                  {% if perms.layers.add_layer == True or perms.documents.add_document == True or user.is_staff == True or user.is_superuser == True %}
                   <li role="separator" class="divider"></li>
+                  {% endif %}
                   <li><a href="{% url "services" %}">{% trans "Manage Remote Services" %}</a></li>
                 </ul>
               </li>
@@ -80,7 +86,9 @@
                   </a>
                   <ul class="dropdown-menu">
                     <li><a href="{% url "search" %}?type=map">{% trans "Explore Maps" %}</a></li>
-                    <li> <a href="{% url "new_map" %}">{% trans "Create Map" %}</a></li>
+                    {% if perms.maps.add_map == True or user.is_staff == True or user.is_superuser == True %}
+                    <li> <a href="{% url "new_map" %}" id="create-map">{% trans "Create Map" %}</a></li>
+                    {% endif %}
                     {% if STORYSCAPES_ENABLED %}
                     <li><a href="/story/new">Compose Story</a></li>
                     {% endif %}

@@ -90,7 +90,8 @@ class ThemeTestCase(ExchangeTest):
                   'docs_link',
                   'background_logo',
                   'primary_logo',
-                  'banner_logo']})])
+                  'banner_logo',
+                  'custom_analytics']})])
         self.assertEqual(
             self.t1.background_logo_url,
             '/static/theme/img/default-background.png'

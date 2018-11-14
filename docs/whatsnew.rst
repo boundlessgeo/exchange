@@ -3,22 +3,21 @@ What’s New in Boundless Exchange
 
 Welcome to the latest update of Boundless Exchange!
 
-This release includes improved SLD handling and numerous bug fixes.
+This release includes a few new features and numerous bug fixes. 
+The documentation has also undergone some structural changes to make it more intuitive and easier to discover topics.
+
+New Features:
+
+  * Boundless Exchange can now register and consume remote services that are protected with the Public Key Infrastructure (PKI) security mechanism
+  * An Exchange administrator will now be able to configure base maps that can be used in map viewers
 
 Bug fixes addressed include:
 
-  * Support for user uploaded SLD Files
-  * Geonode error when .SLD file included in the Layer upload
-  * WMS popup Show Table error
-  * Maploom: Error editing the geometry of a feature
-  * WKID/WKT JSON error when registering services
-  * Maploom: Save Layer Style error
-  * Map reloaded from Explore Maps with only Remote Services show up disabled
-  * Styles created not part of the import process can't be modified in maploom
-  * Maps: IntegrityError populating keyword when editing Maps metadata
-  * Change Permissions for documents and maps not saving
-  * Create a Layer extent issue in Maploom
-  * Maploom: Layer names loading differently in Maploom
-  * Imported symbology not matching in View Details Page
-  * WMS urls are different - one of them works and the other does not
-  * Error loading tiles in the Map Preview for an SLD imported layer 
+  * Maploom: Bounding Box issue with Remote Services
+  * Maploom: Unique style missing Rules
+  * Maploom: Remote Services showing up disabled
+  * Error loading tiles in the Map Preview for an SLD imported layer
+  * ASCII Error when uploading zip file
+  * Delete Group page error
+  * Incorrect number of users are being displayed
+  * Capabilities endpoint fails when using local auth 

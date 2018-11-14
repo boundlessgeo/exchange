@@ -1,0 +1,78 @@
+{% extends "services/services_base.html" %}
+{% load bootstrap_tags %}
+{% load i18n %}
+
+{% block head %}
+{{ block.super }}
+
+
+{% endblock %}
+
+{% block title %} Edit Service - {{ block.super }} {% endblock %}
+
+{% block body %}
+<div class="page-header">
+  <h2>{% trans "Edit Service" %}</h2>
+</div>
+<form method="POST" id="service_edit_form">
+  {% csrf_token %}
+  {{ service_form|as_bootstrap }}
+  <div class="grid-spacer">
+    <p><input type="submit" class="btn btn-primary" value="{% trans "Save" %}"/></p>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_script %}
+{{ block.super }}
+<script type="text/javascript">
+  $(document).ready(function () {
+    {% autoescape on %}
+    var classification_mapping = {{ classification_levels | safe }};
+    {% endautoescape %}
+    var classification_dropdown = $('#id_service-classification')[0];
+    var caveat_dropdown = $('#id_service-caveat')[0];
+
+    var get_caveats_from_classification = function (classification) {
+      return classification_mapping[classification];
+    };
+
+    var get_selected_value = function () {
+      var i = 0;
+
+      while (i < caveat_dropdown.options.length){
+        if (caveat_dropdown.options[i].selected)
+          return caveat_dropdown.options[i].value;
+        i = i + 1;
+      }
+      return false;
+    }
+
+    var update_caveats = function () {
+
+      var selected_value = get_selected_value();
+
+      while(caveat_dropdown.options.length) {
+        caveat_dropdown.remove(0);
+      }
+
+      var caveats = get_caveats_from_classification(classification_dropdown.value);
+      var i;
+      for (i = 0; i < caveats.length; i++) {
+
+        if (caveats[i] === selected_value)
+          caveat_dropdown.add(new Option(caveats[i], caveats[i], false, true));
+        else
+          caveat_dropdown.add(new Option(caveats[i], caveats[i]));
+
+      }
+    };
+
+    update_caveats();
+
+    classification_dropdown.onchange = function(){
+      update_caveats();
+    };
+  });
+</script>
+{% endblock %}

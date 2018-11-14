@@ -31,6 +31,8 @@ from django.db.models import Q
 from geonode.base.models import TopicCategory, License
 from geonode.base.enumerations import UPDATE_FREQUENCIES
 from django.conf import settings
+from django.db.models.signals import post_save
+from django.contrib.auth.models import Group
 
 
 def get_thumb_image_path(instance, filename):
@@ -212,3 +214,15 @@ class CSWRecordReference(models.Model):
     scheme = models.CharField(
         verbose_name='Service Type', choices=scheme_choices, max_length=100)
     url = models.URLField(max_length=512, blank=False)
+
+
+def add_default_permissions(sender, **kwargs):
+    user = kwargs['instance']
+    if kwargs['created']:
+        content_creator = Group.objects.get(name='content_creator')
+        service_manager = Group.objects.get(name='service_manager')
+        user.groups.add(content_creator)
+        user.groups.add(service_manager)
+
+
+post_save.connect(add_default_permissions, sender=settings.AUTH_USER_MODEL)

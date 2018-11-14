@@ -1,0 +1,50 @@
+[
+  {
+    "fields": {
+      "resource": 1,
+      "name": "Legend",
+      "extension": "json",
+      "url": "http://nginx.boundless.test/proxy/?url=https%3A%2F%2Fservices.arcgisonline.com%2Farcgis%2Frest%2Fservices%2FDemographics%2FUSA_Population_Density%2FMapServer%2Flegend%3Ff%3Dpjson",
+      "mime": "application/json",
+      "link_type": "data"
+    },
+    "model": "base.link",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "resource": 2,
+      "name": "Legend",
+      "extension": "png",
+      "url": "http://nginx.boundless.test/proxy/?url=https%3A%2F%2Fmapproxy.boundless.test%3A8344%2Fservice%3Fwidth%3D20%26layer%3Dbcs_data%3Ane_50m_populated_places_simple%26version%3D1.1.1%26service%3DWMS%26format%3Dimage%2Fpng%26request%3DGetLegendGraphic%26legend_options%3DfontAntiAliasing%253Atrue%253BfontSize%253A12%253BforceLabels%253Aon%26height%3D20",
+      "mime": "image/png",
+      "link_type": "image"
+    },
+    "model": "base.link",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "resource": 3,
+      "name": "Legend",
+      "extension": "png",
+      "url": "https://data-test.boundlessgeo.io/geoserver/wms?width=20&layer=bcs_data:115th_congressional_districts&version=1.1.1&service=WMS&format=image/png&request=GetLegendGraphic&legend_options=fontAntiAliasing:true;fontSize:12;forceLabels:on&height=20",
+      "mime": "image/png",
+      "link_type": "image"
+    },
+    "model": "base.link",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "resource": 4,
+      "name": "Legend",
+      "extension": "png",
+      "url": "https://data-test.boundlessgeo.io/geoserver/wms?width=20&layer=bcs_data:115th_congressional_districts&version=1.1.1&service=WMS&format=image/png&request=GetLegendGraphic&legend_options=fontAntiAliasing:true;fontSize:12;forceLabels:on&height=20",
+      "mime": "image/png",
+      "link_type": "image"
+    },
+    "model": "base.link",
+    "pk": 4
+  }
+]

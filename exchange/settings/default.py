@@ -19,6 +19,7 @@
 #########################################################################
 
 import os
+import sys
 import copy
 import dj_database_url
 from ast import literal_eval as le
@@ -47,6 +48,7 @@ def isValid(v):
 
 ANYWHERE_ENABLED = str2bool(os.getenv('ANYWHERE_ENABLED', False))
 SITENAME = os.getenv('SITENAME', 'exchange')
+EXCHANGE_LOCAL_URL = os.getenv('EXCHANGE_LOCAL_URL', 'http://localhost')
 WSGI_APPLICATION = "exchange.wsgi.application"
 ROOT_URLCONF = 'exchange.urls'
 SOCIAL_BUTTONS = str2bool(os.getenv('SOCIAL_BUTTONS', 'False'))
@@ -72,8 +74,11 @@ CLASSIFICATION_BACKGROUND_COLOR = os.getenv(
 )
 CLASSIFICATION_LINK = os.getenv('CLASSIFICATION_LINK', None)
 
-CLASSIFICATION_LEVELS = os.getenv('CLASSIFICATION_LEVELS', ['UNCLASSIFIED', ])
-CAVEATS = os.getenv('CLASSIFICATION_LEVELS', ['FOUO', ])
+CLASSIFICATION_LEVELS = {
+    "sample 1": ["cav1", "cav2"],
+    "sample 2": ["cav1", "cav3"],
+    "sample 3": ["cav4", "cav5"]
+}
 
 # MapLoom Styling Control
 LOOM_STYLING_ENABLED = str2bool(os.getenv('LOOM_STYLING_ENABLED', 'True'))
@@ -213,7 +218,8 @@ INSTALLED_APPS = (
     'solo',
     'composer',
     'social_django',
-) + ADDITIONAL_APPS + INSTALLED_APPS + ('exchange.services',)
+    'exchange.remoteservices',
+) + ADDITIONAL_APPS + INSTALLED_APPS
 
 MIGRATION_MODULES = {
     'user_messages': 'exchange.3pm.user_messages',
@@ -367,6 +373,8 @@ if 'geonode.geoserver' in INSTALLED_APPS:
     MAP_BASELAYERS.extend(baselayers)
 
 
+PROXY_BASEMAP = str2bool(os.getenv('PROXY_BASEMAP', 'False'))
+
 POSTGIS_URL = os.getenv(
     'POSTGIS_URL',
     'postgis://exchange:boundless@localhost:5432/exchange_data'
@@ -387,7 +395,7 @@ if WGS84_MAP_CRS:
 # Set ES_SEARCH to True
 # Run "python manage.py clear_haystack" (if upgrading from haystack)
 # Run "python manage.py rebuild_index"
-ES_SEARCH = strtobool(os.getenv('ES_SEARCH', 'True'))
+ES_SEARCH = strtobool(os.getenv('ES_SEARCH', 'False'))
 
 if ES_SEARCH:
     INSTALLED_APPS = (
@@ -446,20 +454,38 @@ if AUDIT_ENABLED:
 # Logging settings
 # 'DEBUG', 'INFO', 'WARNING', 'ERROR', or 'CRITICAL'
 DJANGO_LOG_LEVEL = os.getenv('DJANGO_LOG_LEVEL', 'ERROR')
+DJANGO_IGNORED_WARNINGS = {
+    'RemovedInDjango18Warning',
+    'RemovedInDjango19Warning',
+    'RuntimeWarning: DateTimeField',
+}
+
+
+def filter_django_warnings(record):
+    for ignored in DJANGO_IGNORED_WARNINGS:
+        if hasattr(record, 'args'):
+            if type(record.args) is list:
+                if len(record.args) > 0:
+                    if ignored in record.args[0]:
+                        return False
+    return True
+
 
 installed_apps_conf = {
     'handlers': ['console'],
     'level': DJANGO_LOG_LEVEL,
 }
 
+# noinspection PyDictCreation
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
             'format':
-                ('%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d'
-                 ' %(message)s'),
+                ('%(levelname)s %(asctime)s %(name)s '
+                 '(%(filename)s %(lineno)d) %(module)s %(process)d '
+                 '%(thread)d %(message)s'),
         },
     },
     'handlers': {
@@ -467,14 +493,22 @@ LOGGING = {
             'level': DJANGO_LOG_LEVEL,
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
-        }
+            'stream': sys.stdout
+        },
+    },
+    'filters': {
+        'ignore_django_warnings': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': filter_django_warnings,
+        },
     },
     'loggers': {
         app: copy.deepcopy(installed_apps_conf) for app in INSTALLED_APPS
     },
     'root': {
         'handlers': ['console'],
-        'level': DJANGO_LOG_LEVEL
+        'level': DJANGO_LOG_LEVEL,
+        'filters': ['ignore_django_warnings', ],
     },
 }
 
@@ -485,6 +519,30 @@ LOGGING['loggers']['django.db.backends'] = {
 }
 
 # Authentication Settings
+
+# ssl_pki
+SSL_PKI_ENABLED = str2bool(os.getenv('SSL_PKI_ENABLED', 'False'))
+if SSL_PKI_ENABLED:
+    INSTALLED_APPS = INSTALLED_APPS + (
+        'ordered_model',
+        'ssl_pki',
+        'exchange.sslpki',  # for connecting ssl_pki signals to geonode models
+        'exchange.sslpki.pki',  # mock old exchange.pki app, for data migration
+    )
+
+    # Force max length validation on encrypted password fields
+    ENFORCE_MAX_LENGTH = 1
+
+    # IMPORTANT: this directory should not be within application or www roots
+    PKI_DIRECTORY = os.getenv('PKI_DIRECTORY', '/usr/local/exchange-pki')
+
+    # ssl_pki app expects a generic setting for EXCHANGE_LOCAL_URL
+    try:
+        SITE_LOCAL_URL = EXCHANGE_LOCAL_URL
+    except NameError:
+        SITE_LOCAL_URL = os.getenv('SITE_LOCAL_URL', 'http://localhost')
+
+    # TODO: add back logtailer setup, if needed
 
 # ldap
 AUTH_LDAP_SERVER_URI = os.getenv('AUTH_LDAP_SERVER_URI', None)
@@ -589,6 +647,11 @@ DEFAULT_ANONYMOUS_VIEW_PERMISSION = str2bool(
     os.getenv('DEFAULT_ANONYMOUS_VIEW_PERMISSION', 'True'))
 DEFAULT_ANONYMOUS_DOWNLOAD_PERMISSION = str2bool(
     os.getenv('DEFAULT_ANONYMOUS_DOWNLOAD_PERMISSION', 'True'))
+# Set default access to layers to all, but only for remote layers
+DEFAULT_ANONYMOUS_VIEW_PERMISSION_REMOTE = str2bool(
+    os.getenv('DEFAULT_ANONYMOUS_VIEW_PERMISSION_REMOTE', 'True'))
+DEFAULT_ANONYMOUS_DOWNLOAD_PERMISSION_REMOTE = str2bool(
+    os.getenv('DEFAULT_ANONYMOUS_DOWNLOAD_PERMISSION_REMOTE', 'True'))
 
 ENABLE_SOCIAL_LOGIN = str2bool(os.getenv('ENABLE_SOCIAL_LOGIN', 'False'))
 
@@ -728,7 +791,15 @@ MAP_CLIENT_USE_CROSS_ORIGIN_CREDENTIALS = str2bool(os.getenv(
 ))
 SOCIAL_AUTH_LOGIN_ERROR_URL = '/auth-failed'
 
-PROXY_URL = ''
+PROXY_URL = os.getenv(
+    'PROXY_URL',
+    ''
+)
+
+ACCESS_TOKEN_NAME = os.getenv(
+    'ACCESS_TOKEN_NAME',
+    'x-token'
+)
 
 # Settings to change the WMS that is used for backgrounds on
 # Thumbnail generation.
@@ -789,3 +860,6 @@ if CARTOVIEW_ENABLED:
             execfile(settings_file)
         except Exception as e:
             pass
+
+
+GOOGLE_ANALYTICS_ID = os.getenv('GOOGLE_ANALYTICS_ID', None)

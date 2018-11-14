@@ -39,6 +39,7 @@ htmlcov/
 .coverage
 .coverage.*
 .cache
+.pytest_cache
 nosetests.xml
 coverage.xml
 *.cover
@@ -102,7 +103,14 @@ vendor/services
 
 # docs
 exchange/static/docs
+
+# local test settings
+exchange/settings/local_settings.py
+
+# vscode
 .vscode
-local_settings.py
+
+# cartoview
 exchange/apps
+
 uploaded

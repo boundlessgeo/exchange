@@ -1,0 +1,70 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+
+{% block extra_script %}
+<script>
+
+   function chooseFile() {
+      $("#id_file").click();
+   }
+
+   $("#id_file").on("change", function() {
+     $("#uploads-new-form").submit();
+    });
+
+</script>
+
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function () {
+    // disable layer creation button and add attribute button if user is not a content creator
+    if ('{{ perms.layers.add_layer }}' != 'True') {
+        // staff and superusers should be able to regardless
+        if ('{{ user.is_staff }}' != 'True' && '{{ user.is_superuser }}' != 'True') {
+            $('#choose_files_button').prop('disabled', true);
+            $('#add_data_button').attr('disabled', true);
+        }
+    }
+})
+</script>
+{% endblock %}
+
+{% block body_outer %}
+
+<div class="page-header">
+  {% if perms.layers.add_layer == True or user.is_staff == True or user.is_superuser == True %}
+    <a href="{% url 'uploads-list' %}" id="add_data_button"><div class="pull-right" style="margin-top: 25px; font-size: 14px">Manage Your Data</div></a>
+  {% endif %}
+  <h2 class="page-title">{% trans "Add Data" %}</h2>
+  {% if perms.layers.add_layer == False and user.is_staff == False and user.is_superuser == False %}
+    <p>{% trans "You are not a Content Creator, so you may not upload a layer. Please contact an Administator if you believe you should be a Content Creator." %}</p>
+  {% endif %}
+</div>
+
+<div>
+  <div class="row" style="margin:20px 0 30px">
+	<form id="uploads-new-form" action="{% url 'uploads-new' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div style="height:0px;overflow:hidden">
+            {{form}}
+        </div>
+        <div class="row">
+            <button type="button" class="btn-info col-md-4 btn" onclick="chooseFile();" id="choose_files_button">choose file(s)</button>
+        </div>
+        <div class="row">
+            <div class="errorlist">
+            {% for error in form.file.errors %}
+                <i class="fa fa-warning">  {{ error|escape }}</i>
+            {% endfor %}
+                <div class="col-md-6" style="padding-top: 5px; padding-left: 2px;">
+                    Valid file extensions: {{ VALID_EXTENSIONS }}
+                </div>
+            </div>
+
+        </div>
+        </form>
+	</div>
+</div>
+
+
+{% endblock %}
