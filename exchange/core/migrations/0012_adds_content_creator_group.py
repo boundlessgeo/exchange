@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
@@ -66,13 +67,11 @@ class Migration(migrations.Migration):
                      profile.is_superuser is False and
                      profile.username != 'AnonymousUser']
 
-        # Adding the content_creator and service_manager groups
-        # to all users by default
-        content_creator = AuthGroup.objects.get(name='content_creator')
-        service_manager = AuthGroup.objects.get(name='service_manager')
+        # Adding the default auth groups to all users
         for user in all_users:
-            user.groups.add(content_creator)
-            user.groups.add(service_manager)
+            for group_name in settings.DEFAULT_USER_AUTH_GROUPS:
+                auth_group = AuthGroup.objects.get(name=group_name)
+                user.groups.add(auth_group)
 
     operations = [
         migrations.RunPython(create_group),

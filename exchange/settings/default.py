@@ -615,6 +615,9 @@ DEFAULT_ANONYMOUS_VIEW_PERMISSION_REMOTE = str2bool(
 DEFAULT_ANONYMOUS_DOWNLOAD_PERMISSION_REMOTE = str2bool(
     os.getenv('DEFAULT_ANONYMOUS_DOWNLOAD_PERMISSION_REMOTE', 'True'))
 
+# List of auth groups to add new users to by default
+DEFAULT_USER_AUTH_GROUPS = ['content_creator', 'service_manager']
+
 ENABLE_SOCIAL_LOGIN = str2bool(os.getenv('ENABLE_SOCIAL_LOGIN', 'False'))
 
 # Should always be set to true if we're behind a proxy

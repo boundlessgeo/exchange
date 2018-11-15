@@ -215,10 +215,9 @@ class CSWRecordReference(models.Model):
 def add_default_permissions(sender, **kwargs):
     user = kwargs['instance']
     if kwargs['created']:
-        content_creator = Group.objects.get(name='content_creator')
-        service_manager = Group.objects.get(name='service_manager')
-        user.groups.add(content_creator)
-        user.groups.add(service_manager)
+        for group_name in settings.DEFAULT_USER_AUTH_GROUPS:
+            auth_group = Group.objects.get(name=group_name)
+            user.groups.add(auth_group)
 
 
 post_save.connect(add_default_permissions, sender=settings.AUTH_USER_MODEL)
