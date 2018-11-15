@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('base', '24_to_26'),
-        ('core', '0007_auto_20170809_1750'),
+        ('core', '0008_adds_content_manager_group'),
     ]
 
     operations = [
