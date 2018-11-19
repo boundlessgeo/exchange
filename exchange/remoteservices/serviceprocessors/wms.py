@@ -25,6 +25,7 @@ from urlparse import urlsplit
 from uuid import uuid4
 
 from django.conf import settings
+from django.utils.translation import ugettext as _
 from geonode.base.models import Link
 from geonode.layers.utils import create_thumbnail
 from geonode.services.enumerations import CASCADED, INDEXED

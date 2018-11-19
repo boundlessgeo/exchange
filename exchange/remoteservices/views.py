@@ -20,9 +20,8 @@
 
 from django.contrib.auth.decorators import login_required
 from exchange.remoteservices.forms import ExchangeCreateServiceForm
-from geonode.services.forms import ServiceForm
 from geonode.services import enumerations
-from geonode.services.models import  HarvestJob
+from geonode.services.models import HarvestJob
 from exchange.remoteservices import tasks
 import logging
 from django.contrib import messages

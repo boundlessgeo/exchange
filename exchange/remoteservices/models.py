@@ -3,7 +3,6 @@ from geonode.services import models as services_models
 
 
 class ExchangeService(services_models.Service):
-
     classification = models.CharField(
         max_length=255,
         null=True,
@@ -47,5 +46,3 @@ class ExchangeService(services_models.Service):
 
     def get_upload_session(self):
         raise NotImplementedError()
-
-

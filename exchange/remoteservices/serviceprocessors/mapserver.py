@@ -22,7 +22,8 @@
 import logging
 from uuid import uuid4
 
-from django.conf import settings
+from django.conf import
+from django.utils.translation import ugettext as _
 from geonode.services.serviceprocessors.arcgis import ArcMapServiceHandler
 
 from exchange.remoteservices.models import ExchangeService
@@ -54,8 +55,10 @@ class ExchangeMapserverServiceHandler(ArcMapServiceHandler):
     #     logger.debug('passed headers = {0}'.format(headers))
     #
     #     self.parsed_service = ArcMapService(url, add_headers=headers)
-    #     self.indexing_method = (
-    #         INDEXED if self._offers_geonode_projection(self.parsed_service.spatialReference['wkid']) else CASCADED)
+    #     wkid = self.parsed_service.spatialReference['wkid']
+    #     self.indexing_method = INDEXED
+    #                            if self._offers_geonode_projection(wkid)
+    #                            else CASCADED
     #     self.url = self.parsed_service.url
     #     self.pki_proxy_url = None
     #     self.pki_url = None
@@ -65,7 +68,7 @@ class ExchangeMapserverServiceHandler(ArcMapServiceHandler):
     #         self.url = pki_route_reverse(self.url)
     #     # self.title = self.parsed_service.itemInfo['title']
     #     # self.name = _get_valid_name(self.parsed_service.itemInfo['name'])
-    #
+
     def create_geonode_service(self, owner, parent=None):
         """Create a new geonode.service.models.Service instance
 
@@ -85,8 +88,8 @@ class ExchangeMapserverServiceHandler(ArcMapServiceHandler):
             version=self.parsed_service._json_struct["currentVersion"],
             name=self.name,
             title=self.title,
-            abstract=self.parsed_service._json_struct["serviceDescription"] or _(
-                "Not provided"),
+            abstract=self.parsed_service._json_struct["serviceDescription"] or
+                     _("Not provided"),
             online_resource=self.parsed_service.url,
         )
         return instance
