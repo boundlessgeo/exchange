@@ -55,7 +55,7 @@ def get_service_handler(base_url, service_type=enumerations.AUTO,
         enumerations.WMS: {"OWS": True, "handler": ExchangeWmsServiceHandler},
         # enumerations.WFS: {"OWS": True, "handler": ServiceHandlerBase},
         # enumerations.TMS: {"OWS": False, "handler": ServiceHandlerBase},
-        enumerations.REST: {"OWS": False,
+        enumerations.REST_MAP: {"OWS": False,
                             "handler": ExchangeMapserverServiceHandler},
         # enumerations.CSW: {"OWS": False, "handler": ServiceHandlerBase},
         # enumerations.HGL: {"OWS": True, "handler": ServiceHandlerBase},
@@ -101,7 +101,7 @@ def get_service_handler(base_url, service_type=enumerations.AUTO,
             headers['PKI_SERVICE_TYPE'] = "{0}".format(service_type)
 
         try:
-            service = handler(base_url, headers=headers)
+            service = handler(base_url)
         except Exception:
             logger.exception(
                 msg="Could not parse service {!r}".format(base_url))

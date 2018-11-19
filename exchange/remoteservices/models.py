@@ -2,7 +2,7 @@ from django.db import models
 from geonode.services import models as services_models
 
 
-class Service(services_models.Service):
+class ExchangeService(services_models.Service):
 
     classification = models.CharField(
         max_length=255,
@@ -49,5 +49,3 @@ class Service(services_models.Service):
         raise NotImplementedError()
 
 
-# Monkey Patching to avoid copying geonode.services views and forms
-services_models.Service = Service

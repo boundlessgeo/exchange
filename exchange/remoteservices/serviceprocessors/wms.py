@@ -19,16 +19,20 @@
 
 """Utilities for enabling OGC WMS remote services in geonode."""
 
+import logging
+from urllib import quote
+from urlparse import urlsplit
+from uuid import uuid4
+
+from django.conf import settings
+from geonode.base.models import Link
+from geonode.layers.utils import create_thumbnail
+from geonode.services.enumerations import CASCADED, INDEXED
 from geonode.services.serviceprocessors.wms import WmsServiceHandler
 from geonode.services.serviceprocessors.wms import _get_valid_name
-import logging
 from owslib.wms import WebMapService
-from urlparse import urlsplit
-from geonode.services.enumerations import CASCADED, INDEXED
-from geonode.layers.utils import create_thumbnail
-from geonode.base.models import Link
-from urllib import quote
-from django.conf import settings
+
+from exchange.remoteservices.models import ExchangeService
 
 try:
     if 'ssl_pki' not in settings.INSTALLED_APPS:
@@ -95,6 +99,31 @@ class ExchangeWmsServiceHandler(WmsServiceHandler):
             check_bbox=True,
             overwrite=True,
         )
+
+    def create_geonode_service(self, owner, parent=None):
+        """Create a new geonode.service.models.Service instance
+
+        :arg owner: The user who will own the service instance
+        :type owner: geonode.people.models.Profile
+
+        """
+
+        instance = ExchangeService(
+            uuid=str(uuid4()),
+            base_url=self.url,
+            proxy_base=None,  # self.proxy_base,
+            type=self.service_type,
+            method=self.indexing_method,
+            owner=owner,
+            parent=parent,
+            version=self.parsed_service.identification.version,
+            name=self.name,
+            title=self.parsed_service.identification.title or self.name,
+            abstract=self.parsed_service.identification.abstract or _(
+                "Not provided"),
+            online_resource=self.parsed_service.provider.url,
+        )
+        return instance
 
     def _create_layer_legend_link(self, geonode_layer):
         """Get the layer's legend and save it locally

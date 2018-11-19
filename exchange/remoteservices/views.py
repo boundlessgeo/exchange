@@ -22,7 +22,7 @@ from django.contrib.auth.decorators import login_required
 from exchange.remoteservices.forms import ExchangeCreateServiceForm
 from geonode.services.forms import ServiceForm
 from geonode.services import enumerations
-from geonode.services.models import Service, HarvestJob
+from geonode.services.models import  HarvestJob
 from exchange.remoteservices import tasks
 import logging
 from django.contrib import messages
@@ -39,6 +39,9 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from geonode.services.views import _gen_harvestable_ids
 from django.template import RequestContext
 from geonode.people.models import Profile
+
+from .forms import ExchangeEditServiceForm
+from .models import ExchangeService
 
 logger = logging.getLogger("geonode.core.layers.views")
 
@@ -58,10 +61,7 @@ def register_service(request):
             service.full_clean()
             service.save()
             service.keywords.add(*service_handler.get_keywords())
-            service.set_permissions({'users': {
-                ''.join(request.user.username):
-                    ['services.change_service', 'services.delete_service']
-            }})
+            service.set_default_permissions()
             if service_handler.indexing_method == enumerations.CASCADED:
                 service_handler.create_cascaded_store()
             request.session[service_handler.url] = service_handler
@@ -89,11 +89,11 @@ def edit_service(request, service_id):
     """
     Edit an existing Service
     """
-    service_obj = get_object_or_404(Service, pk=service_id)
+    service_obj = get_object_or_404(ExchangeService, pk=service_id)
     classification_dict = getattr(settings, "CLASSIFICATION_LEVELS", {})
 
     if request.method == "POST":
-        service_form = ServiceForm(
+        service_form = ExchangeEditServiceForm(
             request.POST, instance=service_obj, prefix="service")
         if service_form.is_valid():
             service_obj = service_form.save(commit=False)
@@ -103,7 +103,7 @@ def edit_service(request, service_id):
             return HttpResponseRedirect(reverse(
                 "harvest_resources", kwargs={"service_id": service_id}))
     else:
-        service_form = ServiceForm(
+        service_form = ExchangeEditServiceForm(
             instance=service_obj, prefix="service")
 
     return render_to_response("services/service_edit.html",
@@ -137,7 +137,7 @@ def _get_service_handler(request, service):
 
 @login_required()
 def harvest_resources(request, service_id):
-    service = get_object_or_404(Service, pk=service_id)
+    service = get_object_or_404(ExchangeService, pk=service_id)
     try:
         handler = request.session[service.base_url]
     except KeyError:  # handler is not saved on the session, recreate it
@@ -212,7 +212,7 @@ def harvest_resources(request, service_id):
 
 @login_required()
 def harvest_single_resource(request, service_id, resource_id):
-    service = get_object_or_404(Service, pk=service_id)
+    service = get_object_or_404(ExchangeService, pk=service_id)
     handler = _get_service_handler(request, service)
     try:  # check that resource_id is valid for this handler
         handler.get_resource(resource_id)
@@ -244,7 +244,7 @@ def harvest_single_resource(request, service_id, resource_id):
 
 @login_required
 def rescan_service(request, service_id):
-    service = get_object_or_404(Service, pk=service_id)
+    service = get_object_or_404(ExchangeService, pk=service_id)
     try:
         _get_service_handler(request, service)
     except Exception:
