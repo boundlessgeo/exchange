@@ -22,7 +22,7 @@
 import logging
 from uuid import uuid4
 
-from django.conf import
+from django.conf import settings
 from django.utils.translation import ugettext as _
 from geonode.services.serviceprocessors.arcgis import ArcMapServiceHandler
 
@@ -77,6 +77,7 @@ class ExchangeMapserverServiceHandler(ArcMapServiceHandler):
 
         """
 
+        abstract = self.parsed_service._json_struct["serviceDescription"]
         instance = ExchangeService(
             uuid=str(uuid4()),
             base_url=self.url,
@@ -88,8 +89,7 @@ class ExchangeMapserverServiceHandler(ArcMapServiceHandler):
             version=self.parsed_service._json_struct["currentVersion"],
             name=self.name,
             title=self.title,
-            abstract=self.parsed_service._json_struct["serviceDescription"] or
-                     _("Not provided"),
+            abstract=abstract or _("Not provided"),
             online_resource=self.parsed_service.url,
         )
         return instance
