@@ -827,10 +827,6 @@ IMPORT_TASK_SOFT_TIME_LIMIT = le(os.getenv('IMPORTER_TIMEOUT', '90'))
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 ALLOWED_HOSTS = ['*']
-try:
-    from local_settings import *  # noqa
-except ImportError:
-    pass
 
 # cartoview settings
 CARTOVIEW_ENABLED = le(os.getenv('CARTOVIEW_ENABLED', "True"))
