@@ -826,7 +826,8 @@ ACCESS_TOKEN_NAME = os.getenv(
 IMPORT_TASK_SOFT_TIME_LIMIT = le(os.getenv('IMPORTER_TIMEOUT', '90'))
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
-ALLOWED_HOSTS = ['*']
+
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', ['*'])
 
 # cartoview settings
 CARTOVIEW_ENABLED = le(os.getenv('CARTOVIEW_ENABLED', "True"))
