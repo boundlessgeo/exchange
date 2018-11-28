@@ -1,3 +1,5 @@
+.. _createmap:
+
 Create a Map
 ============
 

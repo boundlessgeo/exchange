@@ -27,3 +27,11 @@ User Guide
    guide/styling/index
    guide/create_layer/index
    guide/analysis/index
+
+Applications
+------------
+
+.. toctree::
+   :maxdepth: 2
+
+   applications/index
