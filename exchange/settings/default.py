@@ -863,3 +863,4 @@ if CARTOVIEW_ENABLED:
 
 
 GOOGLE_ANALYTICS_ID = os.getenv('GOOGLE_ANALYTICS_ID', None)
+SECRET_KEY = os.getenv('SECRET_KEY', 'boundlessgeo')
