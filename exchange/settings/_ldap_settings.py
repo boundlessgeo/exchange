@@ -21,11 +21,9 @@
 import ldap
 import os
 from ast import literal_eval as le
-from .default import str2bool
-from django_auth_ldap.config import (ActiveDirectoryGroupType,
-                                     LDAPSearch,
+from .settings import str2bool
+from django_auth_ldap.config import (ActiveDirectoryGroupType, LDAPSearch,
                                      MemberDNGroupType)
-
 
 if str2bool(os.environ.get('AUTH_LDAP_DEBUG')):
     import logging
@@ -52,10 +50,12 @@ AUTHENTICATION_BACKENDS = (
 AUTH_LDAP_BIND_DN = os.environ.get('AUTH_LDAP_BIND_DN', '')
 AUTH_LDAP_BIND_PASSWORD = os.environ.get('AUTH_LDAP_BIND_PASSWORD', '')
 AUTH_LDAP_USER_ATTR_MAP = {
-    'first_name': 'givenName', 'last_name': 'sn', 'email': LDAP_EMAIL_MAP,
+    'first_name': 'givenName',
+    'last_name': 'sn',
+    'email': LDAP_EMAIL_MAP,
 }
-AUTH_LDAP_USER_SEARCH = LDAPSearch(LDAP_SEARCH_DN,
-                                   ldap.SCOPE_SUBTREE, AUTH_LDAP_USER)
+AUTH_LDAP_USER_SEARCH = LDAPSearch(LDAP_SEARCH_DN, ldap.SCOPE_SUBTREE,
+                                   AUTH_LDAP_USER)
 
 # ldap django search mappings
 GROUP_SEARCH = os.environ.get('LDAP_GROUP_SEARCH', None)
@@ -66,11 +66,8 @@ if GROUP_SEARCH and len(GROUP_SEARCH) > 0:
         GROUP_SEARCH = GROUP_SEARCH
 if GROUP_SEARCH:
     AUTH_LDAP_USER_FLAGS_BY_GROUP = {}
-    AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
-        GROUP_SEARCH,
-        ldap.SCOPE_SUBTREE,
-        "(objectClass=group)"
-    )
+    AUTH_LDAP_GROUP_SEARCH = LDAPSearch(GROUP_SEARCH, ldap.SCOPE_SUBTREE,
+                                        "(objectClass=group)")
 
     ACTIVE_SEARCH = os.environ.get('LDAP_ACTIVE_SEARCH', None)
     STAFF_SEARCH = os.environ.get('LDAP_STAFF_SEARCH', None)
@@ -78,22 +75,16 @@ if GROUP_SEARCH:
 
     if ACTIVE_SEARCH and len(ACTIVE_SEARCH) > 0:
         try:
-            AUTH_LDAP_USER_FLAGS_BY_GROUP['is_active'] = le(
-                ACTIVE_SEARCH
-            )
+            AUTH_LDAP_USER_FLAGS_BY_GROUP['is_active'] = le(ACTIVE_SEARCH)
         except SyntaxError:
             AUTH_LDAP_USER_FLAGS_BY_GROUP['is_active'] = ACTIVE_SEARCH
         if STAFF_SEARCH and len(STAFF_SEARCH) > 0:
             try:
-                AUTH_LDAP_USER_FLAGS_BY_GROUP['is_staff'] = le(
-                    STAFF_SEARCH
-                )
+                AUTH_LDAP_USER_FLAGS_BY_GROUP['is_staff'] = le(STAFF_SEARCH)
             except SyntaxError:
                 AUTH_LDAP_USER_FLAGS_BY_GROUP['is_staff'] = STAFF_SEARCH
         if SU_SEARCH and len(SU_SEARCH) > 0:
             try:
-                AUTH_LDAP_USER_FLAGS_BY_GROUP['is_superuser'] = le(
-                    SU_SEARCH
-                )
+                AUTH_LDAP_USER_FLAGS_BY_GROUP['is_superuser'] = le(SU_SEARCH)
             except SyntaxError:
                 AUTH_LDAP_USER_FLAGS_BY_GROUP['is_superuser'] = SU_SEARCH

@@ -24,12 +24,6 @@ import copy
 import dj_database_url
 from ast import literal_eval as le
 from geonode.settings import *  # noqa
-from geonode.settings import (
-    MIDDLEWARE_CLASSES,
-    STATICFILES_DIRS,
-    INSTALLED_APPS,
-    DATABASES
-)
 
 
 def str2bool(v):
@@ -56,22 +50,16 @@ SOCIAL_BUTTONS = str2bool(os.getenv('SOCIAL_BUTTONS', 'False'))
 USE_TZ = str2bool(os.getenv('USE_TZ', 'True'))
 
 # Installation on a closed 'airgapped' network
-DISABLE_BOUNDLESS_LINK_IN_FOOTER = str2bool(os.getenv(
-    'DISABLE_BOUNDLESS_LINK_IN_FOOTER',
-    'False')
-)
+DISABLE_BOUNDLESS_LINK_IN_FOOTER = str2bool(
+    os.getenv('DISABLE_BOUNDLESS_LINK_IN_FOOTER', 'False'))
 
 # classification banner
-CLASSIFICATION_BANNER_ENABLED = str2bool(os.getenv(
-    'CLASSIFICATION_BANNER_ENABLED',
-    'False')
-)
+CLASSIFICATION_BANNER_ENABLED = str2bool(
+    os.getenv('CLASSIFICATION_BANNER_ENABLED', 'False'))
 CLASSIFICATION_TEXT = os.getenv('CLASSIFICATION_TEXT', 'UNCLASSIFIED//FOUO')
 CLASSIFICATION_TEXT_COLOR = os.getenv('CLASSIFICATION_TEXT_COLOR', 'white')
-CLASSIFICATION_BACKGROUND_COLOR = os.getenv(
-    'CLASSIFICATION_BACKGROUND_COLOR',
-    'green'
-)
+CLASSIFICATION_BACKGROUND_COLOR = os.getenv('CLASSIFICATION_BACKGROUND_COLOR',
+                                            'green')
 CLASSIFICATION_LINK = os.getenv('CLASSIFICATION_LINK', None)
 
 CLASSIFICATION_LEVELS = {
@@ -118,8 +106,8 @@ if LOGIN_WARNING_ENABLED:
 EMAIL_HOST = os.getenv('EMAIL_HOST', None)
 EMAIL_PORT = le(os.getenv('EMAIL_PORT', '25'))
 EMAIL_USE_TLS = str2bool(os.getenv('EMAIL_USE_TLS', 'False'))
-EMAIL_BACKEND = os.getenv(
-    'EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND',
+                          'django.core.mail.backends.smtp.EmailBackend')
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', None)
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', None)
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', None)
@@ -128,7 +116,7 @@ ACCOUNT_ACTIVATION_DAYS = le(os.getenv('ACCOUNT_ACTIVATION_DAYS', '7'))
 
 # path setup
 LOCAL_ROOT = os.path.abspath(os.path.dirname(__file__))
-APP_ROOT = os.path.join(LOCAL_ROOT, os.pardir)
+APP_ROOT = os.path.join(LOCAL_ROOT, os.path.pardir)
 PROJECT_ROOT = APP_ROOT
 STATICFILES_DIRS += [
     os.path.join(PROJECT_ROOT, "static"),
@@ -176,21 +164,18 @@ TEMPLATES = [
                 'classification',
                 'exchange.core.context_processors.resource_variables',
             ],
-            'debug': DEBUG,
+            'debug':
+            DEBUG,
         },
     },
 ]
 
 # middleware
-MIDDLEWARE_CLASSES = (
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'social_django.middleware.SocialAuthExceptionMiddleware'
-) + MIDDLEWARE_CLASSES
+MIDDLEWARE_CLASSES = ('whitenoise.middleware.WhiteNoiseMiddleware',
+                      'social_django.middleware.SocialAuthExceptionMiddleware'
+                      ) + MIDDLEWARE_CLASSES
 
-ADDITIONAL_APPS = os.getenv(
-    'ADDITIONAL_APPS',
-    ()
-)
+ADDITIONAL_APPS = os.getenv('ADDITIONAL_APPS', ())
 
 if isinstance(ADDITIONAL_APPS, str):
     ADDITIONAL_APPS = tuple(map(str.strip, ADDITIONAL_APPS.split(',')))
@@ -226,7 +211,7 @@ MIGRATION_MODULES = {
 }
 
 if OSGEO_IMPORTER_ENABLED:
-    INSTALLED_APPS = ('osgeo_importer',) + INSTALLED_APPS
+    INSTALLED_APPS = ('osgeo_importer', ) + INSTALLED_APPS
 else:
     UPLOADER = {
         'BACKEND': 'geonode.importer',
@@ -242,50 +227,37 @@ if GEONODE_CLIENT_ENABLED:
     GEONODE_CLIENT_HOOKSET = "geonode.client.hooksets.ReactHookSet"
 
 # authorized exempt urls
-ADDITIONAL_AUTH_EXEMPT_URLS = os.getenv(
-    'ADDITIONAL_AUTH_EXEMPT_URLS',
-    ()
-)
+ADDITIONAL_AUTH_EXEMPT_URLS = os.getenv('ADDITIONAL_AUTH_EXEMPT_URLS', ())
 
 if isinstance(ADDITIONAL_AUTH_EXEMPT_URLS, str):
-    ADDITIONAL_AUTH_EXEMPT_URLS = tuple(map(
-        str.strip, ADDITIONAL_AUTH_EXEMPT_URLS.split(',')))
+    ADDITIONAL_AUTH_EXEMPT_URLS = tuple(
+        map(str.strip, ADDITIONAL_AUTH_EXEMPT_URLS.split(',')))
 
-AUTH_EXEMPT_URLS = ('/capabilities', '/auth-failed', '/register-by-token/*',
-                    '/complete/*', '/login/*',
-                    '/api/o/*', '/api/roles', '/api/adminRole',
-                    '/api/users', '/o/token/*', '/o/authorize/*',
-                    ) + ADDITIONAL_AUTH_EXEMPT_URLS
+AUTH_EXEMPT_URLS = (
+    '/capabilities',
+    '/auth-failed',
+    '/register-by-token/*',
+    '/complete/*',
+    '/login/*',
+    '/api/o/*',
+    '/api/roles',
+    '/api/adminRole',
+    '/api/users',
+    '/o/token/*',
+    '/o/authorize/*',
+) + ADDITIONAL_AUTH_EXEMPT_URLS
 
 # geoserver settings
-GEOSERVER_URL = os.getenv(
-    'GEOSERVER_URL',
-    'http://127.0.0.1:8080/geoserver/'
-)
-GEOSERVER_LOCAL_URL = os.getenv(
-    'GEOSERVER_LOCAL_URL',
-    GEOSERVER_URL
-)
-GEOSERVER_USER = os.getenv(
-    'GEOSERVER_USER',
-    'admin'
-)
-GEOSERVER_PASSWORD = os.getenv(
-    'GEOSERVER_PASSWORD',
-    'geoserver'
-)
-GEOSERVER_LOG = os.getenv(
-    'GEOSERVER_LOG',
-    '/opt/geonode/geoserver_data/logs/geoserver.log'
-)
-GEOSERVER_DATA_DIR = os.getenv(
-    'GEOSERVER_DATA_DIR',
-    '/opt/geonode/geoserver_data'
-)
-GEOGIG_DATASTORE_DIR = os.getenv(
-    'GEOSERVER_DATA_DIR',
-    '/opt/geonode/geoserver_data/geogig'
-)
+GEOSERVER_URL = os.getenv('GEOSERVER_URL', 'http://127.0.0.1:8080/geoserver/')
+GEOSERVER_LOCAL_URL = os.getenv('GEOSERVER_LOCAL_URL', GEOSERVER_URL)
+GEOSERVER_USER = os.getenv('GEOSERVER_USER', 'admin')
+GEOSERVER_PASSWORD = os.getenv('GEOSERVER_PASSWORD', 'geoserver')
+GEOSERVER_LOG = os.getenv('GEOSERVER_LOG',
+                          '/opt/geonode/geoserver_data/logs/geoserver.log')
+GEOSERVER_DATA_DIR = os.getenv('GEOSERVER_DATA_DIR',
+                               '/opt/geonode/geoserver_data')
+GEOGIG_DATASTORE_DIR = os.getenv('GEOSERVER_DATA_DIR',
+                                 '/opt/geonode/geoserver_data/geogig')
 PG_DATASTORE = os.getenv('PG_DATASTORE', 'exchange_imports')
 PG_GEOGIG = str2bool(os.getenv('PG_GEOGIG', 'True'))
 
@@ -319,33 +291,38 @@ GEOSERVER_BASE_URL = OGC_SERVER['default']['PUBLIC_LOCATION'] + 'wms'
 GEOGIG_DATASTORE_NAME = 'geogig-repo'
 
 GEOFENCE = {
-    'url': os.getenv(
-        'GEOFENCE_URL', "{}/geofence".format(GEOSERVER_LOCAL_URL.strip('/'))),
-    'username': os.getenv('GEOFENCE_USERNAME', GEOSERVER_USER),
-    'password': os.getenv('GEOFENCE_PASSWORD', GEOSERVER_PASSWORD)
+    'url':
+    os.getenv('GEOFENCE_URL', "{}/geofence".format(
+        GEOSERVER_LOCAL_URL.strip('/'))),
+    'username':
+    os.getenv('GEOFENCE_USERNAME', GEOSERVER_USER),
+    'password':
+    os.getenv('GEOFENCE_PASSWORD', GEOSERVER_PASSWORD)
 }
 
 MAP_BASELAYERS = [{
-    "source": {"ptype": "gxp_olsource"},
+    "source": {
+        "ptype": "gxp_olsource"
+    },
     "type": "OpenLayers.Layer",
     "args": ["No background"],
     "name": "background",
     "visibility": False,
     "fixed": True,
-    "group":"background"
-}, {
-    "source": {"ptype": "gxp_osmsource"},
-    "type": "OpenLayers.Layer.OSM",
-    "name": "mapnik",
-    "visibility": True,
-    "fixed": True,
     "group": "background"
-}]
+},
+                  {
+                      "source": {
+                          "ptype": "gxp_osmsource"
+                      },
+                      "type": "OpenLayers.Layer.OSM",
+                      "name": "mapnik",
+                      "visibility": True,
+                      "fixed": True,
+                      "group": "background"
+                  }]
 
-MAPBOX_BASEMAPS = os.getenv(
-    'MAPBOX_BASEMAP_NAMES',
-    ""
-)
+MAPBOX_BASEMAPS = os.getenv('MAPBOX_BASEMAP_NAMES', "")
 
 if MAPBOX_BASEMAPS:
     MAPBOX_BASEMAPS = list(map(str.strip, MAPBOX_BASEMAPS.split(',')))
@@ -372,19 +349,14 @@ if 'geonode.geoserver' in INSTALLED_APPS:
     MAP_BASELAYERS = [LOCAL_GEOSERVER]
     MAP_BASELAYERS.extend(baselayers)
 
-
 PROXY_BASEMAP = str2bool(os.getenv('PROXY_BASEMAP', 'False'))
 
 POSTGIS_URL = os.getenv(
-    'POSTGIS_URL',
-    'postgis://exchange:boundless@localhost:5432/exchange_data'
-)
+    'POSTGIS_URL', 'postgis://exchange:boundless@localhost:5432/exchange_data')
 DATABASES['exchange_imports'] = dj_database_url.parse(
-    POSTGIS_URL,
-    conn_max_age=600
-)
-DATABASES[
-    'exchange_imports']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
+    POSTGIS_URL, conn_max_age=600)
+DATABASES['exchange_imports'][
+    'ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
 WGS84_MAP_CRS = str2bool(os.getenv('WGS84_MAP_CRS', 'False'))
 if WGS84_MAP_CRS:
@@ -395,12 +367,10 @@ if WGS84_MAP_CRS:
 # Set ES_SEARCH to True
 # Run "python manage.py clear_haystack" (if upgrading from haystack)
 # Run "python manage.py rebuild_index"
-ES_SEARCH = strtobool(os.getenv('ES_SEARCH', 'False'))
+ES_SEARCH = strtobool(os.getenv('ES_SEARCH', 'True'))
 
 if ES_SEARCH:
-    INSTALLED_APPS = (
-        'elasticsearch_app',
-    ) + INSTALLED_APPS
+    INSTALLED_APPS = ('elasticsearch_app', ) + INSTALLED_APPS
     ES_URL = os.getenv('ES_URL', 'http://127.0.0.1:9200/')
     # Disable Haystack
     HAYSTACK_SEARCH = False
@@ -414,7 +384,7 @@ CELERY_TASK_DEFAULT_QUEUE = "default"
 CELERY_TASK_DEFAULT_EXCHANGE = "default"
 CELERY_TASK_DEFAULT_EXCHANGE_TYPE = "direct"
 CELERY_TASK_DEFAULT_ROUTING_KEY = "default"
-ASYNC_SIGNALS = le(os.environ.get('ASYNC_SIGNALS', 'True'))
+ASYNC_SIGNALS = strtobool(os.environ.get('ASYNC_SIGNALS', 'False'))
 RABBITMQ_SIGNALS_BROKER_URL = 'amqp://localhost:5672'
 REDIS_SIGNALS_BROKER_URL = 'redis://localhost:6379/0'
 LOCAL_SIGNALS_BROKER_URL = 'memory://'
@@ -437,19 +407,15 @@ CELERY_ACKS_LATE = True
 # Set this to False in order to run async
 CELERY_TASK_ALWAYS_EAGER = False if ASYNC_SIGNALS else True
 
-
 # audit settings
 AUDIT_ENABLED = str2bool(os.getenv('AUDIT_ENABLED', 'True'))
 if AUDIT_ENABLED:
-    INSTALLED_APPS = INSTALLED_APPS + (
-        'exchange.audit',
-    )
+    INSTALLED_APPS = INSTALLED_APPS + ('exchange.audit', )
 
     AUDIT_TO_FILE = str2bool(os.getenv('AUDIT_TO_FILE', 'False'))
     AUDIT_LOGFILE_LOCATION = os.getenv(
         'AUDIT_LOGFILE_LOCATION',
-        os.path.join(LOCAL_ROOT, 'exchange_audit_log.json')
-    )
+        os.path.join(LOCAL_ROOT, 'exchange_audit_log.json'))
 
 # Logging settings
 # 'DEBUG', 'INFO', 'WARNING', 'ERROR', or 'CRITICAL'
@@ -482,10 +448,9 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format':
-                ('%(levelname)s %(asctime)s %(name)s '
-                 '(%(filename)s %(lineno)d) %(module)s %(process)d '
-                 '%(thread)d %(message)s'),
+            'format': ('%(levelname)s %(asctime)s %(name)s '
+                       '(%(filename)s %(lineno)d) %(module)s %(process)d '
+                       '%(thread)d %(message)s'),
         },
     },
     'handlers': {
@@ -502,13 +467,15 @@ LOGGING = {
             'callback': filter_django_warnings,
         },
     },
-    'loggers': {
-        app: copy.deepcopy(installed_apps_conf) for app in INSTALLED_APPS
-    },
+    'loggers':
+    {app: copy.deepcopy(installed_apps_conf)
+     for app in INSTALLED_APPS},
     'root': {
         'handlers': ['console'],
         'level': DJANGO_LOG_LEVEL,
-        'filters': ['ignore_django_warnings', ],
+        'filters': [
+            'ignore_django_warnings',
+        ],
     },
 }
 
@@ -548,7 +515,7 @@ if SSL_PKI_ENABLED:
 AUTH_LDAP_SERVER_URI = os.getenv('AUTH_LDAP_SERVER_URI', None)
 LDAP_SEARCH_DN = os.getenv('LDAP_SEARCH_DN', None)
 if all([AUTH_LDAP_SERVER_URI, LDAP_SEARCH_DN]):
-    from ._ldap import *   # noqa
+    from ._ldap import *  # noqa
 
 # geoaxis
 GEOAXIS_ENABLED = str2bool(os.getenv('GEOAXIS_ENABLED', 'False'))
@@ -567,23 +534,24 @@ if GEOAXIS_ENABLED:
 # NearSight Options, adding NEARSIGHT_ENABLED to env will enable nearsight.
 NEARSIGHT_ENABLED = str2bool(os.getenv('NEARSIGHT_ENABLED', 'False'))
 if NEARSIGHT_ENABLED:
-    NEARSIGHT_UPLOAD_PATH = os.getenv(
-        'NEARSIGHT_UPLOAD_PATH', '/opt/nearsight/store')
+    NEARSIGHT_UPLOAD_PATH = os.getenv('NEARSIGHT_UPLOAD_PATH',
+                                      '/opt/nearsight/store')
     NEARSIGHT_LAYER_PREFIX = os.getenv('NEARSIGHT_LAYER_PREFIX', 'nearsight')
     NEARSIGHT_CATEGORY_NAME = os.getenv('NEARSIGHT_CATEGORY_NAME', 'NearSight')
     NEARSIGHT_GEONODE_RESTRICTIONS = os.getenv(
         'NEARSIGHT_GEONODE_RESTRICTIONS', 'NearSight Data')
     DATABASES['nearsight'] = DATABASES['exchange_imports']
     CACHES = locals().get('CACHES', {})
-    CACHES['nearsight'] = CACHES.get('nearsight', {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': NEARSIGHT_UPLOAD_PATH,
-    })
+    CACHES['nearsight'] = CACHES.get(
+        'nearsight', {
+            'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+            'LOCATION': NEARSIGHT_UPLOAD_PATH,
+        })
     CACHES['default'] = CACHES.get('default', CACHES.get('nearsight'))
-    NEARSIGHT_SERVICE_UPDATE_INTERVAL = le(os.getenv(
-        'NEARSIGHT_SERVICE_UPDATE_INTERVAL', '5'))
+    NEARSIGHT_SERVICE_UPDATE_INTERVAL = le(
+        os.getenv('NEARSIGHT_SERVICE_UPDATE_INTERVAL', '5'))
     SSL_VERIFY = str2bool(os.getenv('SSL_VERIFY', 'False'))
-    INSTALLED_APPS += ('nearsight',)
+    INSTALLED_APPS += ('nearsight', )
 
 # If django-osgeo-importer is enabled, give it the settings it needs...
 if 'osgeo_importer' in INSTALLED_APPS:
@@ -592,10 +560,8 @@ if 'osgeo_importer' in INSTALLED_APPS:
     OSGEO_DATASTORE = 'exchange_imports'
     # Tell it to use the GeoNode compatible mode
     OSGEO_IMPORTER_GEONODE_ENABLED = True
-    OSGEO_IMPORTER_UPLOAD_RASTER_TO_GEOSERVER = str2bool(os.getenv(
-        'OSGEO_IMPORTER_UPLOAD_RASTER_TO_GEOSERVER',
-        'True'
-    ))
+    OSGEO_IMPORTER_UPLOAD_RASTER_TO_GEOSERVER = str2bool(
+        os.getenv('OSGEO_IMPORTER_UPLOAD_RASTER_TO_GEOSERVER', 'True'))
     # override GeoNode setting so importer UI can see when tasks finish
     CELERY_IGNORE_RESULT = False
     IMPORT_HANDLERS = [
@@ -616,21 +582,16 @@ if 'osgeo_importer' in INSTALLED_APPS:
         'exchange.importer.geonode_postimport_handler.GeoNodePostImportHandler',  # noqa
     ]
     PROJECTION_DIRECTORY = os.path.join(
-        os.path.dirname(pyproj.__file__),
-        'data/'
-    )
+        os.path.dirname(pyproj.__file__), 'data/')
 
 FILESERVICE_CONFIG = {
-    'store_dir': os.getenv(
-        'FILESERVICE_MEDIA_ROOT', os.path.join(MEDIA_ROOT, 'fileservice')),
+    'store_dir':
+    os.getenv('FILESERVICE_MEDIA_ROOT', os.path.join(MEDIA_ROOT,
+                                                     'fileservice')),
     'types_allowed': ['.jpg', '.jpeg', '.png'],
-    'streaming_supported': False
+    'streaming_supported':
+    False
 }
-
-try:
-    from local_settings import *  # noqa
-except ImportError:
-    pass
 
 # Use https:// scheme in Gravatar URLs
 AVATAR_GRAVATAR_SSL = True
@@ -687,65 +648,63 @@ if ENABLE_SOCIAL_LOGIN:
         'social_core.pipeline.user.create_user',
         'social_core.pipeline.social_auth.associate_user',
         'social_core.pipeline.social_auth.load_extra_data',
-        'social_core.pipeline.user.user_details'
-    )
+        'social_core.pipeline.user.user_details')
 
     # Auth0
     SOCIAL_AUTH_AUTH0_KEY = os.getenv('OAUTH_AUTH0_KEY', None)
-    SOCIAL_AUTH_AUTH0_OIDC_CONFORMANT = str2bool(os.getenv(
-        'OAUTH_AUTH0_OIDC_CONFORMANT', 'False'))
+    SOCIAL_AUTH_AUTH0_OIDC_CONFORMANT = str2bool(
+        os.getenv('OAUTH_AUTH0_OIDC_CONFORMANT', 'False'))
     SOCIAL_AUTH_AUTH0_MOBILE_KEY = os.getenv('OAUTH_AUTH0_MOBILE_KEY', None)
     SOCIAL_AUTH_AUTH0_SECRET = os.getenv('OAUTH_AUTH0_SECRET', None)
     SOCIAL_AUTH_AUTH0_HOST = os.getenv('OAUTH_AUTH0_HOST', None)
     ENABLE_AUTH0_LOGIN = isValid(SOCIAL_AUTH_AUTH0_KEY)
-    SOCIAL_AUTH_AUTH0_SCOPE = ['sub', 'nickname', 'email',
-                               'profile', 'picture', 'email_verfied',
-                               'name', 'openid', 'given_name', 'user_id',
-                               'family_name', 'preferred_username']
+    SOCIAL_AUTH_AUTH0_SCOPE = [
+        'sub', 'nickname', 'email', 'profile', 'picture', 'email_verfied',
+        'name', 'openid', 'given_name', 'user_id', 'family_name',
+        'preferred_username'
+    ]
     if ENABLE_AUTH0_LOGIN:
         DEFAULT_SOCIAL_PROVIDER = 'auth0'
     AUTH0_APP_NAME = os.getenv('AUTH0_APP_NAME', 'Connect')
-    OAUTH_AUTH0_ADMIN_ROLES = os.getenv(
-        'OAUTH_AUTH0_ADMIN_ROLES',
-        ""
-    )
-    OAUTH_AUTH0_ALLOWED_ROLES = os.getenv(
-        'OAUTH_AUTH0_ALLOWED_ROLES',
-        ""
-    )
+    OAUTH_AUTH0_ADMIN_ROLES = os.getenv('OAUTH_AUTH0_ADMIN_ROLES', "")
+    OAUTH_AUTH0_ALLOWED_ROLES = os.getenv('OAUTH_AUTH0_ALLOWED_ROLES', "")
 
     if OAUTH_AUTH0_ADMIN_ROLES.strip():
         AUTH0_ADMIN_ROLES = map(str.strip, OAUTH_AUTH0_ADMIN_ROLES.split(','))
     if OAUTH_AUTH0_ALLOWED_ROLES.strip():
-        AUTH0_ALLOWED_ROLES = map(
-            str.strip, OAUTH_AUTH0_ALLOWED_ROLES.split(','))
+        AUTH0_ALLOWED_ROLES = map(str.strip,
+                                  OAUTH_AUTH0_ALLOWED_ROLES.split(','))
 
     # Microsoft Azure Active Directory
     SOCIAL_AUTH_AZUREAD_OAUTH2_KEY = os.getenv('OAUTH_AZUREAD_KEY', None)
     SOCIAL_AUTH_AZUREAD_OAUTH2_SECRET = os.getenv('OAUTH_AZUREAD_SECRET', None)
-    SOCIAL_AUTH_AZUREAD_OAUTH2_RESOURCE = os.getenv('OAUTH_AZUREAD_RESOURCE',
-                                                    'https://graph.microsoft.com/')  # noqa
+    SOCIAL_AUTH_AZUREAD_OAUTH2_RESOURCE = os.getenv(
+        'OAUTH_AZUREAD_RESOURCE', 'https://graph.microsoft.com/')  # noqa
     ENABLE_MICROSOFT_AZURE_LOGIN = isValid(SOCIAL_AUTH_AZUREAD_OAUTH2_KEY)
 
     # Microsoft Azure Active Directory Tenant Support
-    SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_KEY = os.getenv('OAUTH_AZUREAD_TENANT_KEY',  # noqa
-                                                      None)
-    SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_SECRET = os.getenv('OAUTH_AZUREAD_TENANT_SECRET',  # noqa
-                                                         None)
-    SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_TENANT_ID = os.getenv('OAUTH_AZUREAD_TENANT_ID',  # noqa
-                                                            None)
-    SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_RESOURCE = os.getenv('OAUTH_AZUREAD_TENANT_RESOURCE',  # noqa
-                                                           'https://graph.microsoft.com/')  # noqa
+    SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_KEY = os.getenv(
+        'OAUTH_AZUREAD_TENANT_KEY',  # noqa
+        None)
+    SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_SECRET = os.getenv(
+        'OAUTH_AZUREAD_TENANT_SECRET',  # noqa
+        None)
+    SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_TENANT_ID = os.getenv(
+        'OAUTH_AZUREAD_TENANT_ID',  # noqa
+        None)
+    SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_RESOURCE = os.getenv(
+        'OAUTH_AZUREAD_TENANT_RESOURCE',  # noqa
+        'https://graph.microsoft.com/')  # noqa
 
     # Facebook
     SOCIAL_AUTH_FACEBOOK_KEY = os.getenv('OAUTH_FACEBOOK_KEY', None)
     SOCIAL_AUTH_FACEBOOK_SECRET = os.getenv('OAUTH_FACEBOOK_SECRET', None)
     OAUTH_FACEBOOK_SCOPES = os.getenv('OAUTH_FACEBOOK_SCOPES', 'email')
-    SOCIAL_AUTH_FACEBOOK_SCOPE = map(
-        str.strip, OAUTH_FACEBOOK_SCOPES.split(','))
+    SOCIAL_AUTH_FACEBOOK_SCOPE = map(str.strip,
+                                     OAUTH_FACEBOOK_SCOPES.split(','))
     SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-        'fields': os.getenv(
-            'OAUTH_FACEBOOK_PROFILE_EXTRA_PARAMS', 'id,name,email'),
+        'fields':
+        os.getenv('OAUTH_FACEBOOK_PROFILE_EXTRA_PARAMS', 'id,name,email'),
     }
     ENABLE_FACEBOOK_LOGIN = isValid(SOCIAL_AUTH_FACEBOOK_KEY)
 
@@ -760,8 +719,8 @@ if ENABLE_SOCIAL_LOGIN:
     SOCIAL_AUTH_GEOAXIS_HOST = os.getenv('OAUTH_GEOAXIS_HOST', None)
     OAUTH_GEOAXIS_USER_FIELDS = os.getenv(
         'OAUTH_GEOAXIS_USER_FIELDS', 'username, email, last_name, first_name')
-    SOCIAL_AUTH_GEOAXIS_USER_FIELDS = map(
-        str.strip, OAUTH_GEOAXIS_USER_FIELDS.split(','))
+    SOCIAL_AUTH_GEOAXIS_USER_FIELDS = map(str.strip,
+                                          OAUTH_GEOAXIS_USER_FIELDS.split(','))
     OAUTH_GEOAXIS_SCOPES = os.getenv('OAUTH_GEOAXIS_SCOPES', 'UserProfile.me')
     SOCIAL_AUTH_GEOAXIS_SCOPE = map(str.strip, OAUTH_GEOAXIS_SCOPES.split(','))
     ENABLE_GEOAXIS_LOGIN = isValid(SOCIAL_AUTH_GEOAXIS_KEY)
@@ -771,8 +730,7 @@ if ENABLE_SOCIAL_LOGIN:
     # SOCIAL_AUTH_GEOAXIS_HOST is None
     if ENABLE_GEOAXIS_LOGIN:
         AUTHENTICATION_BACKENDS += (
-            'exchange.auth.backends.geoaxis.GeoAxisOAuth2',
-        )
+            'exchange.auth.backends.geoaxis.GeoAxisOAuth2', )
 
 # MapLoom search options
 NOMINATIM_URL = os.getenv('NOMINATIM_URL', '//nominatim.openstreetmap.org')
@@ -784,76 +742,53 @@ else:
     NOMINATIM_ENABLED = True
 
 SEARCH_FILTERS['HOST_ENABLED'] = True
-SEARCH_FILTERS['REGION_ENABLED'] = str2bool(os.getenv(
-    'SEARCH_REGION_ENABLED',
-    'False'
-))
-MAP_CLIENT_USE_CROSS_ORIGIN_CREDENTIALS = str2bool(os.getenv(
-    'MAP_CLIENT_USE_CROSS_ORIGIN_CREDENTIALS',
-    'False'
-))
+SEARCH_FILTERS['REGION_ENABLED'] = str2bool(
+    os.getenv('SEARCH_REGION_ENABLED', 'False'))
+MAP_CLIENT_USE_CROSS_ORIGIN_CREDENTIALS = str2bool(
+    os.getenv('MAP_CLIENT_USE_CROSS_ORIGIN_CREDENTIALS', 'False'))
 SOCIAL_AUTH_LOGIN_ERROR_URL = '/auth-failed'
 
-PROXY_URL = os.getenv(
-    'PROXY_URL',
-    ''
-)
+PROXY_URL = os.getenv('PROXY_URL', '')
 
-ACCESS_TOKEN_NAME = os.getenv(
-    'ACCESS_TOKEN_NAME',
-    'x-token'
-)
+ACCESS_TOKEN_NAME = os.getenv('ACCESS_TOKEN_NAME', 'x-token')
 
 # Settings to change the WMS that is used for backgrounds on
 # Thumbnail generation.
 # Both Settings are required to change from default
 THUMBNAIL_BACKGROUND_WMS = os.getenv(
-    'THUMBNAIL_BACKGROUND_WMS',
-    'https://demo.boundlessgeo.com/geoserver/wms?'
-)
+    'THUMBNAIL_BACKGROUND_WMS', 'https://demo.boundlessgeo.com/geoserver/wms?')
 
-THUMBNAIL_BACKGROUND_WMS_LAYER = os.getenv(
-    'THUMBNAIL_BACKGROUND_WMS_LAYER',
-    'ne:NE1_HR_LC_SR_W_DR'
-)
+THUMBNAIL_BACKGROUND_WMS_LAYER = os.getenv('THUMBNAIL_BACKGROUND_WMS_LAYER',
+                                           'ne:NE1_HR_LC_SR_W_DR')
 
-
-ACCESS_TOKEN_NAME = os.getenv(
-    'ACCESS_TOKEN_NAME',
-    'x-token'
-)
+ACCESS_TOKEN_NAME = os.getenv('ACCESS_TOKEN_NAME', 'x-token')
 
 IMPORT_TASK_SOFT_TIME_LIMIT = le(os.getenv('IMPORTER_TIMEOUT', '90'))
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', ['*'])
-
 # cartoview settings
-CARTOVIEW_ENABLED = le(os.getenv('CARTOVIEW_ENABLED', "True"))
+APPS_DIR = os.path.abspath(os.path.join(APP_ROOT, "apps"))
+CARTOVIEW_ENABLED = le(os.getenv('CARTOVIEW_ENABLED', "False"))
 if CARTOVIEW_ENABLED:
-    from cartoview import settings as cartoview_settings
-    INSTALLED_APPS += cartoview_settings.CARTOVIEW_INSTALLED_APPS
-    APPS_DIR = os.path.abspath(os.path.join(APP_ROOT, "apps"))
-    PENDING_APPS = os.path.join(
-        os.path.join(APP_ROOT, "apps"), "pendingOperation.yml")
+    from cartoview.settings import (CARTOVIEW_CONTEXT_PROCESSORS,
+                                    CARTOVIEW_INSTALLED_APPS,
+                                    CARTOVIEW_STATIC_DIRS)
+    INSTALLED_APPS += CARTOVIEW_INSTALLED_APPS
     APPS_MENU = False
     # NOTE: please comment the following line of you want to use geonode
     # templates
     # TEMPLATES[0]["DIRS"] = TEMPLATES[0][
     #     "DIRS"] + cartoview_settings.CARTOVIEW_TEMPLATE_DIRS
     TEMPLATES[0]["OPTIONS"][
-        'context_processors'] += \
-        cartoview_settings.CARTOVIEW_CONTEXT_PROCESSORS
+        'context_processors'] += CARTOVIEW_CONTEXT_PROCESSORS
 
-    STATICFILES_DIRS += cartoview_settings.CARTOVIEW_STATIC_DIRS
+    STATICFILES_DIRS += CARTOVIEW_STATIC_DIRS
 
-    from cartoview import app_manager
+    from cartoview.app_manager.settings import load_apps
     from past.builtins import execfile
-    app_manager_settings = os.path.join(
-        os.path.dirname(app_manager.__file__), "settings.py")
-    execfile(os.path.realpath(app_manager_settings))
-    load_apps(APPS_DIR)
+    CARTOVIEW_APPS, APPS_SETTINGS = load_apps(APPS_DIR)
     INSTALLED_APPS += CARTOVIEW_APPS
     for settings_file in APPS_SETTINGS:
         try:
@@ -861,6 +796,10 @@ if CARTOVIEW_ENABLED:
         except Exception as e:
             pass
 
-
 GOOGLE_ANALYTICS_ID = os.getenv('GOOGLE_ANALYTICS_ID', None)
-SECRET_KEY = os.getenv('SECRET_KEY', 'boundlessgeo')
+# NOTE: local_settings should be imported at the end of the file to
+# override default settings
+try:
+    from local_settings import *  # noqa
+except ImportError as e:
+    pass
