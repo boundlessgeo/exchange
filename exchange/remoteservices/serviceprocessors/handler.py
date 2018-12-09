@@ -101,9 +101,9 @@ def get_service_handler(base_url, service_type=enumerations.AUTO,
             headers['PKI_SERVICE_TYPE'] = "{0}".format(service_type)
 
         try:
-            service = handler(base_url)
-        except Exception:
+            service = handler(base_url, headers=headers)
+        except Exception as e:
             logger.exception(
                 msg="Could not parse service {!r}".format(base_url))
-            raise
+            raise e
     return service
