@@ -21,7 +21,7 @@
 import os
 from celery import Celery
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'exchange.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'exchange.settings.base')
 
 from django.conf import settings  # noqa
 
