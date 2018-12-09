@@ -310,17 +310,16 @@ MAP_BASELAYERS = [{
     "visibility": False,
     "fixed": True,
     "group": "background"
-},
-                  {
-                      "source": {
-                          "ptype": "gxp_osmsource"
-                      },
-                      "type": "OpenLayers.Layer.OSM",
-                      "name": "mapnik",
-                      "visibility": True,
-                      "fixed": True,
-                      "group": "background"
-                  }]
+}, {
+    "source": {
+        "ptype": "gxp_osmsource"
+    },
+    "type": "OpenLayers.Layer.OSM",
+    "name": "mapnik",
+    "visibility": True,
+    "fixed": True,
+    "group": "background"
+}]
 
 MAPBOX_BASEMAPS = os.getenv('MAPBOX_BASEMAP_NAMES', "")
 
