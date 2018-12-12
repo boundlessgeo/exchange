@@ -942,6 +942,16 @@ class AuthErrorPage(TemplateView):
     template_name = 'account/auth-failed.html'
 
 
+def es_layer_browse(request):
+    search_url = reverse('search')
+    return HttpResponseRedirect(search_url + "?type=layer")
+
+
+def es_map_browse(request):
+    search_url = reverse('search')
+    return HttpResponseRedirect(search_url + "?type=map")
+
+
 @login_required
 def layer_create(request, template='createlayer/layer_create.html'):
     """
