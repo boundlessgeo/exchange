@@ -24,7 +24,6 @@ from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 from elasticsearch_app.urls import urlpatterns as search_urls
 from geonode.urls import urlpatterns as geonode_urls
-from django.views.generic import TemplateView
 from exchange.maploom.urls import urlpatterns as maploom_urls
 from fileservice.urls import urlpatterns as fileservice_urls
 from thumbnails.urls import urlpatterns as thumbnail_urls
