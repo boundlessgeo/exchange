@@ -328,7 +328,7 @@
 
 
             $scope.geogigEnabled = function() {
-                if ($scope.layer == null || $scope.layer.layer_type == 'raster') {
+                if ( !geogig_enabled || $scope.layer == null || $scope.layer.layer_type == 'raster') {
                     return false;
                 } else {
                     return true;

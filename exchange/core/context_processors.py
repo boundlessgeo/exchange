@@ -74,6 +74,7 @@ def resource_variables(request):
         ES_SEARCH=getattr(settings, 'ES_SEARCH', False),
         PROXY_BASEMAP=getattr(settings, 'PROXY_BASEMAP', False),
         GOOGLE_ANALYTICS_ID=getattr(settings, 'GOOGLE_ANALYTICS_ID', False),
+        GEOGIG_ENABLED=getattr(settings, 'GEOGIG_ENABLED', False),
     )
 
     return defaults

@@ -4,6 +4,9 @@
 {% block extra_script %}
     {% include 'osgeo_importer/_importer_scripts.html' %}
     {% include 'osgeo_importer/_importer_styles.html' %}
+    <script>
+      var geogig_enabled = {{ GEOGIG_ENABLED|yesno:"true,false" }};
+    </script>
     {{ block.super }}
 {% endblock %}
 
