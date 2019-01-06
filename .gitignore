@@ -111,7 +111,7 @@ local_settings.py
 .vscode
 
 # cartoview
-exchange/apps
+apps
 
 uploaded
 *.sqlite3

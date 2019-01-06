@@ -310,16 +310,17 @@ MAP_BASELAYERS = [{
     "visibility": False,
     "fixed": True,
     "group": "background"
-}, {
-    "source": {
-        "ptype": "gxp_osmsource"
-    },
-    "type": "OpenLayers.Layer.OSM",
-    "name": "mapnik",
-    "visibility": True,
-    "fixed": True,
-    "group": "background"
-}]
+},
+                  {
+                      "source": {
+                          "ptype": "gxp_osmsource"
+                      },
+                      "type": "OpenLayers.Layer.OSM",
+                      "name": "mapnik",
+                      "visibility": True,
+                      "fixed": True,
+                      "group": "background"
+                  }]
 
 MAPBOX_BASEMAPS = os.getenv('MAPBOX_BASEMAP_NAMES', "")
 
@@ -768,7 +769,7 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', ['*'])
 # cartoview settings
-APPS_DIR = os.path.abspath(os.path.join(APP_ROOT, "apps"))
+APPS_DIR = os.path.abspath(os.path.join(APP_ROOT, os.path.pardir, "apps"))
 CARTOVIEW_ENABLED = le(os.getenv('CARTOVIEW_ENABLED', "False"))
 if CARTOVIEW_ENABLED:
     from cartoview.settings import (CARTOVIEW_CONTEXT_PROCESSORS,
