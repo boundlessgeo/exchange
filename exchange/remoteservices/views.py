@@ -55,6 +55,27 @@ def register_service(request):
             service_handler = form.cleaned_data["service_handler"]
             service = service_handler.create_geonode_service(
                 owner=request.user)
+            if getattr(service_handler.parsed_service, 'initialExtent',
+                       None):
+                service.bbox_x0 = service_handler.parsed_service.initialExtent[
+                    'xmin']
+                service.bbox_y0 = service_handler.parsed_service.initialExtent[
+                    'ymin']
+                service.bbox_x1 = service_handler.parsed_service.initialExtent[
+                    'xmax']
+                service.bbox_y1 = service_handler.parsed_service.initialExtent[
+                    'ymax']
+            else:
+                logger.info('Could not retrieve extent from service: {0}'
+                            .format(service))
+            if getattr(service_handler.parsed_service, 'spatialReference',
+                       None):
+                service.srid = \
+                    service_handler.parsed_service.spatialReference[
+                        'latestWkid']
+            else:
+                logger.info('Could not retrieve srid from service: {0}'
+                            .format(service))
             service.full_clean()
             service.save()
             service.keywords.add(*service_handler.get_keywords())
@@ -76,7 +97,8 @@ def register_service(request):
                         kwargs={"service_id": service.id})
             )
         else:
-            result = render(request, service_register_template, {"form": form})
+            result = render(request, service_register_template,
+                            {"form": form})
     else:
         form = ExchangeCreateServiceForm()
         result = render(

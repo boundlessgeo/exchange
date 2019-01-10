@@ -25,6 +25,8 @@ from django.conf import settings
 from geonode.services import enumerations
 from exchange.remoteservices.serviceprocessors.handler \
     import get_service_handler
+from urllib2 import HTTPError as urllibHTTPError
+from requests.exceptions import HTTPError, ConnectionError
 try:
     if 'ssl_pki' not in settings.INSTALLED_APPS:
         raise ImportError
@@ -69,10 +71,53 @@ class ExchangeCreateServiceForm(CreateServiceForm):
             try:
                 service_handler = get_service_handler(
                     base_url=url, service_type=service_type)
-
+            # WMS raises requests.exceptions.HTTPError
+            except HTTPError as e:
+                status_code = e.response.status_code
+                if status_code == 500 or status_code == 403:
+                    raise ValidationError(
+                        _("HTTP {0} error. This could be due to authorization "
+                          "failure. Please contact your Exchange Administrator"
+                          " to confirm SSL or PKI configuration is correct."
+                          .format(status_code)))
+                elif status_code == 404:
+                    raise ValidationError(
+                        _("HTTP {0} error. The host of this service may be "
+                          "down or inaccessible.".format(status_code)))
+                else:
+                    raise ValidationError(
+                        _("Unknown error connecting to {0}: HTTP {1} error."
+                          .format(url, status_code)))
+            # ArcREST raises urllib2.HTTPError
+            except urllibHTTPError as e:
+                if e.code == 500 or e.code == 403:
+                    raise ValidationError(
+                        _("HTTP {0} error. This could be due to authorization "
+                          "failure. Please contact your Exchange Administrator"
+                          " to confirm SSL or PKI configuration is correct."
+                          .format(e.code)))
+                elif e.code == 404:
+                    raise ValidationError(
+                        _("HTTP {0} error. The host of this service may be "
+                          "down or inaccessible.".format(e.code)))
+                else:
+                    raise ValidationError(
+                        _("Unknown error connecting to {0}: HTTP {1} error."
+                          .format(url, e.code)))
+            except ConnectionError:
+                raise ValidationError(
+                    _("Connection timed out attempting to access {0} - "
+                      "host may be down or inaccessible".format(url)))
+            except KeyError:
+                raise ValidationError(
+                    _("Could not find a matching service at {0} - "
+                      "host exists, but service name does not. Please ensure "
+                      "the service name is typed correctly and present on "
+                      "this host.".format(url)))
             except Exception:
                 raise ValidationError(
-                    _("Could not connect to the service at %(url)s"),
+                    _("Could not connect to the service at %(url)s "
+                      "for an unknown reason"),
                     params={"url": url}
                 )
             if not service_handler.has_resources():

@@ -102,8 +102,8 @@ def get_service_handler(base_url, service_type=enumerations.AUTO,
 
         try:
             service = handler(base_url, headers=headers)
-        except Exception:
+        except Exception as e:
             logger.exception(
                 msg="Could not parse service {!r}".format(base_url))
-            raise
+            raise e
     return service
