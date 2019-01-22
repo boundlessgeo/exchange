@@ -441,7 +441,7 @@ installed_apps_conf = {
     'handlers': ['console'],
     'level': DJANGO_LOG_LEVEL,
 }
-
+'''
 # noinspection PyDictCreation
 LOGGING = {
     'version': 1,
@@ -478,7 +478,7 @@ LOGGING = {
         ],
     },
 }
-
+'''
 LOGGING['loggers']['django.db.backends'] = {
     'handlers': ['console'],
     'propagate': False,
