@@ -35,5 +35,5 @@
 	branch = ps/pki
 [submodule "vendor/cartoview"]
 	path = vendor/cartoview
-	url = git@github.com:cartologic/cartoview.git
+url=git@github.com:boundlessgeo/cartoview.git
 	branch = 1.8.x
