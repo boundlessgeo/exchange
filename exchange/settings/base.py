@@ -19,8 +19,6 @@
 #########################################################################
 
 import os
-import sys
-import copy
 import dj_database_url
 from ast import literal_eval as le
 from geonode.settings import *  # noqa
@@ -310,17 +308,16 @@ MAP_BASELAYERS = [{
     "visibility": False,
     "fixed": True,
     "group": "background"
-},
-                  {
-                      "source": {
-                          "ptype": "gxp_osmsource"
-                      },
-                      "type": "OpenLayers.Layer.OSM",
-                      "name": "mapnik",
-                      "visibility": True,
-                      "fixed": True,
-                      "group": "background"
-                  }]
+}, {  # noqa
+    "source": {
+        "ptype": "gxp_osmsource"
+    },
+    "type": "OpenLayers.Layer.OSM",
+    "name": "mapnik",
+    "visibility": True,
+    "fixed": True,
+    "group": "background"
+}]
 
 MAPBOX_BASEMAPS = os.getenv('MAPBOX_BASEMAP_NAMES', "")
 
