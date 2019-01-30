@@ -46,6 +46,8 @@ from geonode.contrib.createlayer.utils import create_layer
 from geonode.contrib.createlayer.forms import NewLayerForm
 from django.utils.translation import ugettext as _
 from geonode.people.models import Profile
+from exchange.remoteservices.serviceprocessors.handler \
+    import get_service_handler
 
 if 'geonode.geoserver' in settings.INSTALLED_APPS:
     from geonode.geoserver.helpers import ogc_server_settings
@@ -269,8 +271,49 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         config["styles"] = layer.default_style.name
 
     if layer.storeType == "remoteStore":
-        reprojected_bbox = bbox_to_projection(bbox, source_srid=layer.srid,
-                                              target_srid=3857)
+        source_srid = None
+        # Only grab the service proj/bbox if it is valid
+        if None not in layer.service.bbox[0:4]:
+            bbox = [float(coord) for coord in list(layer.service.bbox[0:4])]
+            source_srid = layer.service.srid
+        # Otherwise try the service directly
+        # This is needed since previous services registered
+        # did not store the bbox/srid in the model
+        else:
+            try:
+                service_handler = get_service_handler(
+                    base_url=layer.service.base_url,
+                    service_type=layer.service.type)
+                if getattr(service_handler.parsed_service, 'initialExtent',
+                           None):
+                    bbox[0] = service_handler.parsed_service.initialExtent[
+                        'xmin']
+                    bbox[1] = service_handler.parsed_service.initialExtent[
+                        'ymin']
+                    bbox[2] = service_handler.parsed_service.initialExtent[
+                        'xmax']
+                    bbox[3] = service_handler.parsed_service.initialExtent[
+                        'ymax']
+                else:
+                    logger.info('Could not retrieve extent from service: {0}'
+                                .format(layer.service))
+                if getattr(service_handler.parsed_service, 'spatialReference',
+                           None):
+                    source_srid = \
+                        service_handler.parsed_service.spatialReference[
+                            'latestWkid']
+                else:
+                    logger.info('Could not retrieve srid from service: {0}'
+                                .format(layer.service))
+            except Exception as e:
+                logger.info('Failed to access service endpoint: {0}'
+                            .format(layer.service.base_url))
+                logger.info('Caught error: {0}'.format(e))
+        if source_srid is None:
+            source_srid = layer.srid
+        target_srid = 3857 if config["srs"] == 'EPSG:900913' else config["srs"]
+        reprojected_bbox = bbox_to_projection(bbox, source_srid=source_srid,
+                                              target_srid=target_srid)
         bbox = reprojected_bbox[:4]
         config['bbox'] = [float(coord) for coord in bbox]
         service = layer.service
@@ -574,10 +617,14 @@ def new_map_config(request):
                         ogc_server_settings.PUBLIC_LOCATION).netloc
                     service_url = urlsplit(service.base_url).netloc
 
+                    if config["srs"] == 'EPSG:900913':
+                        target_srid = 3857
+                    else:
+                        target_srid = config["srs"]
                     reprojected_bbox = bbox_to_projection(
                         bbox,
                         source_srid=layer.srid,
-                        target_srid=3857
+                        target_srid=target_srid
                     )
                     bbox = reprojected_bbox[:4]
                     config['bbox'] = [float(coord) for coord in bbox]
