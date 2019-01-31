@@ -9,7 +9,7 @@ node {
       stage('Checkout'){
         checkout scm
         sh """
-          git submodule update --init
+          git submodule update --depth 50 --init
           echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
         """
         checkout([$class: 'GitSCM',
