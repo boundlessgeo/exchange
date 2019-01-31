@@ -10,7 +10,7 @@
 	url = git@github.com:boundlessgeo/sphinx-theme.git
 [submodule "vendor/django-osgeo-importer"]
 	path = vendor/django-osgeo-importer
-url=https://github.com/Geonode/django-osgeo-importer
+	url = git://github.com/Geonode/django-osgeo-importer
 	branch = angular-1.4
 [submodule "vendor/gsconfig"]
 	path = vendor/gsconfig
@@ -35,5 +35,5 @@ url=https://github.com/Geonode/django-osgeo-importer
 	branch = ps/pki
 [submodule "vendor/cartoview"]
 	path = vendor/cartoview
-url=git@github.com:boundlessgeo/cartoview.git
+	url = git@github.com:boundlessgeo/cartoview.git
 	branch = 1.8.x
