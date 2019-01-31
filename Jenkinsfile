@@ -7,7 +7,13 @@ node {
 
     try {
       stage('Checkout'){
-        checkout scm
+        checkout([
+        $class                           : 'GitSCM',
+        branches                         : scm.branches,
+        doGenerateSubmoduleConfigurations: false,
+        extensions                       : scm.extensions + [[$class: 'SubmoduleOption', disableSubmodules: false, recursiveSubmodules: false, reference: '', trackingSubmodules: false]],
+        submoduleCfg                     : [],
+        userRemoteConfigs                : scm.userRemoteConfigs])
         sh """
           git submodule update --depth 50 --init --recursive
           echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
