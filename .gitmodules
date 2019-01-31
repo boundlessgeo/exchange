@@ -10,8 +10,8 @@
 	url = git@github.com:boundlessgeo/sphinx-theme.git
 [submodule "vendor/django-osgeo-importer"]
 	path = vendor/django-osgeo-importer
-	url = git://github.com/Geonode/django-osgeo-importer
-	branch = angular-1.4
+	url = git@github.com:GeoNode/django-osgeo-importer.git
+	branch = master
 [submodule "vendor/gsconfig"]
 	path = vendor/gsconfig
 	url = git@github.com:boundlessgeo/gsconfig.git
