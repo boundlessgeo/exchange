@@ -28,6 +28,7 @@ node {
 
       stage('Setup'){
         sh """
+          ls -al vendor/django-osgeo-importer
           docker pull 'quay.io/boundlessgeo/sonar-maven-py3-alpine'
           docker pull 'quay.io/boundlessgeo/bex-nodejs-bower-grunt:v0.10.x'
           docker-compose -f vendor/docker/bex/docker-compose.yml --project-dir=. down
