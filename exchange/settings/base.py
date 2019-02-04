@@ -784,9 +784,12 @@ if CARTOVIEW_ENABLED:
 
     STATICFILES_DIRS += CARTOVIEW_STATIC_DIRS
 
-    from cartoview.app_manager.settings import load_apps
+    from cartoview import app_manager
     from past.builtins import execfile
-    CARTOVIEW_APPS, APPS_SETTINGS = load_apps(APPS_DIR)
+    app_manager_settings = os.path.join(
+        os.path.dirname(app_manager.__file__), "settings.py")
+    execfile(os.path.realpath(app_manager_settings))
+    load_apps(APPS_DIR)
     INSTALLED_APPS += CARTOVIEW_APPS
     for settings_file in APPS_SETTINGS:
         try:
@@ -800,4 +803,4 @@ GOOGLE_ANALYTICS_ID = os.getenv('GOOGLE_ANALYTICS_ID', None)
 try:
     from local_settings import *  # noqa
 except ImportError as e:
-    pass
+    print(e.message)
