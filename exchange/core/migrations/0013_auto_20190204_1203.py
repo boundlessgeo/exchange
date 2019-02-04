@@ -15,6 +15,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='thumbnailimage',
             name='thumbnail_image',
-            field=models.ImageField(upload_to=exchange.core.models.get_thumb_image_path),
+            field=models.ImageField(
+                upload_to=exchange.core.models.get_thumb_image_path),
         ),
     ]
