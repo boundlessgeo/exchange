@@ -1,7 +1,7 @@
 [submodule "vendor/geonode"]
 	path = vendor/geonode
-	url = git@github.com:cartologic/geonode.git
-	branch = new2.8.x
+	url = git@github.com:boundlessgeo/geonode.git
+	branch = exchange/1.5.x
 [submodule "vendor/maploom"]
 	path = vendor/maploom
 	url = git@github.com:boundlessgeo/MapLoom.git

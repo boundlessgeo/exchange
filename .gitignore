@@ -117,3 +117,6 @@ uploaded
 *.sqlite3
 *.sqlite
 *.db
+
+celerybeat-schedule
+exchange/static_root

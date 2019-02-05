@@ -121,11 +121,18 @@ STATICFILES_DIRS += [
 ]
 # django Media Section
 # uncomment the following if you want your files out of geonode folder
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, "uploaded")
+MEDIA_ROOT = os.getenv(
+    'MEDIA_ROOT',
+    os.path.join(PROJECT_ROOT, "uploaded")
+)
+
 MEDIA_URL = "/uploaded/"
 LOCAL_MEDIA_URL = "/uploaded/"
 # static section
-STATIC_ROOT = os.path.join(PROJECT_ROOT, "static_root")
+STATIC_ROOT = os.getenv(
+    'STATIC_ROOT',
+    os.path.join(PROJECT_ROOT, "static_root")
+)
 
 # static files storage
 STATICFILES_DIRS = [
@@ -206,6 +213,7 @@ INSTALLED_APPS = (
 
 MIGRATION_MODULES = {
     'user_messages': 'exchange.3pm.user_messages',
+    'announcements': 'exchange.3pm.announcements',
 }
 
 if OSGEO_IMPORTER_ENABLED:
@@ -767,7 +775,11 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', ['*'])
 # cartoview settings
-APPS_DIR = os.path.abspath(os.path.join(APP_ROOT, os.path.pardir, "apps"))
+APPS_DIR = os.getenv(
+    'CARTOVIEW_APPS_DIR',
+    os.path.abspath(os.path.join(APP_ROOT, os.path.pardir, "apps"))
+)
+
 CARTOVIEW_ENABLED = le(os.getenv('CARTOVIEW_ENABLED', "False"))
 if CARTOVIEW_ENABLED:
     from cartoview.settings import (CARTOVIEW_CONTEXT_PROCESSORS,
@@ -803,4 +815,4 @@ GOOGLE_ANALYTICS_ID = os.getenv('GOOGLE_ANALYTICS_ID', None)
 try:
     from local_settings import *  # noqa
 except ImportError as e:
-    print(e.message)
+    pass

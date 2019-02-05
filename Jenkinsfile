@@ -41,13 +41,13 @@ node {
             "pycodestyle" : {
               bashDocker(
                 'quay.io/boundlessgeo/sonar-maven-py3-alpine',
-                'pycodestyle exchange --ignore=E722,E731'
+                'pycodestyle exchange --ignore=E722,E731 --max-line-length=120'
               )
             },
             "flake8" : {
               bashDocker(
                 'quay.io/boundlessgeo/sonar-maven-py3-alpine',
-                'flake8 --ignore=F405,E722,E731 exchange'
+                'flake8 --ignore=F405,E722,E731 --max-line-length=120 exchange'
               )
             }
         )
