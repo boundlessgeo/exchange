@@ -15,8 +15,16 @@ class AuthZeroOAuth2(BaseOAuth2):
     HOST = getattr(settings, 'SOCIAL_AUTH_AUTH0_HOST', 'auth0.com')
     CLIENT_KEY = getattr(settings, 'SOCIAL_AUTH_AUTH0_KEY', '')
     CLIENT_SECRET = getattr(settings, 'SOCIAL_AUTH_AUTH0_SECRET', '')
-    OIDC_CONFORMANT = getattr(settings,
-                              'SOCIAL_AUTH_AUTH0_OIDC_CONFORMANT', False)
+    OIDC_CONFORMANT = getattr(
+        settings,
+        'SOCIAL_AUTH_AUTH0_OIDC_CONFORMANT',
+        False
+    )
+    ENFORCE_ENV_AUTHZ = getattr(
+        settings,
+        'SOCIAL_AUTH_AUTH0_ENFORCE_ENVIRONMENT_AUTHORIZATION',
+        False
+    )
     ID_KEY = 'user_id'
     AUTHORIZATION_URL = 'https://{domain}/authorize'.format(domain=HOST)
     ACCESS_TOKEN_URL = 'https://{domain}/oauth/token'.format(domain=HOST)
@@ -53,7 +61,12 @@ class AuthZeroOAuth2(BaseOAuth2):
         if self.OIDC_CONFORMANT:
             return response['sub']
         else:
-            return details['user_id']
+            if 'user_id' in details:
+                return details['user_id']
+            if 'user_id' in response:
+                return response['user_id']
+            if 'sub' in response:
+                return response['sub']
 
     def compliance_check(self, response):
         details = {}
@@ -117,9 +130,10 @@ class AuthZeroOAuth2(BaseOAuth2):
     def auth_allowed(self, response, details):
         """Return True if the user should be allowed to authenticate, by
         checking SITE_URL against the enviornment whitelist"""
+        if self.ENFORCE_ENV_AUTHZ is False:
+            return True
 
         allowed = False
-
         allowed_environments = response.get(self.ENV_NAMESPACE)
 
         for environment_url in allowed_environments:

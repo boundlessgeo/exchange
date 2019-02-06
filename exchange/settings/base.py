@@ -38,7 +38,7 @@ def isValid(v):
         return False
 
 
-ANYWHERE_ENABLED = str2bool(os.getenv('ANYWHERE_ENABLED', False))
+ANYWHERE_ENABLED = str2bool(os.getenv('ANYWHERE_ENABLED', 'False'))
 SITENAME = os.getenv('SITENAME', 'exchange')
 EXCHANGE_LOCAL_URL = os.getenv('EXCHANGE_LOCAL_URL', 'http://localhost')
 WSGI_APPLICATION = "exchange.wsgi.application"
@@ -674,6 +674,9 @@ if ENABLE_SOCIAL_LOGIN:
     AUTH0_APP_NAME = os.getenv('AUTH0_APP_NAME', 'Connect')
     OAUTH_AUTH0_ADMIN_ROLES = os.getenv('OAUTH_AUTH0_ADMIN_ROLES', "")
     OAUTH_AUTH0_ALLOWED_ROLES = os.getenv('OAUTH_AUTH0_ALLOWED_ROLES', "")
+    SOCIAL_AUTH_AUTH0_ENFORCE_ENVIRONMENT_AUTHORIZATION = str2bool(
+        os.getenv('OAUTH_AUTH0_ENFORCE_ENVIRONMENT_AUTHORIZATION', 'True')
+    )
 
     if OAUTH_AUTH0_ADMIN_ROLES.strip():
         AUTH0_ADMIN_ROLES = map(str.strip, OAUTH_AUTH0_ADMIN_ROLES.split(','))
@@ -780,7 +783,7 @@ APPS_DIR = os.getenv(
     os.path.abspath(os.path.join(APP_ROOT, os.path.pardir, "apps"))
 )
 
-CARTOVIEW_ENABLED = le(os.getenv('CARTOVIEW_ENABLED', "False"))
+CARTOVIEW_ENABLED = str2bool(os.getenv('CARTOVIEW_ENABLED', 'False'))
 if CARTOVIEW_ENABLED:
     from cartoview.settings import (CARTOVIEW_CONTEXT_PROCESSORS,
                                     CARTOVIEW_INSTALLED_APPS,
