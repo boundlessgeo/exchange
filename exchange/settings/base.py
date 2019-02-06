@@ -816,6 +816,6 @@ GOOGLE_ANALYTICS_ID = os.getenv('GOOGLE_ANALYTICS_ID', None)
 # NOTE: local_settings should be imported at the end of the file to
 # override default settings
 try:
-    from local_settings import *  # noqa
+    from .local_settings import *  # noqa
 except ImportError as e:
     pass
