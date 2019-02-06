@@ -5,6 +5,7 @@
 [submodule "vendor/maploom"]
 	path = vendor/maploom
 	url = git@github.com:boundlessgeo/MapLoom.git
+	branch = 2.8-issues
 [submodule "vendor/sphinx-theme"]
 	path = vendor/sphinx-theme
 	url = git@github.com:boundlessgeo/sphinx-theme.git
