@@ -137,15 +137,14 @@ def make_thumb_request(remote, baseurl, params=None):
             logger.debug('fetching %s with token' % thumbnail_create_url)
             resp = http_client.get(thumbnail_create_url)
 
-        if 200 <= resp.status_code <= 299:
+        if resp.status_code == 200:
             if 'ServiceException' not in resp.content:
                 return resp.content
 
-        logger.info(
+        logger.error(
             'Thumbnail: Encountered service exception or unexpected '
-            'status code (%d).  Aborting.',
-            resp.status_code)
-        logger.debug('content: %s', resp.content)
+            'URL: %s. status code: (%d). content: %s Aborting.',
+            thumbnail_create_url, resp.status_code, resp.content)
     except Exception as e:
         logger.error(e.message)
         logger.exception('Error occured making thumbnail')
@@ -199,6 +198,10 @@ def get_bbox(instance, crs='EPSG:3857'):
     height = int(200 / ratio)
     logger.debug('height: %s', height)
 
+    if instance.srid == 'EPSG:3857':
+        bbox = "{},{},{},{}".format(instance.bbox_x0, instance.bbox_y0, instance.bbox_x1, instance.bbox_y1)
+        return bbox, height
+
     if crs == 'EPSG:3857':
         # create bbox in 3857
         minx, miny = forward_mercator([minlon, max(-85.0, minlat)])
@@ -209,7 +212,7 @@ def get_bbox(instance, crs='EPSG:3857'):
             maxx,
             maxy
         )
-        return bbox, height
+        return bbox.replace('+', ''), height
     elif crs == 'EPSG:4326':
         # deal with weird bbox order for geographic coords in wms 1.3.0
         bbox = '%s,%s,%s,%s' % (
