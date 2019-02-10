@@ -298,8 +298,8 @@ GEOGIG_DATASTORE_NAME = 'geogig-repo'
 
 GEOFENCE = {
     'url':
-    os.getenv('GEOFENCE_URL', "{}/geofence".format(
-        GEOSERVER_LOCAL_URL.strip('/'))),
+    os.getenv('GEOFENCE_URL', "{}rest/geofence".format(
+        GEOSERVER_LOCAL_URL)),
     'username':
     os.getenv('GEOFENCE_USERNAME', GEOSERVER_USER),
     'password':
