@@ -21,6 +21,8 @@ resource providers.
 
 **Share -** Fast, easy, and version-controlled
 
+Check out the `Exchange Wiki <https://github.com/boundlessgeo/exchange/wiki>`_ for an overview of Exchange and how to develop towards it.
+
 `Documentation <https://connect.boundlessgeo.com/docs/exchange/latest/>`_
 
 
