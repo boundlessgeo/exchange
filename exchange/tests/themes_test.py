@@ -138,7 +138,7 @@ class ThemeTestCase(ExchangeTest):
         )
 
     def tearDown(self):
-            rmtree(theme_dir)
+        rmtree(theme_dir)
 
 
 class ThemeViewTest(ExchangeTest):

@@ -21,13 +21,13 @@
 import os
 from celery import Celery
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'exchange.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'exchange.settings.base')
 
 from django.conf import settings  # noqa
 
-app = Celery(settings.CELERY_DEFAULT_EXCHANGE)
+app = Celery(settings.CELERY_TASK_DEFAULT_EXCHANGE)
 
 # Using a string here means the worker will not have to
 # pickle the object when using Windows.
-app.config_from_object('django.conf:settings')
+app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)

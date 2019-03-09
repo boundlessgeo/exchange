@@ -8,6 +8,7 @@ from exchange.utils import get_bearer_token
 from geonode.layers.models import Layer
 from geonode.maps.models import Map
 from geonode.geoserver.helpers import ogc_server_settings
+from geonode.services.enumerations import REST_MAP, REST_IMG, GN_WMS, WMS
 from geonode.utils import forward_mercator
 from requests import session
 from requests.adapters import HTTPAdapter, Retry
@@ -136,16 +137,16 @@ def make_thumb_request(remote, baseurl, params=None):
             logger.debug('fetching %s with token' % thumbnail_create_url)
             resp = http_client.get(thumbnail_create_url)
 
-        if 200 <= resp.status_code <= 299:
+        if resp.status_code == 200:
             if 'ServiceException' not in resp.content:
                 return resp.content
 
-        logger.info(
+        logger.error(
             'Thumbnail: Encountered service exception or unexpected '
-            'status code (%d).  Aborting.',
-            resp.status_code)
-        logger.debug('content: %s', resp.content)
+            'URL: %s. status code: (%d). content: %s Aborting.',
+            thumbnail_create_url, resp.status_code, resp.content)
     except Exception as e:
+        logger.error(e.message)
         logger.exception('Error occured making thumbnail')
     return None
 
@@ -197,6 +198,10 @@ def get_bbox(instance, crs='EPSG:3857'):
     height = int(200 / ratio)
     logger.debug('height: %s', height)
 
+    if instance.srid == 'EPSG:3857':
+        bbox = "{},{},{},{}".format(instance.bbox_x0, instance.bbox_y0, instance.bbox_x1, instance.bbox_y1)
+        return bbox, height
+
     if crs == 'EPSG:3857':
         # create bbox in 3857
         minx, miny = forward_mercator([minlon, max(-85.0, minlat)])
@@ -207,7 +212,7 @@ def get_bbox(instance, crs='EPSG:3857'):
             maxx,
             maxy
         )
-        return bbox, height
+        return bbox.replace('+', ''), height
     elif crs == 'EPSG:4326':
         # deal with weird bbox order for geographic coords in wms 1.3.0
         bbox = '%s,%s,%s,%s' % (
@@ -305,9 +310,9 @@ def get_thumbnails(instance):
         map = True
     elif (hasattr(instance, 'storeType') and
             instance.storeType == 'remoteStore'):
-        if instance.service.type == 'REST':
+        if instance.remote_service.type in(REST_MAP, REST_IMG):
             rest = True
-        elif instance.service.type == 'WMS':
+        elif instance.remote_service.type in (GN_WMS, WMS):
             wms = True
     else:
         internal = True
@@ -345,7 +350,7 @@ def get_thumbnails(instance):
                 layer = Layer.objects.get(typename=layer.name)
                 if (hasattr(layer, 'storeType') and
                         layer.storeType == 'remoteStore' and
-                        layer.service.type == 'WMS'):
+                        layer.remote_service.type == 'WMS'):
                     wms_layers.append(layer)
             except:
                 logger.debug('could not find layer %s', layer.name)
@@ -491,7 +496,7 @@ def generate_thumbnail_task(instance_id, class_name):
                 instance_id)
             if (hasattr(instance, 'storeType') and
                     instance.storeType == 'remoteStore'):
-                save_thumbnail(obj_type, instance.service_typename,
+                save_thumbnail(obj_type, instance.typename,
                                'image/png', thumb_png, True)
             else:
                 save_thumbnail(obj_type, instance_id,

@@ -73,7 +73,7 @@ dev/.logs/
 *.log
 
 
-exchange/migrations/
+# exchange/migrations/
 .DS_Store
 
 #bower
@@ -105,4 +105,18 @@ vendor/services
 exchange/static/docs
 
 # local test settings
-exchange/settings/local_settings.py
+local_settings.py
+
+# vscode
+.vscode
+
+# cartoview
+apps
+
+uploaded
+*.sqlite3
+*.sqlite
+*.db
+
+celerybeat-schedule
+exchange/static_root

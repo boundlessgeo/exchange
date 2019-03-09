@@ -22,11 +22,11 @@ from django.conf import settings
 from django.conf.urls import patterns, url, include
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
+from elasticsearch_app.urls import urlpatterns as search_urls
 from geonode.urls import urlpatterns as geonode_urls
 from exchange.maploom.urls import urlpatterns as maploom_urls
 from fileservice.urls import urlpatterns as fileservice_urls
 from thumbnails.urls import urlpatterns as thumbnail_urls
-from elasticsearch_app.urls import urlpatterns as search_urls
 from . import views
 
 js_info_dict = {
@@ -37,35 +37,40 @@ urlpatterns = patterns(
     '',
     url(r'^/?$', views.home_screen, name='home'),
     url(r'^layers/(?P<layername>[^/]*)/metadata_detail$',
-        views.layer_metadata_detail, name='layer_metadata_detail'),
+        views.layer_metadata_detail,
+        name='layer_metadata_detail'),
     url(r'^layers/(?P<layername>[^/]*)/publish$',
-        views.layer_publish, name='layer_publish'),
-    url(r'^maps/(?P<mapid>[^/]*)/metadata_detail$', views.map_metadata_detail,
+        views.layer_publish,
+        name='layer_publish'),
+    url(r'^maps/(?P<mapid>[^/]*)/metadata_detail$',
+        views.map_metadata_detail,
         name='map_metadata_detail'),
-    url(r'^wfsproxy/', views.geoserver_reverse_proxy,
+    url(r'^wfsproxy/',
+        views.geoserver_reverse_proxy,
         name='geoserver_reverse_proxy'),
     # Redirect help and developer links to the documentation page
     url(r'^help/$', views.documentation_page, name='help'),
     url(r'^developer/$', views.documentation_page, name='developer'),
-
     url(r'^services/(?P<pk>\d+)/publish$',
-        views.publish_service, name='publish_service'),
-
+        views.publish_service,
+        name='publish_service'),
     url(r'^auth-failed/', views.AuthErrorPage.as_view(), name='auth_failed'),
     url(r'^about/', views.about_page, name='about'),
     url(r'^capabilities/', views.capabilities, name='capabilities'),
     url(r'^logout/', views.logout, name='exchange_logout'),
 
-    url(r'^maps/new$', views.new_map, name="new_map"),
-    url(r'^maps/new/data$', views.new_map_json, name='new_map_json'),
-
+    # url(r'^maps/new$', views.new_map, name="new_map"),
+    # url(r'^maps/new/data$', views.new_map_json, name='new_map_json'),
     url(r'^proxy/', views.proxy),
-
     (r'^services/', include('exchange.remoteservices.urls')),
-
     url(r'^layers/create/$', views.layer_create, name='layer_create'),
 )
 
+if settings.ES_SEARCH:
+    urlpatterns += [
+        url(r'^layers/$', views.es_layer_browse, name='layer_browse'),
+        url(r'^maps/$', views.es_map_browse, name='map_browse'),
+    ]
 if 'ssl_pki' in settings.INSTALLED_APPS:
     from ssl_pki.urls import urlpatterns as pki_urls
     urlpatterns += pki_urls
@@ -85,6 +90,7 @@ if settings.ENABLE_SOCIAL_LOGIN is True and settings.ANYWHERE_ENABLED is True:
 if 'osgeo_importer' in settings.INSTALLED_APPS:
     # Replace the default Exchange 'layers/upload'
     from osgeo_importer.views import FileAddView
+
     urlpatterns += [
         url(
             r'^layers/upload$',
@@ -94,16 +100,18 @@ if 'osgeo_importer' in settings.INSTALLED_APPS:
     ]
     # Add django-osgeo-importer URLs
     from osgeo_importer.urls import urlpatterns as osgeo_importer_urls
+
     urlpatterns += osgeo_importer_urls
 
 # Layer detail override needs to come after the layer upload override
-urlpatterns += [
-    url(r'^layers/(?P<layername>[^/]*)$',
-        views.layer_detail, name="layer_detail"),
-]
+# urlpatterns += [
+#     url(r'^layers/(?P<layername>[^/]*)$',
+#         views.layer_detail, name="layer_detail"),
+# ]
 
 if 'nearsight' in settings.INSTALLED_APPS:
     from nearsight.urls import urlpatterns as nearsight_urls
+
     urlpatterns += nearsight_urls
 
 # Use our Elasticsearch implementation for search
@@ -117,6 +125,9 @@ if 'worm' in settings.INSTALLED_APPS:
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += geonode_urls
+if settings.CARTOVIEW_ENABLED:
+    from cartoview.urls import urlpatterns as cartoview_urls
+    urlpatterns += cartoview_urls
 urlpatterns += fileservice_urls
 urlpatterns += thumbnail_urls
 urlpatterns += maploom_urls

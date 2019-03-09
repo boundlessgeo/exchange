@@ -1,14 +1,12 @@
 import os
 
-from default import *  # noqa
+from .base import *  # noqa
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-STATIC_ROOT = os.getenv(
-    'STATIC_ROOT',
-    os.path.join(BASE_DIR, "../.storage/static_root"))
-MEDIA_ROOT = os.getenv(
-    'MEDIA_ROOT',
-    os.path.join(BASE_DIR, "../.storage/media"))
+STATIC_ROOT = os.getenv('STATIC_ROOT',
+                        os.path.join(BASE_DIR, "../.storage/static_root"))
+MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR,
+                                                  "../.storage/media"))
 
 # ensures tests are run on writing to file
 AUDIT_TO_FILE = True

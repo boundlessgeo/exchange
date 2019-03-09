@@ -1,26 +1,29 @@
 [submodule "vendor/geonode"]
 	path = vendor/geonode
 	url = git@github.com:boundlessgeo/geonode.git
-	branch = exchange/1.4.x
+	branch = exchange/1.5.x
 [submodule "vendor/maploom"]
 	path = vendor/maploom
 	url = git@github.com:boundlessgeo/MapLoom.git
+	branch = 2.8-issues
 [submodule "vendor/sphinx-theme"]
 	path = vendor/sphinx-theme
 	url = git@github.com:boundlessgeo/sphinx-theme.git
 [submodule "vendor/django-osgeo-importer"]
 	path = vendor/django-osgeo-importer
 	url = git@github.com:GeoNode/django-osgeo-importer.git
-	branch = angular-1.6
+	branch = gsconfig-2-support
 [submodule "vendor/gsconfig"]
 	path = vendor/gsconfig
 	url = git@github.com:boundlessgeo/gsconfig.git
 [submodule "vendor/geonode-elasticsearch"]
 	path = vendor/geonode-elasticsearch
 	url = git@github.com:boundlessgeo/geonode-elasticsearch.git
+	branch = geonode2.8.x
 [submodule "vendor/docker"]
 	path = vendor/docker
 	url = git@github.com:boundlessgeo/docker.git
+	branch = master
 [submodule "vendor/exchange-mobile-extension"]
 	path = vendor/exchange-mobile-extension
 	url = git@github.com:boundlessgeo/exchange-mobile-extension.git
@@ -31,3 +34,7 @@
 	path = vendor/arcrest
 	url = git@github.com:boundlessgeo/ArcREST.git
 	branch = ps/pki
+[submodule "vendor/cartoview"]
+	path = vendor/cartoview
+	url = git@github.com:boundlessgeo/cartoview.git
+	branch = 1.8.x

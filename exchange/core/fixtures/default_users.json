@@ -19,6 +19,9 @@
             "fax": null,
             "is_active": true,
             "delivery": null,
+            "groups": [
+                3
+            ],
             "organization": null,
             "password": "pbkdf2_sha256$12000$ASdvqNLCdwUd$6FBtjUga0lj2Iq78hyA0iztSUCgFKzxtAMysr1D4WIY=",
             "country": null,
@@ -46,6 +49,9 @@
             "fax": null,
             "is_active": true,
             "delivery": null,
+            "groups": [
+                3
+            ],
             "organization": null,
             "password": "pbkdf2_sha256$12000$eaY3wZWxxbhE$iUAk/R6aZmBKNMryFWBQd+Ouvbw9tsPAmK6HbRCPoow=",
             "country": null,

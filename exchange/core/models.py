@@ -25,7 +25,6 @@ from io import BytesIO
 from django.core.files.base import ContentFile
 from resizeimage import resizeimage
 from django import forms
-import os
 import uuid
 import datetime
 from django.db.models import Q
@@ -36,9 +35,14 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import Group
 
 
+def get_thumb_image_path(instance, filename):
+    image_path = ["thumbs", filename]
+    return "/".join(image_path)
+
+
 class ThumbnailImage(SingletonModel):
     thumbnail_image = models.ImageField(
-        upload_to=os.path.join(settings.MEDIA_ROOT, 'thumbs'),
+        upload_to=get_thumb_image_path,
     )
 
     def save(self, *args, **kwargs):
@@ -71,28 +75,28 @@ class ThumbnailImageForm(forms.Form):
 
 
 def get_classifications():
-        return [(x, str(x)) for x in getattr(
-            settings, 'CLASSIFICATION_LEVELS', [])]
+    return [(x, str(x)) for x in getattr(
+        settings, 'CLASSIFICATION_LEVELS', [])]
 
 
 def get_caveats():
-        return [(x, str(x)) for x in getattr(settings, 'CAVEATS', [])]
+    return [(x, str(x)) for x in getattr(settings, 'CAVEATS', [])]
 
 
 def get_provenances():
-        default = [('Commodity', 'Commodity'),
-                   ('Crowd-sourced data', 'Crowd-sourced data'),
-                   ('Derived by trusted agents ',
-                    'Derived by trusted agents '),
-                   ('Open Source', 'Open Source'),
-                   ('Structured Observations (SOM)',
-                    'Structured Observations (SOM)'),
-                   ('Unknown', 'Unknown')]
+    default = [('Commodity', 'Commodity'),
+               ('Crowd-sourced data', 'Crowd-sourced data'),
+               ('Derived by trusted agents ',
+                'Derived by trusted agents '),
+               ('Open Source', 'Open Source'),
+               ('Structured Observations (SOM)',
+                'Structured Observations (SOM)'),
+               ('Unknown', 'Unknown')]
 
-        provenance_choices = [(x, str(x)) for x in getattr(
-            settings, 'PROVENANCE_CHOICES', [])]
+    provenance_choices = [(x, str(x)) for x in getattr(
+        settings, 'PROVENANCE_CHOICES', [])]
 
-        return provenance_choices + default
+    return provenance_choices + default
 
 
 class CSWRecord(models.Model):

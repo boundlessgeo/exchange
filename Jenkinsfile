@@ -9,7 +9,7 @@ node {
       stage('Checkout'){
         checkout scm
         sh """
-          git submodule update --init
+          git submodule update --depth 50 --init --recursive
           echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
         """
         checkout([$class: 'GitSCM',
@@ -28,6 +28,7 @@ node {
 
       stage('Setup'){
         sh """
+          ls -al vendor/django-osgeo-importer
           docker pull 'quay.io/boundlessgeo/sonar-maven-py3-alpine'
           docker pull 'quay.io/boundlessgeo/bex-nodejs-bower-grunt:v0.10.x'
           docker-compose -f vendor/docker/bex/docker-compose.yml --project-dir=. down
@@ -40,13 +41,13 @@ node {
             "pycodestyle" : {
               bashDocker(
                 'quay.io/boundlessgeo/sonar-maven-py3-alpine',
-                'pycodestyle exchange --ignore=E722,E731'
+                'pycodestyle exchange --ignore=E722,E731 --max-line-length=120'
               )
             },
             "flake8" : {
               bashDocker(
                 'quay.io/boundlessgeo/sonar-maven-py3-alpine',
-                'flake8 --ignore=F405,E722,E731 exchange'
+                'flake8 --ignore=F405,E722,E731 --max-line-length=120 exchange'
               )
             }
         )
@@ -126,6 +127,7 @@ node {
       // Success or failure, always send notifications
       echo currentBuild.result
       sh """
+        docker-compose -f vendor/docker/bex/docker-compose.yml --project-dir=. logs
         docker-compose -f vendor/docker/bex/docker-compose.yml --project-dir=. down
         docker system prune -f
         """

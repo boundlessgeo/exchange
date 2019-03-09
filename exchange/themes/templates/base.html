@@ -53,6 +53,10 @@
             <ul class="nav navbar-nav toolbar">
               {% block tabs %}
               {% if user.is_authenticated %}
+              {% url 'app_manager_base_url' as apps_url %}
+              {% if apps_url %}
+              <li><a href="{{apps_url}}">{% trans "Apps" %}</a></li> 
+              {% endif %}
               <li id="nav_layers">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   {% trans "Data" %}
@@ -104,7 +108,7 @@
                   {% if user.is_superuser %}
                     <li role="separator" class="divider"></li>
                     <li><a href="/admin/people/profile/add/">{% trans "Add User" %}</a></li>
-                    <li><a href="{% url "account_invite_user" %}">{% trans "Invite User" %}</a></li>
+                    <li><a href="{% url "geonode.invitations:geonode-send-invite" %}">{% trans "Invite User" %}</a></li>
                     <li><a href="{% url "group_create" %}">{% trans "Create Group" %}</a></li>
                   {% endif %}
                   <li role="separator" class="divider"></li>
