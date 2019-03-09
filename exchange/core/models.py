@@ -34,6 +34,8 @@ from geonode.base.enumerations import UPDATE_FREQUENCIES
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.contrib.auth.models import Group
+from geonode.layers.models import Layer
+from exchange.remoteservices.models import ExchangeService
 
 
 class ThumbnailImage(SingletonModel):
@@ -221,3 +223,9 @@ def add_default_permissions(sender, **kwargs):
 
 
 post_save.connect(add_default_permissions, sender=settings.AUTH_USER_MODEL)
+
+
+class ExchangeLayer(models.Model):
+    geonode_layer = models.OneToOneField(Layer)
+    exchange_service = models.ForeignKey(ExchangeService,
+                                         null=True, blank=True)

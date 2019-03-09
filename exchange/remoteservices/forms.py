@@ -18,11 +18,14 @@
 #
 #########################################################################
 
-from geonode.services.forms import CreateServiceForm
+from geonode.services.forms import CreateServiceForm, ServiceForm
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 from django.conf import settings
+from django import forms
 from geonode.services import enumerations
+from geonode.base.models import License
+from exchange.remoteservices.models import ExchangeService
 from exchange.remoteservices.serviceprocessors.handler \
     import get_service_handler
 from urllib2 import HTTPError as urllibHTTPError
@@ -138,3 +141,95 @@ class ExchangeCreateServiceForm(CreateServiceForm):
                     )
             self.cleaned_data["service_handler"] = service_handler
             self.cleaned_data["type"] = service_handler.service_type
+
+
+# TODO: What is a better name for this?
+# Needs to be differentiated from form which applies to ExchangeService model
+class ServiceFormOverride(ServiceForm):
+    license = forms.ModelChoiceField(
+        label=_('License'),
+        queryset=License.objects.filter(),
+        required=False)
+    abstract = forms.CharField(
+        label=_("Abstract"),
+        widget=forms.Textarea(
+            attrs={
+                'cols': 60
+            }
+        ),
+        required=False
+    )
+    fees = forms.CharField(label=_('Fees'), max_length=1000,
+                           widget=forms.TextInput(
+                               attrs={
+                                   'size': '60',
+                                   'class': 'inputText'
+                               }), required=False)
+
+
+class ExchangeServiceForm(forms.ModelForm):
+    poc_name = forms.CharField(
+        label=_('Point of Contact'),
+        max_length=255,
+        widget=forms.TextInput(
+            attrs={
+                'size': '60',
+                'class': 'inputText'
+            }
+        ),
+        required=False
+    )
+    poc_position = forms.CharField(
+        label=_('PoC Position'),
+        max_length=255,
+        widget=forms.TextInput(
+            attrs={
+                'size': '60',
+                'class': 'inputText'
+            }
+        ),
+        required=False
+    )
+    poc_email = forms.CharField(
+        label=_('PoC Email'),
+        max_length=255,
+        widget=forms.TextInput(
+            attrs={
+                'size': '60',
+                'class': 'inputText'
+            }
+        ),
+        required=False
+    )
+    poc_phone = forms.CharField(
+        label=_('PoC Phone'),
+        max_length=255,
+        widget=forms.TextInput(
+            attrs={
+                'size': '60',
+                'class': 'inputText'
+            }
+        ),
+        required=False
+    )
+    poc_address = forms.CharField(
+        label=_('PoC Location/Address'),
+        max_length=255,
+        widget=forms.Textarea(
+            attrs={
+                'cols': 60
+            }
+        ),
+        required=False
+    )
+
+    class Meta:
+        model = ExchangeService
+        labels = {'description': _('Short Name')}
+        fields = (
+            'poc_name',
+            'poc_position',
+            'poc_email',
+            'poc_phone',
+            'poc_address',
+        )

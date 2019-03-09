@@ -85,9 +85,39 @@
     <dd><a itemprop="author" href="{{ resource.owner.get_absolute_url }}">{{ resource.owner.username }}</a></dd>
     {% endif %}
 
-    {% if resource.poc.user %}
+    {% if resource.service.classification %}
+    <dt>{% trans "Classification" %}</dt>
+    <dd>{{ resource.service.classification }}</dd>
+    {% endif %}
+
+    {% if resource.service.caveat %}
+    <dt>{% trans "Caveat" %}</dt>
+    <dd>{{ resource.service.caveat }}</dd>
+    {% endif %}
+
+    {% if resource.exchangelayer.exchange_service.poc_name %}
     <dt>{% trans "Point of Contact" %}</dt>
-    <dd><a href="{{ resource.poc.user.get_absolute_url }}">{{ resource.poc.user.username }}</a></dd>
+    <dd>{{ resource.exchangelayer.exchange_service.poc_name }}</dd>
+    {% endif %}
+
+    {% if resource.exchangelayer.exchange_service.poc_position %}
+    <dt>{% trans "PoC Position" %}</dt>
+    <dd>{{ resource.exchangelayer.exchange_service.poc_position }}</dd>
+    {% endif %}
+
+    {% if resource.exchangelayer.exchange_service.poc_email %}
+    <dt>{% trans "PoC Email" %}</dt>
+    <dd>{{ resource.exchangelayer.exchange_service.poc_email }}</dd>
+    {% endif %}
+
+    {% if resource.exchangelayer.exchange_service.poc_phone %}
+    <dt>{% trans "PoC Phone" %}</dt>
+    <dd>{{ resource.exchangelayer.exchange_service.poc_phone }}</dd>
+    {% endif %}
+
+    {% if resource.exchangelayer.exchange_service.poc_address %}
+    <dt>{% trans "PoC Address" %}</dt>
+    <dd>{{ resource.exchangelayer.exchange_service.poc_address }}</dd>
     {% endif %}
   </dl>
 

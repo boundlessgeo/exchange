@@ -19,8 +19,9 @@
 #########################################################################
 
 from django.contrib.auth.decorators import login_required
-from exchange.remoteservices.forms import ExchangeCreateServiceForm
-from geonode.services.forms import ServiceForm
+from exchange.remoteservices.forms import ExchangeCreateServiceForm, \
+    ServiceFormOverride, ExchangeServiceForm
+from exchange.remoteservices.models import ExchangeService
 from geonode.services import enumerations
 from geonode.services.models import Service, HarvestJob
 from exchange.remoteservices import tasks
@@ -112,26 +113,42 @@ def edit_service(request, service_id):
     Edit an existing Service
     """
     service_obj = get_object_or_404(Service, pk=service_id)
+    if 'exchangeservice' in service_obj \
+            and service_obj.exchangeservice is not None:
+        exchange_service_obj = service_obj.exchangeservice
+    else:
+        exchange_service_obj = ExchangeService(geonode_service=service_obj)
     classification_dict = getattr(settings, "CLASSIFICATION_LEVELS", {})
 
     if request.method == "POST":
-        service_form = ServiceForm(
+        service_form = ServiceFormOverride(
             request.POST, instance=service_obj, prefix="service")
-        if service_form.is_valid():
+        exchange_service_form = ExchangeServiceForm(
+            request.POST, instance=exchange_service_obj,
+            prefix="exchangeservice"
+        )
+        if service_form.is_valid() and exchange_service_form.is_valid():
             service_obj = service_form.save(commit=False)
             service_obj.keywords.clear()
             service_obj.keywords.add(*service_form.cleaned_data['keywords'])
             service_obj.save()
+            exchange_service_obj = exchange_service_form.save(commit=False)
+            exchange_service_obj.save()
             return HttpResponseRedirect(reverse(
                 "harvest_resources", kwargs={"service_id": service_id}))
     else:
-        service_form = ServiceForm(
+        service_form = ServiceFormOverride(
             instance=service_obj, prefix="service")
+        exchange_service_form = ExchangeServiceForm(
+            instance=exchange_service_obj, prefix="exchangeservice"
+        )
 
     return render_to_response("services/service_edit.html",
                               RequestContext(request,
                                              {"service": service_obj,
                                               "service_form": service_form,
+                                              "exchange_service_form":
+                                                  exchange_service_form,
                                               "classification_levels":
                                                   classification_dict}))
 

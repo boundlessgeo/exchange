@@ -17,6 +17,7 @@
 <form method="POST" id="service_edit_form">
   {% csrf_token %}
   {{ service_form|as_bootstrap }}
+  {{ exchange_service_form|as_bootstrap }}
   <div class="grid-spacer">
     <p><input type="submit" class="btn btn-primary" value="{% trans "Save" %}"/></p>
   </div>
