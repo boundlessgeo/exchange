@@ -1059,6 +1059,39 @@ class TestPkiUtils(PkiTestCase):
             self.base_url,
             relative_to_absolute_url(self.base_url))
 
+    def test_utf8_compat(self):
+        # Test all functions work with utf8 strings
+        # encode() will encode strings as utf8 by default
+        self.assertTrue(has_pki_prefix(self.pki_url.encode()))
+
+        self.assertTrue(has_proxy_prefix(self.proxy_url.encode()))
+
+        self.assertEqual(self.pki_url,
+                         pki_route(self.base_url.encode()))
+
+        self.assertEqual(self.proxy_url,
+                         proxy_route(self.base_url.encode()))
+
+        self.assertEqual(self.base_url,
+                         pki_route_reverse(self.pki_url.encode()))
+
+        self.assertEqual(self.base_url,
+                         proxy_route_reverse(self.base_url.encode()))
+
+        self.assertEqual(self.proxy_url,
+                         pki_to_proxy_route(self.pki_url.encode()))
+
+        self.assertTrue(
+            protocol_relative_url(self.protocol_relative_url.encode()))
+
+        self.assertEqual(
+            self.base_url,
+            protocol_relative_to_scheme(self.protocol_relative_url.encode()))
+
+        self.assertEqual(
+            self.base_url,
+            relative_to_absolute_url(self.protocol_relative_url.encode()))
+
 
 class TestPkiValidation(TestCase):
 
