@@ -330,9 +330,9 @@
           {% if resource.service.wms_url and resource.service.wfs_url %}
             {% if resource.service.type == 'REST' %}
             <input type="text" class="form-control" readonly
-            value="{{ resource.service.wms_url}}/{{resource.alternate}}" id="copy-input">
+            value="{{ resource.service.wms_url}}/{{resource.alternate}}" id="copy-input-wms">
             <span class="input-group-btn">
-              <button class="btn btn-primary" type="button" id="copy-button"
+              <button class="btn btn-primary" type="button" id="copy-button-wms"
                   data-toggle="tooltip" data-placement="button"
                   title="Copy to Clipboard">
                 Copy WMS Source URL
@@ -343,9 +343,9 @@
     <form>
       <div class="input-group">
             <input type="text" class="form-control" readonly
-            value="{{ resource.service.wfs_url}}/{{resource.alternate}}" id="copy-input">
+            value="{{ resource.service.wfs_url}}/{{resource.alternate}}" id="copy-input-wfs">
             <span class="input-group-btn">
-              <button class="btn btn-primary" type="button" id="copy-button"
+              <button class="btn btn-primary" type="button" id="copy-button-wfs"
                   data-toggle="tooltip" data-placement="button"
                   title="Copy to Clipboard">
                 Copy WFS Source URL
@@ -353,9 +353,9 @@
             </span>
             {% else %}
             <input type="text" class="form-control" readonly
-            value="{{ resource.service.wms_url}}" id="copy-input">
+            value="{{ resource.service.wms_url}}" id="copy-input-wms">
             <span class="input-group-btn">
-              <button class="btn btn-primary" type="button" id="copy-button"
+              <button class="btn btn-primary" type="button" id="copy-button-wms"
                   data-toggle="tooltip" data-placement="button"
                   title="Copy to Clipboard">
                 Copy WMS Source URL
@@ -366,9 +366,9 @@
     <form>
       <div class="input-group">
             <input type="text" class="form-control" readonly
-            value="{{ resource.service.wfs_url}}" id="copy-input">
+            value="{{ resource.service.wfs_url}}" id="copy-input-wfs">
             <span class="input-group-btn">
-              <button class="btn btn-primary" type="button" id="copy-button"
+              <button class="btn btn-primary" type="button" id="copy-button-wfs"
                   data-toggle="tooltip" data-placement="button"
                   title="Copy to Clipboard">
                 Copy WFS Source URL
@@ -681,6 +681,54 @@
           }
         });
         $('#copy-button').bind('copied', function(event, message) {
+          $(this).attr('title', message)
+              .tooltip('fixTitle')
+              .tooltip('show')
+              .attr('title', "Copy to Clipboard")
+              .tooltip('fixTitle');
+        });
+        // TODO: Need to do this a better way
+        $('#copy-button-wms').tooltip();
+        $('#copy-button-wms').bind('click', function() {
+          var input = document.querySelector('#copy-input-wms');
+          input.focus();
+          input.setSelectionRange(0, input.value.length + 1);
+          try {
+            var success = document.execCommand('copy');
+            if (success) {
+              $('#copy-button-wms').trigger('copied', ['Copied!']);
+            } else {
+              $('#copy-button-wms').trigger('copied', ['Copy with Ctrl-c']);
+            }
+          } catch (err) {
+            $('#copy-button-wms').trigger('copied', ['Copy with Ctrl-c']);
+          }
+        });
+        $('#copy-button-wms').bind('copied', function(event, message) {
+          $(this).attr('title', message)
+              .tooltip('fixTitle')
+              .tooltip('show')
+              .attr('title', "Copy to Clipboard")
+              .tooltip('fixTitle');
+        });
+
+        $('#copy-button-wfs').tooltip();
+        $('#copy-button-wfs').bind('click', function() {
+          var input = document.querySelector('#copy-input-wfs');
+          input.focus();
+          input.setSelectionRange(0, input.value.length + 1);
+          try {
+            var success = document.execCommand('copy');
+            if (success) {
+              $('#copy-button-wfs').trigger('copied', ['Copied!']);
+            } else {
+              $('#copy-button-wfs').trigger('copied', ['Copy with Ctrl-c']);
+            }
+          } catch (err) {
+            $('#copy-button-wfs').trigger('copied', ['Copy with Ctrl-c']);
+          }
+        });
+        $('#copy-button-wfs').bind('copied', function(event, message) {
           $(this).attr('title', message)
               .tooltip('fixTitle')
               .tooltip('show')
