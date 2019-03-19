@@ -316,18 +316,9 @@
     <li class="list-group-item">
     <form>
       <div class="input-group">
-          {% if resource.storeType != "remoteStore" %}
+        {% if resource.storeType != "remoteStore" %}
         <input type="text" class="form-control" readonly
           value="{{ GEOSERVER_BASE_URL }}{{ resource.workspace }}/ows?service=wms&version=1.3.0&request=GetCapabilities&typename={{ resource.layer.name  }}" id="copy-input">
-          {% else %}
-          {% if resource.service.type == 'REST' %}
-          <input type="text" class="form-control" readonly
-          value="{{ resource.service.base_url}}/{{resource.alternate}}" id="copy-input">
-          {% else %}
-           <input type="text" class="form-control" readonly
-          value="{{ resource.service.base_url}}" id="copy-input">
-          {% endif %}
-          {% endif %}
         <span class="input-group-btn">
           <button class="btn btn-primary" type="button" id="copy-button"
               data-toggle="tooltip" data-placement="button"
@@ -335,6 +326,72 @@
             Copy Source URL
           </button>
         </span>
+        {% else %}
+          {% if resource.service.wms_url and resource.service.wfs_url %}
+            {% if resource.service.type == 'REST' %}
+            <input type="text" class="form-control" readonly
+            value="{{ resource.service.wms_url}}/{{resource.alternate}}" id="copy-input">
+            <span class="input-group-btn">
+              <button class="btn btn-primary" type="button" id="copy-button"
+                  data-toggle="tooltip" data-placement="button"
+                  title="Copy to Clipboard">
+                Copy WMS Source URL
+              </button>
+            </span>
+      </div>
+    </form>
+    <form>
+      <div class="input-group">
+            <input type="text" class="form-control" readonly
+            value="{{ resource.service.wfs_url}}/{{resource.alternate}}" id="copy-input">
+            <span class="input-group-btn">
+              <button class="btn btn-primary" type="button" id="copy-button"
+                  data-toggle="tooltip" data-placement="button"
+                  title="Copy to Clipboard">
+                Copy WFS Source URL
+              </button>
+            </span>
+            {% else %}
+            <input type="text" class="form-control" readonly
+            value="{{ resource.service.wms_url}}" id="copy-input">
+            <span class="input-group-btn">
+              <button class="btn btn-primary" type="button" id="copy-button"
+                  data-toggle="tooltip" data-placement="button"
+                  title="Copy to Clipboard">
+                Copy WMS Source URL
+              </button>
+            </span>
+      </div>
+    </form>
+    <form>
+      <div class="input-group">
+            <input type="text" class="form-control" readonly
+            value="{{ resource.service.wfs_url}}" id="copy-input">
+            <span class="input-group-btn">
+              <button class="btn btn-primary" type="button" id="copy-button"
+                  data-toggle="tooltip" data-placement="button"
+                  title="Copy to Clipboard">
+                Copy WFS Source URL
+              </button>
+            </span>
+            {% endif %}
+          {% else %}
+            {% if resource.service.type == 'REST' %}
+            <input type="text" class="form-control" readonly
+            value="{{ resource.service.base_url}}/{{resource.alternate}}" id="copy-input">
+            {% else %}
+            <input type="text" class="form-control" readonly
+            value="{{ resource.service.base_url}}" id="copy-input">
+            {% endif %}
+            <span class="input-group-btn">
+              <button class="btn btn-primary" type="button" id="copy-button"
+                  data-toggle="tooltip" data-placement="button"
+                  title="Copy to Clipboard">
+                Copy Source URL
+              </button>
+            </span>
+          {% endif %}
+        {% endif %}
       </div>
     </form>
     </li>
