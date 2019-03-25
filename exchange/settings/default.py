@@ -225,8 +225,9 @@ else:
 
 if GEONODE_CLIENT_ENABLED:
     INSTALLED_APPS = ('geonode-client',) + INSTALLED_APPS
-    LAYER_PREVIEW_LIBRARY = 'react'
-
+    LAYER_PREVIEW_LIBRARY = 'MOW'
+    # LAYER_PREVIEW_LIBRARY = 'react'
+    
 # authorized exempt urls
 ADDITIONAL_AUTH_EXEMPT_URLS = os.getenv(
     'ADDITIONAL_AUTH_EXEMPT_URLS',
