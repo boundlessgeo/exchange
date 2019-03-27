@@ -2,6 +2,15 @@
 
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
+        var isSelected = false;
+        $('#layerselect').click(function() {
+            if(isSelected) {
+                $("#layerlist").removeClass("dropdownshow");
+            } else {
+                $("#layerlist").addClass("dropdownshow");
+            }
+            isSelected = !isSelected;
+        });
         {% if resource.bbox_string %}
         var bbox = [{{ resource.bbox_string }}];
         {% else %}
@@ -25,6 +34,13 @@
                 // map.setBasemap(MoW.Basemap.ID.LOW_BW_CADRG);
                 map.setExtent(extent.split(','));
                 map.addOverlay(wmsOverlay);
+
+                $('#streetsBtn').click(function() {
+                    map.setBasemap(MoW.Basemap.ID.CANVAS_SLATE);
+                });
+                $('#imageryBtn').click(function() {
+                    map.setBasemap(MoW.Basemap.ID.HILLSHADE);
+                });
             });
         });
-</script> 
+</script>

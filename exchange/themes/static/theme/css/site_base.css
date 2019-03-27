@@ -360,3 +360,86 @@ h1, h2, h3, h4, h5, h6 {
 .required-field::after {
     content: "*";
 }
+/* giving space for the MoW map*/
+#preview_map {
+    height: 600px; 
+    border: 1px solid black;
+}
+
+/* Custom controls for MoW layer control*/
+  a {
+    text-decoration: none;
+  }
+  
+  .layerlist {
+      font-family: monospace;
+      padding: 5px;
+      position: absolute;
+      right: 20px;
+      z-index: 1000;
+      font-size: 20px;
+  }
+  
+  .dropdown .layerlist {
+    background: darkorange;
+      list-style: none;
+      margin: 0;
+      padding-left: 0;
+  }
+  
+  .layerbutton {
+      color: #fff;
+    background: darkorange;
+      display: block;
+      float: left;
+      padding: 1rem;
+      position: relative;
+      text-decoration: none;
+    transition-duration: 0.5s;
+  }
+  .layeroption {
+      color: #fff;
+    background: darkorange;
+      display: block;
+      float: left;
+      padding: 1rem;
+      position: relative;
+      text-decoration: none;
+    transition-duration: 0.5s;
+  }
+    
+  .layerinfo{
+    color: #fff;
+  }
+  
+  .layeroption:hover{
+      background: red;
+      cursor: pointer;
+  }
+  .layerbutton:hover{
+      background: red;
+      cursor: pointer;
+  }
+  
+  .dropdown {
+    background: orange;
+    visibility: hidden;
+    opacity: 0;
+    min-width: 5rem;
+    position: absolute;
+    transition: all 0.5s ease;
+    margin-top: 1rem;
+    left: 0;
+    display: none;
+  }
+  .dropdownshow{
+    visibility: visible;
+    opacity: 1;
+    display: block;
+  }  
+  .layerlist .layerbutton .dropdown .layeroption{
+    clear: both;
+    width: 100%;
+    color: #fff;
+  }
+  
