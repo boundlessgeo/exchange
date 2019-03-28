@@ -49,17 +49,15 @@
     <div id="embedded_map" class="mrg-btm">
       <div id="preview_map">
         <div class='layerlist'>
-          <div class="layerbutton"><div id="layerselect" class="layerinfo"><i class="fa fa-ellipsis-h"></i></div>
+          <div class="layerbutton"><div id="layerselect" class="layerinfo"><i class="fa fa-ellipsis-h ellipsis"></i></div>
             <ul class="dropdown" id="layerlist">
-              <li class='layeroption' id="streetsBtn"><a class="layerinfo" href="#">Sub-1</a></li>
-              <li class='layeroption' id="imageryBtn"><a class="layerinfo" href="#">Sub-2</a></li>
-              <li class='layeroption'><a class="layerinfo" href="#">Sub-3</a></li>
+              <li class='layeroption' id="autoscaleBase"><a class="layerinfo" href="#">Autoscale</a></li>
+              <li class='layeroption' id="canvasgrayBase"><a class="layerinfo" href="#">Grey</a></li>
+              <li class='layeroption' id="streetsBase"><a class="layerinfo" href="#">Streets</a></li>
             </ul>
           </div>
         </div>
-      </div>
-      <button id="imageryBtn">Test2</button>
-      
+      </div>      
     <div class="layer-actions">
       {% include "_actions.html" %}
     </div>

@@ -35,11 +35,21 @@
                 map.setExtent(extent.split(','));
                 map.addOverlay(wmsOverlay);
 
-                $('#streetsBtn').click(function() {
-                    map.setBasemap(MoW.Basemap.ID.CANVAS_SLATE);
+                $('#autoscaleBase').click(function() {
+                    console.log(MoW.Basemap.ID);
+                    map.setBasemap(MoW.Basemap.ID.AUTOSCALING);
+                    isSelected = false;
+                    $("#layerlist").removeClass("dropdownshow");
                 });
-                $('#imageryBtn').click(function() {
-                    map.setBasemap(MoW.Basemap.ID.HILLSHADE);
+                $('#canvasgrayBase').click(function() {
+                    map.setBasemap(MoW.Basemap.ID.CANVAS_SLATE);
+                    isSelected = false;
+                    $("#layerlist").removeClass("dropdownshow");
+                });
+                $('#streetsBase').click(function() {
+                    map.setBasemap(MoW.Basemap.ID.STREETS);
+                    isSelected = false;
+                    $("#layerlist").removeClass("dropdownshow");
                 });
             });
         });

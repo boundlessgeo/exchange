@@ -372,7 +372,7 @@ h1, h2, h3, h4, h5, h6 {
   }
   
   .layerlist {
-      font-family: monospace;
+      /* font-family: monospace; */
       padding: 5px;
       position: absolute;
       right: 20px;
@@ -382,43 +382,59 @@ h1, h2, h3, h4, h5, h6 {
   
   .dropdown .layerlist {
     background: darkorange;
-      list-style: none;
-      margin: 0;
-      padding-left: 0;
+    list-style: none;
+    margin: 0px;
+    padding-left: 0px;
+  }
+  .dropdown {
+    background: darkorange;
+    list-style: none;
+    margin: 0px;
+    padding-left: 0px;
+    padding-inline-start: 0px;
+    right: 10px;
+    border-radius: 25px;
   }
   
   .layerbutton {
-      color: #fff;
+    color: #fff;
     background: darkorange;
-      display: block;
-      float: left;
-      padding: 1rem;
-      position: relative;
-      text-decoration: none;
+    display: block;
+    float: left;
+    padding: .9rem;
+    position: relative;
+    text-decoration: none;
     transition-duration: 0.5s;
+    border-radius: 25px;
   }
   .layeroption {
-      color: #fff;
-    background: darkorange;
-      display: block;
-      float: left;
-      padding: 1rem;
-      position: relative;
-      text-decoration: none;
+    color: #fff;
+    /* background: darkorange; */
+    display: block;
+    float: left;
+    padding: 1rem;
+    position: relative;
+    text-decoration: none;
     transition-duration: 0.5s;
+    border-radius: 25px;
   }
-    
+  .ellipsis {
+      line-height: .9;
+  }
   .layerinfo{
     color: #fff;
+    height: 15px;
+    width: 15px;
+    line-height: 0px;
   }
   
   .layeroption:hover{
-      background: red;
-      cursor: pointer;
+    background: #ffc04d;
+    cursor: pointer;
   }
   .layerbutton:hover{
-      background: red;
-      cursor: pointer;
+    background:#ffc04d;
+    cursor: pointer;
   }
   
   .dropdown {
@@ -429,8 +445,9 @@ h1, h2, h3, h4, h5, h6 {
     position: absolute;
     transition: all 0.5s ease;
     margin-top: 1rem;
-    left: 0;
+    right: 2px;
     display: none;
+
   }
   .dropdownshow{
     visibility: visible;
