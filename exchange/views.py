@@ -123,6 +123,10 @@ def invites_http_404_view(request):
     raise Http404('Invites have been disabled')
 
 
+def documents_http_404_view(request):
+    raise Http404('Documents have been disabled')
+
+
 def get_pip_version(project):
     version = [
         p.version for p in pkg_resources.working_set

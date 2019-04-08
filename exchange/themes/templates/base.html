@@ -60,7 +60,9 @@
                 </a>
                 <ul class="dropdown-menu">
                   <li><a href="{% url "search" %}?type=layer">{% trans "Layers" %}</a></li>
+                  {% if DOCUMENTS_ENABLED %}
                   <li><a href="{% url "document_browse" %}">{% trans "Documents" %}</a></li>
+                  {% endif %}
                   <li role="separator" class="divider"></li>
                   {% if perms.layers.add_layer == True or user.is_staff == True or user.is_superuser == True %}
                   <li><a href="{% url "layer_upload" %}" id="upload-layer">{% trans "Upload Layer" %}</a></li>
@@ -68,8 +70,10 @@
                           <li><a href="{% url "layer_create" %}" id="create-layer">{% trans "Create Layer" %}</a></li>
                       {% endif %}
                   {% endif %}
-                  {% if perms.documents.add_document == True or user.is_staff == True or user.is_superuser == True %}
-                  <li><a href="{% url "document_upload" %}" id="upload-document">{% trans "Upload Document" %}</a></li>
+                  {% if DOCUMENTS_ENABLED %}
+                    {% if perms.documents.add_document == True or user.is_staff == True or user.is_superuser == True %}
+                    <li><a href="{% url "document_upload" %}" id="upload-document">{% trans "Upload Document" %}</a></li>
+                    {% endif %}
                   {% endif %}
                   {% if perms.layers.add_layer == True or perms.documents.add_document == True or user.is_staff == True or user.is_superuser == True %}
                   <li role="separator" class="divider"></li>

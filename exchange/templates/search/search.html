@@ -29,6 +29,9 @@
   <script type="text/javascript">
     SEARCH_URL = '{% url 'elastic_search' resourcetype='base' %}'
   </script>
+
+  {% include 'search/mow_extent_map.html' %}
+
   {% with include_spatial='true' %}
   {% include 'search/search_scripts.html' %}
   {% endwith %}

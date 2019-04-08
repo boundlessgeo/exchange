@@ -39,7 +39,7 @@ if settings.GEOQUERY_ENABLED:
 def resource_variables(request):
     """Global exchange values to pass to templates"""
     OAM_REMOTE_USER = None
-    if settings.GEOQUERY_ENABLED:
+    if settings.GEOAXIS_ENABLED:
         if settings.GEOAXIS_HEADER in request.META:
             OAM_REMOTE_USER = request.META[settings.GEOAXIS_HEADER]
     defaults = dict(
@@ -81,6 +81,7 @@ def resource_variables(request):
         MAPLOOM_ENABLED=getattr(settings, 'MAPLOOM_ENABLED', True),
         GEOGIG_ENABLED=getattr(settings, 'GEOGIG_ENABLED', False),
         INVITES_ENABLED=getattr(settings, 'INVITES_ENABLED', True),
+        DOCUMENTS_ENABLED=getattr(settings, 'DOCUMENTS_ENABLED', True),
         OAM_REMOTE_USER=OAM_REMOTE_USER,
     )
 

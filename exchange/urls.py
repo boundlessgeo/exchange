@@ -85,6 +85,11 @@ if not settings.INVITES_ENABLED:
             name='invite_404'),
     )
 
+if not settings.DOCUMENTS_ENABLED:
+    urlpatterns += (
+        url(r'^documents/', views.documents_http_404_view),
+    )
+
 if 'ssl_pki' in settings.INSTALLED_APPS:
     from ssl_pki.urls import urlpatterns as pki_urls
     urlpatterns += pki_urls

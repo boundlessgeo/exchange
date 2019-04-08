@@ -101,7 +101,19 @@ class GeonodeElasticsearchTest(ExchangeTest):
                 }
             },
             "username": {
-                "type": "text"
+                "type": "keyword",
+                "fields": {
+                    "english": {
+                        "type": "text",
+                        "analyzer": "english"
+                    },
+                    "text": {
+                        "type": "text"
+                    }
+                }
+            },
+            "date_joined": {
+                "type": "date"
             }
         }
 
@@ -152,6 +164,9 @@ class GeonodeElasticsearchTest(ExchangeTest):
                     }
                 },
                 "type": "keyword"
+            },
+            "last_modified": {
+                "type": "date"
             }
         }
         self.assertDictEqual(group_mappings, group_properties)
@@ -305,6 +320,19 @@ class GeonodeElasticsearchTest(ExchangeTest):
                 "type": "keyword"
             },
             "uuid": {
+                "type": "keyword"
+            },
+            # GVS custom facet fields
+            "license": {
+                "fields": {
+                    "english": {
+                        "type": "text",
+                        "analyzer": "english"
+                    },
+                    "text": {
+                        "type": "text"
+                    }
+                },
                 "type": "keyword"
             }
         }
@@ -524,6 +552,67 @@ class GeonodeElasticsearchTest(ExchangeTest):
             },
             "is_published": {
                 "type": "boolean"
+            },
+            # GVS custom facet fields
+            "license": {
+                "fields": {
+                    "english": {
+                        "type": "text",
+                        "analyzer": "english"
+                    },
+                    "text": {
+                        "type": "text"
+                    }
+                },
+                "type": "keyword"
+            },
+            "classification": {
+                "fields": {
+                    "english": {
+                        "type": "text",
+                        "analyzer": "english"
+                    },
+                    "text": {
+                        "type": "text"
+                    }
+                },
+                "type": "keyword"
+            },
+            "caveat": {
+                "fields": {
+                    "english": {
+                        "type": "text",
+                        "analyzer": "english"
+                    },
+                    "text": {
+                        "type": "text"
+                    }
+                },
+                "type": "keyword"
+            },
+            "provenance": {
+                "fields": {
+                    "english": {
+                        "type": "text",
+                        "analyzer": "english"
+                    },
+                    "text": {
+                        "type": "text"
+                    }
+                },
+                "type": "keyword"
+            },
+            "poc_name": {
+                "fields": {
+                    "english": {
+                        "type": "text",
+                        "analyzer": "english"
+                    },
+                    "text": {
+                        "type": "text"
+                    }
+                },
+                "type": "keyword"
             }
         }
         self.assertDictEqual(layer_mappings, layer_properties)
@@ -677,6 +766,19 @@ class GeonodeElasticsearchTest(ExchangeTest):
                 "type": "keyword"
             },
             "uuid": {
+                "type": "keyword"
+            },
+            # GVS custom facet fields
+            "license": {
+                "fields": {
+                    "english": {
+                        "type": "text",
+                        "analyzer": "english"
+                    },
+                    "text": {
+                        "type": "text"
+                    }
+                },
                 "type": "keyword"
             }
         }
