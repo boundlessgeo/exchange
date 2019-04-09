@@ -1,0 +1,46 @@
+{% extends "documents/document_base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+{% load url from future %}
+
+{% block title %} {% trans "Explore Documents" %} - {{ block.super }} {% endblock %}
+
+{% block body_class %}documents documents-list explore{% endblock %}
+
+{% block body %}
+<div id="user_messages">
+  {% verbatim %}
+    <div class="alert alert-block announcement alert-warning" ng-repeat="message in messages" ng-cloak>
+        <a type="button" class="close" data-dismiss="alert" data-dismiss-url="#" href="#">×</a>
+        <p class="{{ message.tags }}">{{ message.message }}</p>
+    </div>
+  {% endverbatim %}
+</div>
+<div class="page-header">
+  <a href="{% url "document_upload" %}" class="btn btn-primary pull-right">{% trans "Upload Documents" %}</a>
+  <h2>{% trans "Explore Documents" %}</h2>
+</div>
+  {% with include_type_filter='true' %}
+  {% with facet_type='documents' %}
+  {% with header='Document Type' %}
+  {% with filter='doc_type__in' %}
+  {% include "search/_search_content.html" %}
+  {% endwith %}
+  {% endwith %}
+  {% endwith %}
+  {% endwith %}
+  {% include "_bulk_permissions_form.html" %}
+{% endblock %}
+
+{% block extra_script %}
+{{ block.super }}
+  {% if GEONODE_SECURITY_ENABLED %}
+    {% include "_permissions_form_js.html" %}
+  {% endif %}
+  <script type="text/javascript">
+    SEARCH_URL = '{% url 'elastic_search' resourcetype='documents' %}'
+  </script>
+  {% with include_spatial='true' %}
+  {% include 'search/search_scripts.html' %}
+  {% endwith %}
+{% endblock extra_script %}
