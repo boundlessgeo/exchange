@@ -408,17 +408,22 @@
     * Spatial search
     */
     if ($('#preview_map').length > 0) {
-
+      var startingBounds = [-45.87890625,-34.8046875,45.87890625,34.8046875];
       document.addEventListener("DOMContentLoaded", function (event) {
-
+        // $('#resetMapExtent').click(() => {
+        //   console.log('clickky');
+        // });
         MoW.ready(function() {
             var map = new MoW.Map({
               target: 'preview_map',
             });
+            $('#resetMapExtent').click(() => {
+              map.setExtent(startingBounds);ß
+            });
             var eventQueue = map.events;
             eventQueue.subscribe(MoW.Events.ID.MAP_MOVE, function(event, data) {
               var bounds = data.boundingBox.join(',');
-              if (bounds !== [-45.87890625,-34.8046875,45.87890625,34.8046875].join(',')){
+              if (bounds !== startingBounds.join(',')){
                 $scope.query['extent'] = bounds;
                 query_api($scope.query)
               } else {
