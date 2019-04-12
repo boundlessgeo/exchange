@@ -418,7 +418,7 @@
               target: 'preview_map',
             });
             $('#resetMapExtent').click(() => {
-              map.setExtent(startingBounds);ß
+              map.setExtent(startingBounds);
             });
             var eventQueue = map.events;
             eventQueue.subscribe(MoW.Events.ID.MAP_MOVE, function(event, data) {
