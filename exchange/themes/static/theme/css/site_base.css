@@ -361,7 +361,13 @@ h1, h2, h3, h4, h5, h6 {
     content: "*";
 }
 /* giving space for the MoW map*/
-#preview_map {
+.extent_map {
+    height: 190px; 
+    border: 1px solid black;
+}
+
+/* giving space for the MoW map*/
+.details_map {
     height: 600px; 
     border: 1px solid black;
 }
