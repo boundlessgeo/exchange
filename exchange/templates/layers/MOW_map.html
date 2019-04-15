@@ -4,9 +4,9 @@
         var isSelected = false;
         $('#layerselect').click(function() {
             if(isSelected) {
-                $("#layerlist").removeClass("dropdownshow");
+                $("#layerlist").removeClass("mow-layer-list-show");
             } else {
-                $("#layerlist").addClass("dropdownshow");
+                $("#layerlist").addClass("mow-layer-list-show");
             }
             isSelected = !isSelected;
         });
@@ -37,17 +37,17 @@
                     console.log(MoW.Basemap.ID);
                     map.setBasemap(MoW.Basemap.ID.AUTOSCALING);
                     isSelected = false;
-                    $("#layerlist").removeClass("dropdownshow");
+                    $("#layerlist").removeClass("mow-layer-list-show");
                 });
                 $('#canvasgrayBase').click(function() {
                     map.setBasemap(MoW.Basemap.ID.CANVAS_SLATE);
                     isSelected = false;
-                    $("#layerlist").removeClass("dropdownshow");
+                    $("#layerlist").removeClass("mow-layer-list-show");
                 });
                 $('#streetsBase').click(function() {
                     map.setBasemap(MoW.Basemap.ID.STREETS);
                     isSelected = false;
-                    $("#layerlist").removeClass("dropdownshow");
+                    $("#layerlist").removeClass("mow-layer-list-show");
                 });
             });
         });

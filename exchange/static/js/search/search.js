@@ -408,7 +408,7 @@
     * Spatial search
     */
     if ($('#preview_map').length > 0) {
-      var startingBounds = [-37.08984375,-33.046875,37.08984375,33.046875];
+      var startingBounds = [-45.87890625,-33.046875,45.87890625,33.046875];
       document.addEventListener("DOMContentLoaded", function (event) {
         MoW.ready(function() {
             var map = new MoW.Map({

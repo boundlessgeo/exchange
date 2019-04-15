@@ -386,13 +386,13 @@ h1, h2, h3, h4, h5, h6 {
       font-size: 20px;
   }
   
-  .dropdown .layerlist {
+  .mow-layer-list .layerlist {
     background: darkorange;
     list-style: none;
     margin: 0px;
     padding-left: 0px;
   }
-  .dropdown {
+  .mow-layer-list {
     background: darkorange;
     list-style: none;
     margin: 0px;
@@ -443,7 +443,7 @@ h1, h2, h3, h4, h5, h6 {
     cursor: pointer;
   }
   
-  .dropdown {
+  .mow-layer-list {
     background: orange;
     visibility: hidden;
     opacity: 0;
@@ -455,12 +455,12 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
 
   }
-  .dropdownshow{
+  .mow-layer-list-show{
     visibility: visible;
     opacity: 1;
     display: block;
   }  
-  .layerlist .layerbutton .dropdown .layeroption{
+  .layerlist .layerbutton .mow-layer-list .layeroption{
     clear: both;
     width: 100%;
     color: #fff;
