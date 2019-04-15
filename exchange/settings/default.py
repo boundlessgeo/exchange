@@ -231,7 +231,8 @@ MOW_CLIENT_ENABLED = os.getenv('MOW_CLIENT_ENABLED', False)
 
 if MOW_CLIENT_ENABLED:
     LAYER_PREVIEW_LIBRARY = 'MOW'
-    MOW_URL = os.getenv('MOW_URL', 'https://mapbeta.gvslabs.com/api/mow-minimal.js')
+    MOW_URL = os.getenv('MOW_URL',
+                        'https://mapbeta.gvslabs.com/api/mow-minimal.js')
 
 # authorized exempt urls
 ADDITIONAL_AUTH_EXEMPT_URLS = os.getenv(
@@ -794,5 +795,3 @@ GOOGLE_ANALYTICS_ID = os.getenv('GOOGLE_ANALYTICS_ID', None)
 MAPLOOM_ENABLED = os.getenv('MAPLOOM_ENABLED', True)
 INVITES_ENABLED = str2bool(os.getenv('INVITES_ENABLED', 'True'))
 DOCUMENTS_ENABLED = os.getenv('DOCUMENTS_ENABLED', True)
-
-
