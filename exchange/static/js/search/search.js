@@ -418,85 +418,28 @@
     /*
     * Spatial search
     */
-    if ($('.leaflet_map').length > 0) {
-      angular.extend($scope, {
-        layers: {
-          baselayers: {
-            stamen: {
-              name: 'Toner Lite',
-              type: 'xyz',
-              url: 'http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png',
-              layerOptions: {
-                subdomains: ['a', 'b', 'c'],
-                attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>',
-                continuousWorld: true
+    if ($('#preview_map').length > 0) {
+      var startingBounds = [-45.87890625,-33.046875,45.87890625,33.046875];
+      document.addEventListener("DOMContentLoaded", function (event) {
+        MoW.ready(function() {
+            var map = new MoW.Map({
+              target: 'preview_map',
+            });
+            $('#resetMapExtent').click(() => {
+              map.setExtent(startingBounds);
+            });
+            var eventQueue = map.events;
+            eventQueue.subscribe(MoW.Events.ID.MAP_MOVE, function(event, data) {
+              var bounds = data.boundingBox.join(',');
+              if (bounds !== startingBounds.join(',')){
+                $scope.query['extent'] = bounds;
+                query_api($scope.query)
+              } else {
+                $scope.query['extent'] = [-179,-89,179,89].join(', ');;
+                query_api($scope.query);
               }
-            }
-          }
-        },
-        map_center: {
-          lat: 5.6,
-          lng: 3.9,
-          zoom: 0
-        },
-        defaults: {
-          zoomControl: false
-        }
-      });
-
-
-      var leafletData = $injector.get('leafletData'),
-          map = leafletData.getMap('filter-map');
-
-      map.then(function(map){
-        /* prevent the user from wrapping around the world. */
-        // map.setMaxBounds([[-180, -90], [180, 90]]);
-
-        var skip_move_check = false;
-        map.on('moveend', function(){
-          var bounds = map.getBounds();
-          var new_bounds = [];
-          var changed = false;
-
-          if (
-             (bounds.getWest() > 180 || bounds.getWest() < -180) ||
-             (bounds.getNorth() > 90 || bounds.getNorth() < -90) ||
-             (bounds.getEast() > 180 || bounds.getEast() < -180) ||
-             (bounds.getSouth() > 90 || bounds.getSouth() < -90)
-            ) {
-            changed = true;
-          }
-
-          new_bounds[0] = Math.min(180, Math.max(-180, bounds.getWest()));
-          new_bounds[1] = Math.min(90, Math.max(-90, bounds.getSouth()));
-          new_bounds[2] = Math.max(-180, Math.min(180, bounds.getEast()));
-          new_bounds[3] = Math.max(-90, Math.min(90, bounds.getNorth()));
-
-          if (!skip_move_check && changed) {
-            skip_move_check = true;
-            var sw = L.latLng({lat: new_bounds[1], lon: new_bounds[0]});
-            var ne = L.latLng({lat: new_bounds[3], lon: new_bounds[2]});
-            map.panInsideBounds(L.latLngBounds(sw, ne));
-          } else {
-            $scope.query['extent'] = map.getBounds().toBBoxString();
-            query_api($scope.query);
-            skip_move_check = false;
-          }
+            });
         });
-      });
-
-      var showMap = false;
-      $('#_extent_filter').click(function(evt) {
-     	showMap = !showMap
-        if (showMap){
-          leafletData.getMap().then(function(map) {
-            map.invalidateSize();
-          });
-        } else {
-            /* clear the extent filter when the map is hidden */
-            delete $scope.query['extent'];
-            query_api($scope.query);
-        }
       });
     }
   });

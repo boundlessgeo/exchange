@@ -227,6 +227,13 @@ if GEONODE_CLIENT_ENABLED:
     INSTALLED_APPS = ('geonode-client',) + INSTALLED_APPS
     LAYER_PREVIEW_LIBRARY = 'react'
 
+MOW_CLIENT_ENABLED = os.getenv('MOW_CLIENT_ENABLED', False)
+
+if MOW_CLIENT_ENABLED:
+    LAYER_PREVIEW_LIBRARY = 'MOW'
+    MOW_URL = os.getenv('MOW_URL',
+                        'https://mapbeta.gvslabs.com/api/mow-minimal.js')
+
 # authorized exempt urls
 ADDITIONAL_AUTH_EXEMPT_URLS = os.getenv(
     'ADDITIONAL_AUTH_EXEMPT_URLS',

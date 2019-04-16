@@ -83,6 +83,7 @@ def resource_variables(request):
         INVITES_ENABLED=getattr(settings, 'INVITES_ENABLED', True),
         DOCUMENTS_ENABLED=getattr(settings, 'DOCUMENTS_ENABLED', True),
         OAM_REMOTE_USER=OAM_REMOTE_USER,
+        MOW_URL=getattr(settings, 'MOW_URL', None),
     )
 
     return defaults

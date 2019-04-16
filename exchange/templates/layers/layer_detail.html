@@ -24,6 +24,8 @@
     {% include "layers/layer_geoext_map.html" %}
   {% elif preview == 'OL3' %}
     {% include "layers/layer_ol3_map.html" %}
+  {% elif preview == 'MOW' %}
+    {% include "layers/MOW_map.html" %}
   {% elif preview == 'react' %}
     <script type="text/javascript" src="{{ STATIC_URL}}geonode/js/utils/thumbnail.js"></script>
     {% include 'geonode-client/layer_map.html' %}
@@ -45,9 +47,18 @@
   <div class="col-md-8">
 
     <div id="embedded_map" class="mrg-btm">
-      <div id="preview_map"></div>
+      <div id="preview_map" class="details_map">
+        <div class='layerlist'>
+            <div class="layerbutton"><div id="layerselect" class="layerinfo"><i class="fa fa-ellipsis-h ellipsis"></i></div>
+              <ul class="mow-layer-list" id="layerlist">
+                <li class='layeroption' id="autoscaleBase"><a class="layerinfo" href="#">Autoscale</a></li>
+                <li class='layeroption' id="canvasgrayBase"><a class="layerinfo" href="#">Grey</a></li>
+                <li class='layeroption' id="streetsBase"><a class="layerinfo" href="#">Streets</a></li>
+              </ul>
+            </div>
+        </div>
+      </div>   
     </div>
-
     <div class="layer-actions">
       {% include "_actions.html" %}
     </div>

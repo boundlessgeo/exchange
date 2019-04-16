@@ -360,3 +360,116 @@ h1, h2, h3, h4, h5, h6 {
 .required-field::after {
     content: "*";
 }
+
+/* giving space for the MoW map*/
+.extent_map {
+    height: 190px; 
+    border: 1px solid black;
+}
+
+/* giving space for the MoW map*/
+.details_map {
+    height: 600px; 
+    border: 1px solid black;
+}
+
+/* Custom controls for MoW layer control*/
+  a {
+    text-decoration: none;
+  }
+  
+  .layerlist {
+      /* font-family: monospace; */
+      padding: 5px;
+      position: absolute;
+      right: 20px;
+      z-index: 1000;
+      font-size: 20px;
+  }
+  
+  .mow-layer-list .layerlist {
+    background: darkorange;
+    list-style: none;
+    margin: 0px;
+    padding-left: 0px;
+  }
+
+  .mow-layer-list {
+    background: darkorange;
+    list-style: none;
+    margin: 0px;
+    padding-left: 0px;
+    padding-inline-start: 0px;
+    right: 10px;
+    border-radius: 25px;
+  }
+  
+  .layerbutton {
+    color: #fff;
+    background: darkorange;
+    display: block;
+    float: left;
+    padding: .9rem;
+    position: relative;
+    text-decoration: none;
+    transition-duration: 0.5s;
+    border-radius: 25px;
+  }
+
+  .layeroption {
+    color: #fff;
+    /* background: darkorange; */
+    display: block;
+    float: left;
+    padding: 1rem;
+    position: relative;
+    text-decoration: none;
+    transition-duration: 0.5s;
+    border-radius: 25px;
+  }
+
+  .ellipsis {
+      line-height: .9;
+  }
+
+  .layerinfo{
+    color: #fff;
+    height: 15px;
+    width: 15px;
+    line-height: 0px;
+  }
+  
+  .layeroption:hover{
+    background: #ffc04d;
+    cursor: pointer;
+  }
+
+  .layerbutton:hover{
+    background:#ffc04d;
+    cursor: pointer;
+  }
+  
+  .mow-layer-list {
+    background: orange;
+    visibility: hidden;
+    opacity: 0;
+    min-width: 5rem;
+    position: absolute;
+    transition: all 0.5s ease;
+    margin-top: 1rem;
+    right: 2px;
+    display: none;
+
+  }
+
+  .mow-layer-list-show{
+    visibility: visible;
+    opacity: 1;
+    display: block;
+  }
+
+  .layerlist .layerbutton .mow-layer-list .layeroption{
+    clear: both;
+    width: 100%;
+    color: #fff;
+  }
