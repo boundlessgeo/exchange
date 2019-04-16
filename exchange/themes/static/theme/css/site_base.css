@@ -360,6 +360,7 @@ h1, h2, h3, h4, h5, h6 {
 .required-field::after {
     content: "*";
 }
+
 /* giving space for the MoW map*/
 .extent_map {
     height: 190px; 
@@ -392,6 +393,7 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0px;
     padding-left: 0px;
   }
+
   .mow-layer-list {
     background: darkorange;
     list-style: none;
@@ -413,6 +415,7 @@ h1, h2, h3, h4, h5, h6 {
     transition-duration: 0.5s;
     border-radius: 25px;
   }
+
   .layeroption {
     color: #fff;
     /* background: darkorange; */
@@ -424,9 +427,11 @@ h1, h2, h3, h4, h5, h6 {
     transition-duration: 0.5s;
     border-radius: 25px;
   }
+
   .ellipsis {
       line-height: .9;
   }
+
   .layerinfo{
     color: #fff;
     height: 15px;
@@ -438,6 +443,7 @@ h1, h2, h3, h4, h5, h6 {
     background: #ffc04d;
     cursor: pointer;
   }
+
   .layerbutton:hover{
     background:#ffc04d;
     cursor: pointer;
@@ -455,14 +461,15 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
 
   }
+
   .mow-layer-list-show{
     visibility: visible;
     opacity: 1;
     display: block;
-  }  
+  }
+
   .layerlist .layerbutton .mow-layer-list .layeroption{
     clear: both;
     width: 100%;
     color: #fff;
   }
-  
