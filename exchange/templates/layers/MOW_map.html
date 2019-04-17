@@ -17,20 +17,42 @@
         {% endif %}
         source = null;
         extent = [];
+        var overLay = null;
+        var type = ''
         {% if resource.get_tiles_url %}
-        source = {
-            'url': '{{ resource.ows_url }}',
-            'layers': ['{{ resource.typename }}'],
-            'name': '{{ resource.typename }}'
-        };
+            source = {
+                'url': '{{ resource.ows_url }}',
+                'layers': ['{{ resource.typename }}'],
+                'name': '{{ resource.typename }}'
+            };
+            type = 'wms';
         extent = '{{ resource.bbox_string }}'
+        {% elif resource.ptype == 'gxp_wmscsource' %}
+            source = {
+                'url': '{{ resource.ows_url }}',
+                'description': '{{ resource.typename }}',
+                'name': '{{ resource.typename }}'
+            };
+            type = 'wms';
+
+        {% elif resource.ptype == 'gxp_arcrestsource' %}
+            source = {
+                'url': '{{ resource.ows_url }}',
+                'description': '{{ resource.typename }}',
+                'name': '{{ resource.typename }}'
+            };
+            type = 'arcgis';
+
         {% endif %}
         MoW.ready(function() {
                 map = new MoW.Map({target: 'preview_map'});
                 var wmsOverlay;
-                wmsOverlay = MoW.Factory.createWMSOverlay(source);
-                map.addOverlay(wmsOverlay);
-                map.setExtent(extent.split(','));
+                if (type === 'arcgis'){
+                    wmsOverlay = MoW.Factory.createArcGISOverlay(source);
+                } else if (type === 'wms'){
+                    wmsOverlay = MoW.Factory.createWMSOverlay(source);
+                    map.setExtent(extent.split(','));
+                }
                 map.addOverlay(wmsOverlay);
 
                 $('#autoscaleBase').click(function() {
