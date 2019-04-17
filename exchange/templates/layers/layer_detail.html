@@ -48,6 +48,7 @@
 
     <div id="embedded_map" class="mrg-btm">
       <div id="preview_map" class="details_map">
+        {% if MOW_ENABLED %}
         <div class='layerlist'>
             <div class="layerbutton"><div id="layerselect" class="layerinfo"><i class="fa fa-ellipsis-h ellipsis"></i></div>
               <ul class="mow-layer-list" id="layerlist">
@@ -57,6 +58,7 @@
               </ul>
             </div>
         </div>
+        {% endif %}
       </div>   
     </div>
     <div class="layer-actions">
