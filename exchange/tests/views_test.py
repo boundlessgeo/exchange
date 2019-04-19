@@ -70,6 +70,8 @@ class AboutPageTest(ViewTestCase):
         self.doit()
 
 
+# TODO: Update this test with new autocomplete views
+@pytest.mark.skip(reason="Autocomplete disabled")
 class AutocompleteEmptyPageTest(ViewTestCase):
 
     def setUp(self):
