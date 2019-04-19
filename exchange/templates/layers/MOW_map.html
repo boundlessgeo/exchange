@@ -59,11 +59,15 @@
                 if (type === 'arcgis'){
                     wmsOverlay = MoW.Factory.createArcGISOverlay(source);
                     map.setExtent(extent);
+                    map.addOverlay(wmsOverlay);
                 } else if (type === 'wms'){
                     wmsOverlay = MoW.Factory.createWMSOverlay(source);
                     map.setExtent(extent.split(','));
+                    map.addOverlay(wmsOverlay);
+                } else {
+                    var alert = new MoW.Alert(MoW.Alert.TYPE.ERROR, "Not valid layer", "Cannot connect to service");
+                    map.showAlert(alert);
                 }
-                map.addOverlay(wmsOverlay);
 
                 $('#autoscaleBase').click(function() {
                     console.log(MoW.Basemap.ID);
