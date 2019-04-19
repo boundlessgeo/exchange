@@ -1,4 +1,6 @@
 <script type="text/javascript" src={{ MOW_URL }}></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.17.1/ol.js" type="text/javascript"></script>
+
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
         var isSelected = false;
@@ -26,7 +28,7 @@
                 'name': '{{ resource.typename }}'
             };
             type = 'wms';
-        extent = '{{ resource.bbox_string }}'
+            extent = '{{ resource.bbox_string }}'
         {% elif resource.ptype == 'gxp_wmscsource' %}
             source = {
                 'url': '{{ resource.ows_url }}',
@@ -43,12 +45,20 @@
             };
             type = 'arcgis';
 
+            var coords = '{{resource.bbox_string}}'.split(',');
+            var point1 = new ol.geom.Point([coords[0], coords[1]]);
+            point1.transform('EPSG:3857', 'EPSG:4326');
+            var point2 = new ol.geom.Point([coords[2], coords[3]]);
+            point2.transform('EPSG:3857', 'EPSG:4326');
+            extent = [...point1.getCoordinates(), ...point2.getCoordinates()];
+
         {% endif %}
         MoW.ready(function() {
                 map = new MoW.Map({target: 'preview_map'});
                 var wmsOverlay;
                 if (type === 'arcgis'){
                     wmsOverlay = MoW.Factory.createArcGISOverlay(source);
+                    map.setExtent(extent);
                 } else if (type === 'wms'){
                     wmsOverlay = MoW.Factory.createWMSOverlay(source);
                     map.setExtent(extent.split(','));
