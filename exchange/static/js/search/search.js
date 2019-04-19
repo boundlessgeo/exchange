@@ -72,7 +72,12 @@
         $http.get(base_search_url).then(function(response){
           var facets = response.data.meta.facets;
           $rootScope.facets = facets;
-    });
+        }, function(response) {
+          var error_message = 'Could not contact url ' + base_search_url + '\nEither elasticsearch is down or base_search_url is misconfigured';
+          console.log(error_message);
+          console.log('Got response: ' + response.status + ' ' + response.statusText);
+          $rootScope.messages = [{'message': error_message}, {'message': 'Got response: ' + response.status + ' ' + response.statusText}];
+        });
   }
 
   // Update facet counts
@@ -133,6 +138,7 @@
     function query_api(data){
       $http.get(Configs.url, {params: data || {}}).then(function(response){
         $scope.results = response.data.objects;
+        $scope.messages = response.data.messages;
         $scope.total_counts = response.data.meta.total_count;
         $scope.$root.query_data = response.data;
 
@@ -140,6 +146,11 @@
           $scope.text_query = $location.search()['q'].replace(/\+/g," ");
         }
         module.haystack_facets($http, $scope.$root, $location);
+      }, function(response) {
+        var error_message = 'Could not contact url ' + Configs.url + '\nEither elasticsearch is down or SEARCH_URL is misconfigured';
+        console.log(error_message);
+        console.log('Got response: ' + response.status + ' ' + response.statusText);
+        $scope.messages = [{'message': error_message}, {'message': 'Got response: ' + response.status + ' ' + response.statusText}];
       });
     };
     query_api($scope.query);
