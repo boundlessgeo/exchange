@@ -52,12 +52,12 @@ node {
         )
       }
 
-      stage('Build Maploom'){
-        bashDocker(
-          'quay.io/boundlessgeo/bex-nodejs-bower-grunt:v0.10.x',
-          'rm -fr vendor/maploom/node_modules vendor/maploom/package-lock.json && . vendor/docker/bex/docker/devops/helper.sh && build-maploom'
-        )
-      }
+      // stage('Build Maploom'){
+      //   bashDocker(
+      //     'quay.io/boundlessgeo/bex-nodejs-bower-grunt:v0.10.x',
+      //     'rm -fr vendor/maploom/node_modules vendor/maploom/package-lock.json && . vendor/docker/bex/docker/devops/helper.sh && build-maploom'
+      //   )
+      // }
 
       stage('Build Images'){
         sh """
