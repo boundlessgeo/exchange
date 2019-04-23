@@ -785,7 +785,7 @@ if MAPLOOM_ENABLED:
         'exchange.maploom',
     )
     # static files storage
-    STATICFILES_DIRS += [
+    STATICFILES_DIRS = [
         os.path.join(APP_ROOT, "maploom", "static"),
     ] + STATICFILES_DIRS
     # MapLoom Styling Control
