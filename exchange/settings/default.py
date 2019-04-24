@@ -81,9 +81,6 @@ CLASSIFICATION_LEVELS = {
     "sample 3": ["cav4", "cav5"]
 }
 
-# MapLoom Styling Control
-LOOM_STYLING_ENABLED = str2bool(os.getenv('LOOM_STYLING_ENABLED', 'True'))
-
 # extent filter
 EXTENT_FILTER_ENABLED = str2bool(os.getenv('EXTENT_FILTER_ENABLED', 'True'))
 
@@ -135,7 +132,6 @@ APP_ROOT = os.path.join(LOCAL_ROOT, os.pardir)
 STATICFILES_DIRS = [
     os.path.join(APP_ROOT, "static"),
     os.path.join(APP_ROOT, "thumbnails", "static"),
-    os.path.join(APP_ROOT, "maploom", "static"),
 ] + STATICFILES_DIRS
 
 # template settings
@@ -200,7 +196,6 @@ INSTALLED_APPS = (
     'geonode.contrib.createlayer',
     'geonode.contrib.api_basemaps',
     'django_classification_banner',
-    'exchange.maploom',
     'solo',
     'composer',
     'social_django',
@@ -744,15 +739,6 @@ if ENABLE_SOCIAL_LOGIN:
             'exchange.auth.backends.geoaxis.GeoAxisOAuth2',
         )
 
-# MapLoom search options
-NOMINATIM_URL = os.getenv('NOMINATIM_URL', '//nominatim.openstreetmap.org')
-GEOQUERY_ENABLED = str2bool(os.getenv('GEOQUERY_ENABLED', 'False'))
-GEOQUERY_URL = os.getenv('GEOQUERY_URL', None)
-if GEOQUERY_ENABLED:
-    NOMINATIM_ENABLED = False
-else:
-    NOMINATIM_ENABLED = True
-
 SEARCH_FILTERS['HOST_ENABLED'] = True
 SEARCH_FILTERS['REGION_ENABLED'] = str2bool(os.getenv(
     'SEARCH_REGION_ENABLED',
@@ -793,5 +779,26 @@ IMPORT_TASK_SOFT_TIME_LIMIT = le(os.getenv('IMPORTER_TIMEOUT', '90'))
 GOOGLE_ANALYTICS_ID = os.getenv('GOOGLE_ANALYTICS_ID', None)
 
 MAPLOOM_ENABLED = str2bool(os.getenv('MAPLOOM_ENABLED', 'True'))
+
+if MAPLOOM_ENABLED:
+    INSTALLED_APPS = INSTALLED_APPS + (
+        'exchange.maploom',
+    )
+    # static files storage
+    STATICFILES_DIRS = [
+        os.path.join(APP_ROOT, "maploom", "static"),
+    ] + STATICFILES_DIRS
+    # MapLoom Styling Control
+    LOOM_STYLING_ENABLED = str2bool(os.getenv('LOOM_STYLING_ENABLED', 'True'))
+    # MapLoom search options
+    NOMINATIM_URL = os.getenv(
+        'NOMINATIM_URL', '//nominatim.openstreetmap.org')
+    GEOQUERY_ENABLED = str2bool(os.getenv('GEOQUERY_ENABLED', 'False'))
+    GEOQUERY_URL = os.getenv('GEOQUERY_URL', None)
+    if GEOQUERY_ENABLED:
+        NOMINATIM_ENABLED = False
+    else:
+        NOMINATIM_ENABLED = True
+
 INVITES_ENABLED = str2bool(os.getenv('INVITES_ENABLED', 'True'))
 DOCUMENTS_ENABLED = str2bool(os.getenv('DOCUMENTS_ENABLED', 'True'))
