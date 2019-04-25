@@ -144,14 +144,7 @@
 
               <li>
                 <div class="search">
-                  <form id="search" action="{% url "search" %}" >
-                    <span class="fa fa-search"></span>
-                    {% if ES_SEARCH or HAYSTACK_SEARCH %}
-                      <input id="search_input" type="text" placeholder="Search" name="q">
-                    {% else %}
-                      <input id="search_input" type="text" placeholder="Search" name="title__icontains">
-                    {% endif %}
-                  </form>
+                  <select id="header_search"></select>
                 </div>
               </li>
               {% endif %}
@@ -291,6 +284,7 @@
     {% endif %}
     <script src="{{ STATIC_URL }}geonode/js/utils/utils.js?v={{ VERSION }}"></script>
     <script src="{{ STATIC_URL }}geonode/js/base/base.js?v={{ VERSION }}"></script>
+
     <script type="text/javascript" src="{% url 'django.views.i18n.javascript_catalog' %}"></script>
     {% block extra_script %}{% endblock extra_script %}
     <script>
@@ -299,6 +293,55 @@
       });
     </script>
     <script type="text/javascript" src="{% url "lang" %}"></script>
+    <script type="text/javascript">
+      $('#header_search').select2({
+        ajax: {
+          url: '{% url "autocomplete" %}',
+          dataType: 'json',
+          data: function (params) {
+            var query = {
+              q: params.term,
+            }
+            return query;
+          },
+          processResults: function (data) {
+            return {
+              results: data.objects
+            }
+          }
+        },
+        placeholder: 'Search',
+        minimumInputLength: 1,
+        tags: true
+      });
 
+      // TODO: transition css does not seem to work here, any way to fix?
+      $('#header_search').on('select2:opening', function(e) {
+        $('#header_search').next('.select2').css('width', '240px');
+      });
+      $('#header_search').on('select2:close', function(e) {
+        $('#header_search').next('.select2').css('width', '120px');
+      });
+
+      $('#header_search').on('select2:select', function(e) {
+        var url = '';
+
+        if ('type' in e.params.data) {
+          if (e.params.data.type == 'document') {
+            url = '/documents/?limit=100&offset=0';
+          } else {
+            url = '/search/?limit=100&offset=0&type=' + e.params.data.type;
+          }
+        } else {
+          // Assuming layer type?
+          url = '/search/?limit=100&offset=0&type=layer';
+        }
+
+        url += '&q=' + e.params.data.text;
+
+        // TODO: Is this the correct way to redirect?
+        window.location.replace(url);
+      });
+    </script>
   </body>
 </html>
