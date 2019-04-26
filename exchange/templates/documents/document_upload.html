@@ -45,10 +45,12 @@
             $('#id_title').val($('#id_doc_file').val().replace("C:\\fakepath\\", ""));
         }
     });
+    // TODO: Unsure of a better way to do this
+    // Select2 element is wrapping onto same line, so push it down with a break
+    $('label[for=resource]').after('<br/>');
     $("#resource").select2({
         minimumInputLength: 1,
         placeholder: 'Select layer, map or empty',
-        width: 'element',
         ajax: {
           traditional: true,
           url: '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}',
@@ -58,7 +60,7 @@
               title__icontains: term.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '')
             }
           },
-          results: function(data) {
+          processResults: function(data) {
             return {
               results: $.map(data.objects,function(object){
                 return {id: object.id, text: object.title};
