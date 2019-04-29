@@ -23,13 +23,7 @@
   <div class="container">
     <h1>Search for Content</h1>
     <div class="search">
-      <select id="search_input"></select>
-      <!--
-      <form id="search" action="/search/">
-        <a href="#" onclick="$('.search').find('#search').submit();"><span class="fa fa-search fa-2x"></span></a>
-
-         <input id="search_input" type="text" placeholder="Search" class="form-control" name="q"></input>
-      </form>-->
+      <select id="search_input"><option></option></select>
     </div>
   </div>
 </div>
@@ -128,7 +122,6 @@
   $('[data-toggle="tooltip"]').tooltip();
 </script>
 <script type="text/javascript">
-  // TODO: How to increase font size?
   $('#search_input').select2({
     ajax: {
       url: '{% url "autocomplete" %}',
