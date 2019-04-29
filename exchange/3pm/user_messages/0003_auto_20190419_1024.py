@@ -17,7 +17,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='GroupMemberThread',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(verbose_name='ID', serialize=False,
+                                        auto_created=True, primary_key=True)),
                 ('unread', models.BooleanField(default=True)),
                 ('deleted', models.BooleanField(default=False)),
                 ('group', models.ForeignKey(to='auth.Group')),
@@ -30,7 +31,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='thread',
             name='single_users',
-            field=models.ManyToManyField(related_name='single_threads', verbose_name='Users', to=settings.AUTH_USER_MODEL, through='user_messages.UserThread', blank=True),
+            field=models.ManyToManyField(related_name='single_threads',
+                                         verbose_name='Users',
+                                         to=settings.AUTH_USER_MODEL,
+                                         through='user_messages.UserThread',
+                                         blank=True),
         ),
         migrations.AlterField(
             model_name='userthread',
@@ -55,6 +60,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='thread',
             name='group_users',
-            field=models.ManyToManyField(related_name='group_threads', verbose_name='Group Members', to=settings.AUTH_USER_MODEL, through='user_messages.GroupMemberThread', blank=True),
+            field=models.ManyToManyField(
+                related_name='group_threads',
+                verbose_name='Group Members',
+                to=settings.AUTH_USER_MODEL,
+                through='user_messages.GroupMemberThread',
+                blank=True),
         ),
     ]
