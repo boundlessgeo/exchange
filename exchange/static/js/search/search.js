@@ -419,7 +419,6 @@
     * Spatial search
     */
     if ($('#preview_map').length > 0) {
-      console.log('test')
       var startingBounds = [-45.87890625,-33.046875,45.87890625,33.046875];
       document.addEventListener("DOMContentLoaded", function (event) {
         MoW.ready(function() {
