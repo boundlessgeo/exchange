@@ -301,6 +301,8 @@
           data: function (params) {
             var query = {
               q: params.term,
+              limit: 10,
+              offset: 0
             }
             return query;
           },
