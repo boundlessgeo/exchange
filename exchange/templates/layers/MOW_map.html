@@ -11,53 +11,28 @@
             }
             isSelected = !isSelected;
         });
-        {% if resource.bbox_string %}
-        var bbox = [{{ resource.bbox_string }}];
-        {% else %}
-        var bbox = null;
-        {% endif %}
-        var source = null;
-        var coords = null;
-        var type = ''
-        {% if resource.ptype == 'gxp_wmscsource' %}
-            source = {
-                'url': '{{ resource.ows_url }}',
-                'layers': ['{{ resource.typename }}'],
-                'name': '{{ resource.typename }}'
-            };
-            type = 'wms';
-            coords = '{{ resource.bbox_string }}'
-        {% elif resource.ptype == 'gxp_arcrestsource' %}
-            source = {
-                'url': '{{ resource.ows_url }}',
-                'description': '{{ resource.typename }}',
-                'name': '{{ resource.typename }}'
-            };
-            type = 'arcgis';
+        
+        var viewer = {{ viewer|safe }}
 
-            var coords = '{{resource.bbox_string}}'.split(',');
-        {% endif %}
         MoW.ready(function() {
                 map = new MoW.Map({target: 'preview_map'});
                 var wmsOverlay;
-                if (type === 'arcgis'){
-                    wmsOverlay = MoW.Factory.createArcGISOverlay(source);
-
-                    // Currently MoW uses an older Openlayers library 
-                    // This technique won't work in the future with Openlayer 5
-                    if (typeof OpenLayers === 'object') {                          
-                        var point1 = new OpenLayers.Geometry.Point(coords[0], coords[1]);
-                        point1.transform('EPSG:3857', 'EPSG:4326');
-                        var point2 = new OpenLayers.Geometry.Point(coords[2], coords[3]);
-                        point2.transform('EPSG:3857', 'EPSG:4326');
-                        map.setExtent([point1.x, point1.y, point2.x, point2.y]);
-                    }
+                if (viewer.ptype === 'gxp_arcrestsource'){
+                    wmsOverlay = MoW.Factory.createArcGISOverlay({
+                        'url': viewer.url,
+                        'description': viewer.typename,
+                        'name': viewer.typename
+                    });
+                    map.setExtent(viewer.bbox);
                     map.addOverlay(wmsOverlay);
-                } else if (type === 'wms'){
-                    wmsOverlay = MoW.Factory.createWMSOverlay(source);
+                } else if (viewer.ptype === 'gxp_wmscsource'){
+                    wmsOverlay = MoW.Factory.createWMSOverlay({
+                        'url': viewer.url,
+                        'layers': [viewer.typename],
+                        'name': viewer.typename
+                    });
                     map.addOverlay(wmsOverlay);
-                    map.setExtent(coords.split(','));
-                    map.addOverlay(wmsOverlay);
+                    map.setExtent(viewer.bbox);
                 } else {
                     var alert = new MoW.Alert(MoW.Alert.TYPE.ERROR, "Not valid layer", "Cannot connect to service");
                     map.showAlert(alert);
