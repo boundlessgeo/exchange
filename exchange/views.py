@@ -326,6 +326,9 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         if source_srid is None:
             source_srid = layer.srid
         target_srid = 3857 if config["srs"] == 'EPSG:900913' else config["srs"]
+        # MoW always expects EPSG:4326 projection
+        if settings.MOW_CLIENT_ENABLED:
+            target_srid = 4326
         reprojected_bbox = bbox_to_projection(bbox, source_srid=source_srid,
                                               target_srid=target_srid)
         bbox = reprojected_bbox[:4]
@@ -635,6 +638,9 @@ def new_map_config(request):
                         target_srid = 3857
                     else:
                         target_srid = config["srs"]
+                    # MoW always expects EPSG:4326 projection
+                    if settings.MOW_CLIENT_ENABLED:
+                        target_srid = 4326
                     reprojected_bbox = bbox_to_projection(
                         bbox,
                         source_srid=layer.srid,
