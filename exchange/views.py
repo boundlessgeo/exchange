@@ -362,6 +362,13 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
             layer_params=json.dumps(config),
             source_params=json.dumps(source_params))
     else:
+        # MoW always expects EPSG:4326 projection
+        if settings.MOW_CLIENT_ENABLED:
+            target_srid = 4326
+            reprojected_bbox = bbox_to_projection(bbox, source_srid=layer.srid,
+                                                  target_srid=target_srid)
+            bbox = reprojected_bbox[:4]
+            config['bbox'] = [float(coord) for coord in bbox]
         maplayer = GXPLayer(
             name=layer.typename,
             ows_url=layer.ows_url,
