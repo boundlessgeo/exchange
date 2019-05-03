@@ -461,9 +461,18 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         map_obj.center_y = center[1]
         map_obj.zoom = math.ceil(min(width_zoom, height_zoom))
 
-    context_dict["viewer"] = json.dumps(
-        map_obj.viewer_json(request.user, access_token,
-                            *(default_map_config(request)[1] + [maplayer])))
+    if settings.MOW_CLIENT_ENABLED:
+        context_dict["viewer"] = json.dumps({
+            'bbox': config['bbox'],
+            'ptype': layer.ptype,
+            'url': layer.ows_url,
+            'typename': layer.typename
+        })
+    else:
+        context_dict["viewer"] = json.dumps(
+            map_obj.viewer_json(
+                request.user, access_token,
+                *(default_map_config(request)[1] + [maplayer])))
 
     context_dict["preview"] = getattr(
         settings,
