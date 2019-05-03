@@ -638,9 +638,6 @@ def new_map_config(request):
                         target_srid = 3857
                     else:
                         target_srid = config["srs"]
-                    # MoW always expects EPSG:4326 projection
-                    if settings.MOW_CLIENT_ENABLED:
-                        target_srid = 4326
                     reprojected_bbox = bbox_to_projection(
                         bbox,
                         source_srid=layer.srid,
