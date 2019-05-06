@@ -1,4 +1,5 @@
 <script type="text/javascript" src={{ MOW_URL }}></script>
+
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
         var isSelected = false;
@@ -10,28 +11,32 @@
             }
             isSelected = !isSelected;
         });
-        {% if resource.bbox_string %}
-        var bbox = [{{ resource.bbox_string }}];
-        {% else %}
-        var bbox = null;
-        {% endif %}
-        source = null;
-        extent = [];
-        {% if resource.get_tiles_url %}
-        source = {
-            'url': '{{ resource.ows_url }}',
-            'layers': ['{{ resource.typename }}'],
-            'name': '{{ resource.typename }}'
-        };
-        extent = '{{ resource.bbox_string }}'
-        {% endif %}
+        
+        var viewer = {{ viewer|safe }}
+
         MoW.ready(function() {
                 map = new MoW.Map({target: 'preview_map'});
                 var wmsOverlay;
-                wmsOverlay = MoW.Factory.createWMSOverlay(source);
-                map.addOverlay(wmsOverlay);
-                map.setExtent(extent.split(','));
-                map.addOverlay(wmsOverlay);
+                if (viewer.ptype === 'gxp_arcrestsource'){
+                    wmsOverlay = MoW.Factory.createArcGISOverlay({
+                        'url': viewer.url,
+                        'description': viewer.typename,
+                        'name': viewer.typename
+                    });
+                    map.setExtent(viewer.bbox);
+                    map.addOverlay(wmsOverlay);
+                } else if (viewer.ptype === 'gxp_wmscsource'){
+                    wmsOverlay = MoW.Factory.createWMSOverlay({
+                        'url': viewer.url,
+                        'layers': [viewer.typename],
+                        'name': viewer.typename
+                    });
+                    map.addOverlay(wmsOverlay);
+                    map.setExtent(viewer.bbox);
+                } else {
+                    var alert = new MoW.Alert(MoW.Alert.TYPE.ERROR, "Not valid layer", "Cannot connect to service");
+                    map.showAlert(alert);
+                }
 
                 $('#autoscaleBase').click(function() {
                     console.log(MoW.Basemap.ID);

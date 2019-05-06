@@ -427,6 +427,8 @@
             });
             $('#resetMapExtent').click(() => {
               map.setExtent(startingBounds);
+              delete $scope.query.extent
+              query_api($scope.query);     
             });
             var eventQueue = map.events;
             eventQueue.subscribe(MoW.Events.ID.MAP_MOVE, function(event, data) {
@@ -435,8 +437,7 @@
                 $scope.query['extent'] = bounds;
                 query_api($scope.query)
               } else {
-                $scope.query['extent'] = [-179,-89,179,89].join(', ');;
-                query_api($scope.query);
+                delete $scope.query.extent
               }
             });
         });

@@ -326,6 +326,9 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         if source_srid is None:
             source_srid = layer.srid
         target_srid = 3857 if config["srs"] == 'EPSG:900913' else config["srs"]
+        # MoW always expects EPSG:4326 projection
+        if settings.MOW_CLIENT_ENABLED:
+            target_srid = 4326
         reprojected_bbox = bbox_to_projection(bbox, source_srid=source_srid,
                                               target_srid=target_srid)
         bbox = reprojected_bbox[:4]
@@ -359,6 +362,13 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
             layer_params=json.dumps(config),
             source_params=json.dumps(source_params))
     else:
+        # MoW always expects EPSG:4326 projection
+        if settings.MOW_CLIENT_ENABLED:
+            target_srid = 4326
+            reprojected_bbox = bbox_to_projection(bbox, source_srid=layer.srid,
+                                                  target_srid=target_srid)
+            bbox = reprojected_bbox[:4]
+            config['bbox'] = [float(coord) for coord in bbox]
         maplayer = GXPLayer(
             name=layer.typename,
             ows_url=layer.ows_url,
@@ -458,9 +468,18 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         map_obj.center_y = center[1]
         map_obj.zoom = math.ceil(min(width_zoom, height_zoom))
 
-    context_dict["viewer"] = json.dumps(
-        map_obj.viewer_json(request.user, access_token,
-                            *(default_map_config(request)[1] + [maplayer])))
+    if settings.MOW_CLIENT_ENABLED:
+        context_dict["viewer"] = json.dumps({
+            'bbox': config['bbox'],
+            'ptype': layer.ptype,
+            'url': layer.ows_url,
+            'typename': layer.typename
+        })
+    else:
+        context_dict["viewer"] = json.dumps(
+            map_obj.viewer_json(
+                request.user, access_token,
+                *(default_map_config(request)[1] + [maplayer])))
 
     context_dict["preview"] = getattr(
         settings,
