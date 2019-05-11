@@ -130,6 +130,17 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 1.5em;
 }
 
+.jumbotron .select2-container .select2-selection--single {
+    text-indent: 64px;
+    text-shadow: None;
+    padding-top: 15px;
+    height: 56px;
+}
+
+.jumbotron .select2-selection__placeholder {
+    font-size: 1.5em;
+}
+
 /* Social Login Buttons*/
 
 .btn-google {
@@ -359,4 +370,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .required-field::after {
     content: "*";
+}
+
+#header_search {
+    width: 120px;
+    height: 32px;
+    border: 1px solid @gray-dark;
+    border-radius: 5px;
+    outline-width: 0;
+    text-indent: 32px;
 }

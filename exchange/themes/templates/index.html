@@ -23,12 +23,7 @@
   <div class="container">
     <h1>Search for Content</h1>
     <div class="search">
-      <form id="search" action="/search/">
-        <a href="#" onclick="$('.search').find('#search').submit();"><span class="fa fa-search fa-2x"></span></a>
-
-        <input id="search_input" type="text" placeholder="Search" class="form-control" name="q"></input>
-
-      </form>
+      <select id="search_input"><option></option></select>
     </div>
   </div>
 </div>
@@ -110,5 +105,49 @@
 </script>
 <script>
   $('[data-toggle="tooltip"]').tooltip();
+</script>
+<script type="text/javascript">
+  $('#search_input').select2({
+    ajax: {
+      url: '{% url "autocomplete" %}',
+      dataType: 'json',
+      data: function (params) {
+        var query = {
+          q: params.term,
+          limit: 10,
+          offset: 0
+        }
+        return query;
+      },
+      processResults: function (data) {
+        return {
+          results: data.objects
+        }
+      }
+    },
+    // TODO: How to get font-awesome search icon back in search bar?
+    placeholder: 'Search',
+    minimumInputLength: 1,
+    tags: true
+  });
+  $('#search_input').on('select2:select', function(e) {
+    var url = '';
+
+    if ('type' in e.params.data) {
+      if (e.params.data.type == 'document') {
+        url = '/documents/?limit=100&offset=0';
+      } else {
+        url = '/search/?limit=100&offset=0&type=' + e.params.data.type;
+      }
+    } else {
+      // Assuming layer type?
+      url = '/search/?limit=100&offset=0&type=layer';
+    }
+
+    url += '&q=' + e.params.data.text;
+
+    // TODO: Is this the correct way to redirect?
+    window.location.replace(url);
+  });
 </script>
 {% endblock extra_script %}
