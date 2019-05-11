@@ -7,7 +7,16 @@
 
 {% block body_class %}search{% endblock %}
 
+
 {% block body_outer %}
+  <div id="user_messages">
+    {% verbatim %}
+      <div class="alert alert-block announcement alert-warning" ng-repeat="message in messages" ng-cloak>
+          <a type="button" class="close" data-dismiss="alert" data-dismiss-url="#" href="#">×</a>
+          <p class="{{ message.tags }}">{{ message.message }}</p>
+      </div>
+    {% endverbatim %}
+  </div>
   <div class="page-header">
     <h2>{% trans "Search" %} <span ng-if="text_query != ''">:</span> <span ng-bind="text_query"></span></h2>
   </div>
@@ -16,6 +25,7 @@
   {% include "search/_search_content.html" %}
   {% endwith %}
 {% endblock %}
+
 
 {% block extra_script %}
   {% if GEONODE_SECURITY_ENABLED %}

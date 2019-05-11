@@ -24,7 +24,15 @@
   {% for service in services %}
   <tr>
       <td><a href='{% url "service_detail" service.id %}'>{{ service.title }}</a></td>
-      <td><a href='{{ service.base_url }}' target="_blank" rel="noopener noreferrer">{{ service.base_url|truncatechars:60 }}</a></td>
+      {% if service.wms_url and service.wfs_url %}
+        <td><strong>{% trans "WMS:" %}</strong>
+            <a href='{{ service.wms_url }}' target="_blank" rel="noopener noreferrer">{{ service.wms_url|truncatechars:60 }}</a>
+            <br/>
+            <strong>{% trans "WFS:" %}</strong>
+            <a href='{{ service.wfs_url }}' target="_blank" rel="noopener noreferrer">{{ service.wfs_url|truncatechars:60 }}</a></td>
+      {% else %}
+        <td><a href='{{ service.base_url }}' target="_blank" rel="noopener noreferrer">{{ service.base_url|truncatechars:60 }}</a></td>
+      {% endif %}
       <td>{{ service.type }}</td>
       <td><a href='{% url "service_detail" service.id %}'>{{ service.owner.username }}</a></td>
       <td><span class="badge">{{ service.layer_set.count }}</span></td>

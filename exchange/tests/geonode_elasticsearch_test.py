@@ -101,7 +101,19 @@ class GeonodeElasticsearchTest(ExchangeTest):
                 }
             },
             "username": {
-                "type": "text"
+                "type": "keyword",
+                "fields": {
+                    "english": {
+                        "type": "text",
+                        "analyzer": "english"
+                    },
+                    "text": {
+                        "type": "text"
+                    }
+                }
+            },
+            "date_joined": {
+                "type": "date"
             }
         }
 
@@ -152,6 +164,9 @@ class GeonodeElasticsearchTest(ExchangeTest):
                     }
                 },
                 "type": "keyword"
+            },
+            "last_modified": {
+                "type": "date"
             }
         }
         self.assertDictEqual(group_mappings, group_properties)
