@@ -452,9 +452,29 @@ class UnifiedSearchTest(ViewTestCase, UploaderMixin):
         self.assertEqual(len(search_results['objects']), 2)
 
     def test_bbox(self):
-        # This will grab test_layer
+        # should get nothing
         self.url = '/api/base/search/' \
-                   '?limit=100&offset=0&extent=-120,-120,25,50'
+                   '?limit=100&offset=0&extent=-120,0,-100,10'
+        self.doit()
+        search_results = json.loads(self.response.content)
+        self.assertEqual(search_results['meta']['total_count'], 0)
+
+        # should intersect with test_layer2
+        self.url = '/api/base/search/' \
+                   '?limit=100&offset=0&extent=-140,10,-100,30'
+        self.doit()
+        search_results = json.loads(self.response.content)
+        self.assertEqual(search_results['meta']['total_count'], 1)
+        self.assertEqual(
+            search_results[
+                'meta']['facets']['type']['facets']['layer']['count'], 1)
+        # should be test_layer2's id
+        self.assertEqual(
+            search_results['objects'][0]['id'], self.test_layer2.id)
+
+        # should be within test_layer
+        self.url = '/api/base/search/' \
+                   '?limit=100&offset=0&extent=-80,12,-79,14'
         self.doit()
         search_results = json.loads(self.response.content)
         self.assertEqual(search_results['meta']['total_count'], 1)
@@ -464,6 +484,17 @@ class UnifiedSearchTest(ViewTestCase, UploaderMixin):
         # should be test_layer's id
         self.assertEqual(
             search_results['objects'][0]['id'], self.test_layer.id)
+
+        # should contain test_layer and test_layer2
+        self.url = '/api/base/search/' \
+                   '?limit=100&offset=0&extent=-150,0,0,60'
+        self.doit()
+        search_results = json.loads(self.response.content)
+        self.assertEqual(search_results['meta']['total_count'], 2)
+        self.assertEqual(
+            search_results[
+                'meta']['facets']['type']['facets']['layer']['count'], 2)
+        self.assertEqual(len(search_results['objects']), 2)
 
     def test_date(self):
         # these should get nothing
