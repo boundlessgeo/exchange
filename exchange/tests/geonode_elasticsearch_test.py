@@ -187,17 +187,8 @@ class GeonodeElasticsearchTest(ExchangeTest):
                 },
                 "type": "text"
             },
-            "bbox_bottom": {
-                "type": "float"
-            },
-            "bbox_left": {
-                "type": "float"
-            },
-            "bbox_right": {
-                "type": "float"
-            },
-            "bbox_top": {
-                "type": "float"
+            "bbox": {
+                "type": "geo_shape"
             },
             "category": {
                 "fields": {
@@ -350,9 +341,6 @@ class GeonodeElasticsearchTest(ExchangeTest):
             "has_time": {
                 "type": "boolean"
             },
-            "bbox_top": {
-                "type": "float"
-            },
             "category__gn_description": {
                 "type": "text"
             },
@@ -375,11 +363,8 @@ class GeonodeElasticsearchTest(ExchangeTest):
             "srid": {
                 "type": "keyword"
             },
-            "bbox_bottom": {
-                "type": "float"
-            },
-            "bbox_right": {
-                "type": "float"
+            "bbox": {
+                "type": "geo_shape"
             },
             "keywords": {
                 "fields": {
@@ -489,9 +474,6 @@ class GeonodeElasticsearchTest(ExchangeTest):
             },
             "supplemental_information": {
                 "type": "text"
-            },
-            "bbox_left": {
-                "type": "float"
             },
             "temporal_extent_start": {
                 "type": "date"
@@ -633,17 +615,8 @@ class GeonodeElasticsearchTest(ExchangeTest):
                 },
                 "type": "text"
             },
-            "bbox_bottom": {
-                "type": "float"
-            },
-            "bbox_left": {
-                "type": "float"
-            },
-            "bbox_right": {
-                "type": "float"
-            },
-            "bbox_top": {
-                "type": "float"
+            "bbox": {
+                "type": "geo_shape"
             },
             "category": {
                 "fields": {
