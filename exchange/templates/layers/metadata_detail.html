@@ -260,32 +260,62 @@
 
     <dl class="dl-horizontal">
 
-        <dt>{% trans "Name" %}</dt>
-        <dd>{{ layer.poc.name_long }}</dd>
+        {% if layer.poc.contact %}
+            <dt>{% trans "Name" %}</dt>
+            <dd>{{ layer.poc.contact.name_long }}</dd>
 
-        <dt>{% trans "email" %}</dt>
-        <dd>{{ layer.poc.email }}</dd>
+            <dt>{% trans "email" %}</dt>
+            <dd>{{ layer.poc.contact.email }}</dd>
 
-        <dt>{% trans "Position" %}</dt>
-        <dd>{{ layer.poc.position }}</dd>
+            <dt>{% trans "Position" %}</dt>
+            <dd>{{ layer.poc.contact.position }}</dd>
 
-        <dt>{% trans "Organization" %}</dt>
-        <dd>{{ layer.poc.organization }}</dd>
+            <dt>{% trans "Organization" %}</dt>
+            <dd>{{ layer.poc.contact.organization }}</dd>
 
-        <dt>{% trans "Location" %}</dt>
-        <dd>{{ layer.poc.location }}</dd>
+            <dt>{% trans "Location" %}</dt>
+            <dd>{{ layer.poc.contact.location }}</dd>
 
-        <dt>{% trans "Voice" %}</dt>
-        <dd>{{ layer.poc.voice }}</dd>
+            <dt>{% trans "Voice" %}</dt>
+            <dd>{{ layer.poc.contact.voice }}</dd>
 
-        <dt>{% trans "Fax" %}</dt>
-        <dd>{{ layer.poc.fax }}</dd>
+            <dt>{% trans "Fax" %}</dt>
+            <dd>{{ layer.poc.contact.fax }}</dd>
 
-        {% if poc.keyword_list %}
-        <dt>{% trans "Keywords" %}</dt>
-        <dd>{% for keyword in layer.poc.keyword_list %}
-            {{ keyword }}
-            {% endfor %}</dd>
+            {% if layer.poc.keyword_list %}
+            <dt>{% trans "Keywords" %}</dt>
+            <dd>{% for keyword in layer.poc.keyword_list %}
+                {{ keyword }}
+                {% endfor %}</dd>
+            {% endif %}
+        {% else %}
+            <dt>{% trans "Name" %}</dt>
+            <dd>{{ layer.poc.name_long }}</dd>
+
+            <dt>{% trans "email" %}</dt>
+            <dd>{{ layer.poc.email }}</dd>
+
+            <dt>{% trans "Position" %}</dt>
+            <dd>{{ layer.poc.position }}</dd>
+
+            <dt>{% trans "Organization" %}</dt>
+            <dd>{{ layer.poc.organization }}</dd>
+
+            <dt>{% trans "Location" %}</dt>
+            <dd>{{ layer.poc.location }}</dd>
+
+            <dt>{% trans "Voice" %}</dt>
+            <dd>{{ layer.poc.voice }}</dd>
+
+            <dt>{% trans "Fax" %}</dt>
+            <dd>{{ layer.poc.fax }}</dd>
+
+            {% if layer.poc.keyword_list %}
+            <dt>{% trans "Keywords" %}</dt>
+            <dd>{% for keyword in layer.poc.keyword_list %}
+                {{ keyword }}
+                {% endfor %}</dd>
+            {% endif %}
         {% endif %}
 
         <hr>
@@ -336,32 +366,62 @@
 
         {% with layer.metadata_author as poc %}
 
-        <dt>{% trans "Name" %}</dt>
-        <dd>{{ poc.name_long }}</dd>
+        {% if poc.contact %}
+            <dt>{% trans "Name" %}</dt>
+            <dd>{{ poc.contact.name_long }}</dd>
 
-        <dt>{% trans "Email" %}</dt>
-        <dd>{{ poc.email }}</dd>
+            <dt>{% trans "email" %}</dt>
+            <dd>{{ poc.contact.email }}</dd>
 
-        <dt>{% trans "Position" %}</dt>
-        <dd>{{ poc.position }}</dd>
+            <dt>{% trans "Position" %}</dt>
+            <dd>{{ poc.contact.position }}</dd>
 
-        <dt>{% trans "Organization" %}</dt>
-        <dd>{{ poc.organization }}</dd>
+            <dt>{% trans "Organization" %}</dt>
+            <dd>{{ poc.contact.organization }}</dd>
 
-        <dt>{% trans "Location" %}</dt>
-        <dd>{{ poc.location }}</dd>
+            <dt>{% trans "Location" %}</dt>
+            <dd>{{ poc.contact.location }}</dd>
 
-        <dt>{% trans "Voice" %}</dt>
-        <dd>{{ poc.voice }}</dd>
+            <dt>{% trans "Voice" %}</dt>
+            <dd>{{ poc.contact.voice }}</dd>
 
-        <dt>{% trans "Fax" %}</dt>
-        <dd>{{ poc.fax }}</dd>
+            <dt>{% trans "Fax" %}</dt>
+            <dd>{{ poc.contact.fax }}</dd>
 
-        {% if poc.keyword_list %}
-        <dt>{% trans "Keywords" %}</dt>
-        <dd>{% for keyword in poc.keyword_list %}
-            {{ keyword }}
-            {% endfor %}</dd>
+            {% if poc.keyword_list %}
+            <dt>{% trans "Keywords" %}</dt>
+            <dd>{% for keyword in poc.keyword_list %}
+                {{ keyword }}
+                {% endfor %}</dd>
+            {% endif %}
+        {% else %}
+            <dt>{% trans "Name" %}</dt>
+            <dd>{{ poc.name_long }}</dd>
+
+            <dt>{% trans "email" %}</dt>
+            <dd>{{ poc.email }}</dd>
+
+            <dt>{% trans "Position" %}</dt>
+            <dd>{{ poc.position }}</dd>
+
+            <dt>{% trans "Organization" %}</dt>
+            <dd>{{ poc.organization }}</dd>
+
+            <dt>{% trans "Location" %}</dt>
+            <dd>{{ poc.location }}</dd>
+
+            <dt>{% trans "Voice" %}</dt>
+            <dd>{{ poc.voice }}</dd>
+
+            <dt>{% trans "Fax" %}</dt>
+            <dd>{{ poc.fax }}</dd>
+
+            {% if poc.keyword_list %}
+            <dt>{% trans "Keywords" %}</dt>
+            <dd>{% for keyword in poc.keyword_list %}
+                {{ keyword }}
+                {% endfor %}</dd>
+            {% endif %}
         {% endif %}
 
         {% endwith %}
