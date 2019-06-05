@@ -106,8 +106,9 @@ def make_thumb_request(remote, baseurl, params=None):
         else:
             p = ''
 
+        if baseurl.endswith('?') is False:
+            baseurl = baseurl + '?'
         thumbnail_create_url = baseurl + p
-        p = urlparse(thumbnail_create_url)
 
         logger.info(
             'Thumbnail: Requesting thumbnail for %s. ',
@@ -147,6 +148,7 @@ def make_thumb_request(remote, baseurl, params=None):
         logger.debug('content: %s', resp.content)
     except Exception as e:
         logger.exception('Error occured making thumbnail')
+        logger.exception(e)
     return None
 
 
