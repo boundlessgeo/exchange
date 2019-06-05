@@ -677,6 +677,10 @@
       });
       $('#set_thumbnail_from_file').click(function() {
         $('#edit-layer').modal('toggle');
+        // TODO: Remove warning when MoW jquery incompatibilities are fixed
+        {% if preview == 'MOW' %}
+          console.log('WARNING: Modals do not load properly with MoW, but thumbnails still set');
+        {% endif %}
         uploadThumbnail('thumbnail-file');
       });
     </script>
