@@ -15,7 +15,9 @@ from .models import is_automatic
 from .models import save_thumbnail
 from PIL import Image
 import io
-from urlparse import urlparse
+from exchange.remoteservices.serviceprocessors.handler \
+    import get_service_handler
+from geonode.utils import bbox_to_projection
 
 try:
     if 'ssl_pki' not in settings.INSTALLED_APPS:
@@ -159,17 +161,89 @@ def make_thumb_request(remote, baseurl, params=None):
 #
 # @return PNG bytes.
 #
-def get_bbox(instance, crs='EPSG:3857'):
-    if crs is None:
-        crs = 'EPSG:3857'
-    minlon = min(float(instance.bbox_x0), float(instance.bbox_x1))
-    minlat = min(float(instance.bbox_y0), float(instance.bbox_y1))
-    maxlon = max(float(instance.bbox_x0), float(instance.bbox_x1))
-    maxlat = max(float(instance.bbox_y0), float(instance.bbox_y1))
+def get_bbox(instance):
+    if settings.MOW_CLIENT_ENABLED:
+        target_srid = 4326
+    else:
+        target_srid = 3857
+    instance_bbox = instance.bbox
+    bbox = [float(coord) for coord in list(instance_bbox[0:4])]
+    source_srid = instance.srid
+    # Special handling only for remote service layers
+    if hasattr(instance, 'storeType'):
+        if instance.storeType == "remoteStore":
+            source_srid = None
+            # Only grab the service proj/bbox if it is valid
+            if None not in instance.service.bbox[0:4]:
+                bbox = [float(coord) for coord in
+                        list(instance.service.bbox[0:4])]
+                source_srid = instance.service.srid
+            # Otherwise try the service directly
+            # This is needed since previous services registered
+            # did not store the bbox/srid in the model
+            else:
+                try:
+                    service_handler = get_service_handler(
+                        base_url=instance.service.base_url,
+                        service_type=instance.service.type)
+                    if getattr(service_handler.parsed_service, 'initialExtent',
+                               None):
+                        bbox[0] = service_handler.parsed_service.initialExtent[
+                            'xmin']
+                        bbox[1] = service_handler.parsed_service.initialExtent[
+                            'ymin']
+                        bbox[2] = service_handler.parsed_service.initialExtent[
+                            'xmax']
+                        bbox[3] = service_handler.parsed_service.initialExtent[
+                            'ymax']
+                    else:
+                        logger.info(
+                            'Could not retrieve extent from service: {0}'
+                            .format(instance.service))
+                    if getattr(service_handler.parsed_service,
+                               'spatialReference',
+                               None):
+                        source_srid = \
+                            service_handler.parsed_service.spatialReference[
+                                'latestWkid']
+                    else:
+                        logger.info('Could not retrieve srid from service: {0}'
+                                    .format(instance.service))
+                except Exception as e:
+                    logger.info('Failed to access service endpoint: {0}'
+                                .format(instance.service.base_url))
+                    logger.info('Caught error: {0}'.format(e))
+            if source_srid is None:
+                source_srid = instance.srid
+
+    reprojected_bbox = bbox_to_projection(bbox, source_srid=source_srid,
+                                          target_srid=target_srid)
+    # Check for errors with reprojection
+    # If last element is not srid, then it contains error message
+    if 'EPSG' not in reprojected_bbox[4]:
+        logger.debug('Thumbnail: Problem with reprojecting bbox of {0} - {1}'
+                     .format(instance, reprojected_bbox[4]))
+        logger.debug('Thumbnail: Using bbox without reprojecting. This may '
+                     'cause thumbnails to have wrong bounds.')
+        minlon = bbox[0]
+        minlat = bbox[1]
+        maxlon = bbox[2]
+        maxlat = bbox[3]
+    else:
+        # TODO: Is this correct for 4326?
+        if settings.MOW_CLIENT_ENABLED:
+            minlon = reprojected_bbox[0]
+            minlat = reprojected_bbox[1]
+            maxlon = reprojected_bbox[2]
+            maxlat = reprojected_bbox[3]
+        else:
+            minlon = reprojected_bbox[1]
+            minlat = reprojected_bbox[0]
+            maxlon = reprojected_bbox[3]
+            maxlat = reprojected_bbox[2]
 
     lon_range = maxlon - minlon
     lat_range = maxlat - minlat
-    ratio = lon_range / lat_range
 
     # create a buffer
     minlon = max(-180, minlon - lon_range * .1)
@@ -199,7 +273,17 @@ def get_bbox(instance, crs='EPSG:3857'):
     height = int(200 / ratio)
     logger.debug('height: %s', height)
 
-    if crs == 'EPSG:3857':
+    # TODO: Is this correct for 4326?
+    if settings.MOW_CLIENT_ENABLED:
+        # deal with weird bbox order for geographic coords in wms 1.3.0
+        bbox = '%s,%s,%s,%s' % (
+            minlat,
+            minlon,
+            maxlat,
+            maxlon
+        )
+        return bbox, height
+    else:
         # create bbox in 3857
         minx, miny = forward_mercator([minlon, max(-85.0, minlat)])
         maxx, maxy = forward_mercator([maxlon, min(85.0, maxlat)])
@@ -210,25 +294,6 @@ def get_bbox(instance, crs='EPSG:3857'):
             maxy
         )
         return bbox, height
-    elif crs == 'EPSG:4326':
-        # deal with weird bbox order for geographic coords in wms 1.3.0
-        bbox = '%s,%s,%s,%s' % (
-            minlat,
-            minlon,
-            maxlat,
-            maxlon
-        )
-        return bbox, height
-    elif crs == 'CRS:84':
-        # crs84 bbox
-        bbox = '%s,%s,%s,%s' % (
-            minlon,
-            minlat,
-            maxlon,
-            maxlat
-        )
-        return bbox, height
-    logger.debug('***************Could not determine BBOX***********')
 
 
 def get_wms_thumbnail(instance=None, layers=None, bbox=None,
