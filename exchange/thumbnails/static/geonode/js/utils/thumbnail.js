@@ -11,6 +11,33 @@ var getThumbnailPathFromUrl = function() {
     return '/thumbnails/' + path_info[0] + '/' + path_info[1];
 }
 
+// TODO: Update this to use js-cookie library instead of this mess
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+var getCsrfToken = function() {
+    // return Cookies.get('csrftoken');
+    return getCookie('csrftoken');
+}
+
+var csrfSafeMethod = function(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
 var refreshThumbnail = function() {
         var thumb = $('#thumbnail');
         var time_str = (new Date()).getTime();
@@ -42,6 +69,13 @@ var createMapThumbnail = function() {
 
     var url = getThumbnailPathFromUrl();
 
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", getCsrfToken());
+            }
+        }
+    });
     $.ajax({
         type: "POST",
         url: url,
@@ -57,6 +91,13 @@ var createMapThumbnail = function() {
 var createDocumentThumbnail = function() {
     var url = getThumbnailPathFromUrl();
 
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", getCsrfToken());
+            }
+        }
+    });
     $.ajax({
         type: "POST",
         url: url,
@@ -81,6 +122,13 @@ var uploadThumbnail = function(inputId) {
     //  send it up to the server.
     //reader.onload = function(e) {
     var upload = function() {
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", getCsrfToken());
+                }
+            }
+        });
         $.ajax({
             type: "POST",
             url: url,
