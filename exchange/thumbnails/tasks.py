@@ -405,12 +405,23 @@ def get_thumbnails(instance):
         if content:
             return content
         else:
-            return bg
+            if bg:
+                return bg
+            else:
+                logger.debug('Thumbnail: could not get REST thumbnail at: '
+                             '{0}'.format(thumbnail_create_url))
+                logger.debug('Thumbnail: background wms also not found, '
+                             'therefore could not set any thumbnail. '
+                             'Has it been set correctly? \n'
+                             'THUMBNAIL_BACKGROUND_WMS: {0}'
+                             .format(THUMBNAIL_BACKGROUND_WMS))
+                return None
 
     # get list of local layers for maps or layer name for local/wms
     if map:
         local_layers = []
         wms_layers = []
+        rest_layers = []
         for layer in instance.layers:
             if layer.local:
                 local_layers.append(layer.name)
@@ -422,6 +433,13 @@ def get_thumbnails(instance):
                         layer.storeType == 'remoteStore' and
                         layer.service.type == 'WMS'):
                     wms_layers.append(layer)
+                elif (hasattr(layer, 'storeType') and
+                        layer.storeType == 'remoteStore' and
+                        layer.service.type == 'REST'):
+                    rest_layers.append(layer)
+                # TODO: Is this a bad case?
+                else:
+                    local_layers.append(layer)
             except:
                 logger.debug('could not find layer %s', layer.name)
         logger.debug('LAYERS: %s      |||    WMS LAYERS: %s',
@@ -446,11 +464,18 @@ def get_thumbnails(instance):
                                                 bbox=bbox, format='image/jpeg')
                 if content:
                     return_images.append(content)
+        # TODO: Does combine_images work with REST layers?
+        if len(rest_layers) > 0:
+            for rest_layer in rest_layers:
+                thumbnail_create_url = '{0}/info/thumbnail'.format(
+                    rest_layer.ows_url)
+                content = make_thumb_request(True, thumbnail_create_url)
+                if content:
+                    return_images.append(content)
         return combine_images(return_images)
 
     # Get image for all local layers
     if internal:
-        layers = instance.typename.encode('utf-8')
         content = get_wms_thumbnail(instance, bbox=bbox)
         if content:
             return_images.append(content)
@@ -475,26 +500,6 @@ def get_thumbnails(instance):
         logger.debug('Getting WMS thumbnail for %s as jpeg', layers)
         content = get_wms_thumbnail(instance, layers=layers,
                                     bbox=bbox, format='image/jpeg')
-        if content:
-            return_images.append(content)
-            return combine_images(return_images)
-
-        content = get_wms_thumbnail(
-            instance,
-            layers=layers,
-            bbox=get_bbox(instance, 'EPSG:4326'),
-            crs='EPSG:4326'
-        )
-        if content:
-            return_images.append(content)
-            return combine_images(return_images)
-
-        content = get_wms_thumbnail(
-            instance,
-            layers=layers,
-            bbox=get_bbox(instance, 'CRS:84'),
-            crs='CRS:84'
-        )
         if content:
             return_images.append(content)
             return combine_images(return_images)
