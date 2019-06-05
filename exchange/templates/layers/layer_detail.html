@@ -27,11 +27,11 @@
   {% elif preview == 'MOW' %}
     {% include "layers/MOW_map.html" %}
   {% elif preview == 'react' %}
-    <script type="text/javascript" src="{{ STATIC_URL}}geonode/js/utils/thumbnail.js"></script>
     {% include 'geonode-client/layer_map.html' %}
   {% else %}
     {% include "layers/layer_leaflet_map.html" %}
   {% endif %}
+<script type="text/javascript" src="{{ STATIC_URL}}geonode/js/utils/thumbnail.js"></script>
 {{ block.super }}
 {% endblock %}
 
