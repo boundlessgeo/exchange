@@ -653,12 +653,12 @@
         </script>
     <script type="text/javascript">
       $('#set_thumbnail').click(function(){
-        createMapThumbnail();
         $('#edit-layer').modal('toggle');
+        createMapThumbnail();
       });
       $('#set_thumbnail_from_file').click(function() {
-        uploadThumbnail('thumbnail-file');
         $('#edit-layer').modal('toggle');
+        uploadThumbnail('thumbnail-file');
       });
     </script>
     {% if GEONODE_SECURITY_ENABLED %}
