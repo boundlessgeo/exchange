@@ -297,9 +297,12 @@ def get_bbox(instance):
 
 
 def get_wms_thumbnail(instance=None, layers=None, bbox=None,
-                      crs=None, format='image/png', height=None):
+                      format='image/png', height=None):
     if instance is None:
         if bbox is None or height is None:
+            logger.debug('Thumbnail: Could not get wms thumbnail - '
+                         'no instance to fetch bbox & height from, and '
+                         'bbox and height were not given')
             return None
         remote = True
         layers = THUMBNAIL_BACKGROUND_WMS_LAYER
@@ -317,10 +320,15 @@ def get_wms_thumbnail(instance=None, layers=None, bbox=None,
     if layers is None:
         layers = instance.typename.encode('utf-8')
 
-    if bbox is None and instance is not None:
-        bbox, height = get_bbox(instance)
-    elif instance is not None:
-        bbox, height = get_bbox(instance, crs=crs)
+    if bbox is None or height is None:
+        # Should always be true at this point
+        if instance is not None:
+            bbox, height = get_bbox(instance)
+        else:
+            logger.debug('Thumbnail: Could not get wms thumbnail - '
+                         'no instance to fetch bbox & height from, and '
+                         'bbox and height were not given')
+            return None
 
     # base parameters for WMS requests
     params = {
