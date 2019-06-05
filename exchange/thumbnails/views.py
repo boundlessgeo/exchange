@@ -25,7 +25,7 @@ def document_thumbnail(objectId):
     try:
         doc = Document.objects.get(id=objectId)
     except Document.DoesNotExist:
-        pass
+        return None
     if doc:
         img = doc._render_thumbnail()
         # save so not needed to generate next time
