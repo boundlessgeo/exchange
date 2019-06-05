@@ -14,6 +14,10 @@ import os
 
 from .models import Thumbnail, save_thumbnail
 from geonode.documents.models import Document
+from django.contrib import messages
+import logging
+
+logger = logging.getLogger(__name__)
 
 # cache the missing thumbnail for missing images.
 TEST_DIR = os.path.dirname(__file__)
@@ -54,15 +58,39 @@ def thumbnail_view(request, objectType, objectId):
         # if the thumbnail is for a document
         # create default thumbnail
         if(objectType == 'documents'):
-            img = document_thumbnail(objectId)
+            try:
+                img = document_thumbnail(objectId)
+            # This case should not occur but represents a failure to save
+            except Exception as e:
+                logger.debug('Thumbnail: Failed to save thumbnail for Document'
+                             ' with id: {0}'.format(objectId))
+                logger.debug('Thumbnail: {0}'.format(e))
+            if img is None:
+                error_msg = 'Thumbnail could not be found for document with ' \
+                            'id {0}'.format(objectId)
+                logger.debug('Thumbnail: ' + error_msg)
+                messages.warning(request, error_msg)
+                return HttpResponse(MISSING_THUMB, content_type='image/png')
+
             return HttpResponse(img, content_type='image/png')
 
         # else return the missing thumbnail.
+        error_msg = 'Thumbnail could not be found for {0} with id {1}'.format(
+            objectType, objectId)
+        logger.debug('Thumbnail: ' + error_msg)
+        messages.warning(request, error_msg)
         return HttpResponse(MISSING_THUMB, content_type='image/png')
     elif(request.method == 'POST'):
         # if body is 'refresh' then just create default document thumb
         if request.body == 'refresh':
-            document_thumbnail(objectId),
+            try:
+                document_thumbnail(objectId)
+            # This case should not occur but represents a failure to save
+            except Exception as e:
+                # TODO: Should we return a fail response here?
+                logger.debug('Thumbnail: Failed to save thumbnail for Document'
+                             ' with id: {0}'.format(objectId))
+                logger.debug('Thumbnail: {0}'.format(e))
             return HttpResponse(status=201)
 
         body_len = len(request.body)
@@ -72,7 +100,10 @@ def thumbnail_view(request, objectType, objectId):
         # adjusted easily.
         max_bytes = 400000
         if(body_len > max_bytes):
-            return HttpResponse(status=400, content='Thumbnail too large.')
+            content = 'Thumbnail too large.'
+            logger.debug('Thumbnail: Could not set because '
+                         '{0}'.format(content))
+            return HttpResponse(status=400, content=content)
 
         image_bytes = request.body
         # check to see if the image has been uploaded as a base64
@@ -82,11 +113,20 @@ def thumbnail_view(request, objectType, objectId):
 
         image_type = imghdr.what('', h=image_bytes)
         if(image_type is None):
-            return HttpResponse(status=400, content='Bad thumbnail format.')
+            content = 'Bad thumbnail format.'
+            logger.debug('Thumbnail: Could not set because '
+                         '{0}'.format(content))
+            return HttpResponse(status=400, content=content)
 
         # if the thumbnail does not exist, create a new one.
-        save_thumbnail(
-            objectType, objectId, 'image/' + image_type, image_bytes, False)
-
-        # return a success message.
-        return HttpResponse(status=201)
+        try:
+            save_thumbnail(
+                objectType, objectId, 'image/' + image_type,
+                image_bytes, False)
+            # return a success message.
+            return HttpResponse(status=201)
+        except Exception as e:
+            logger.error('Thumbnail: Failed to save thumbnail for {0} with '
+                         'id {1}'.format(objectType, objectId))
+            logger.error('Thumbnail: {0}'.format(e))
+            return HttpResponse(status=400, content='Thumbnail failed to save')
