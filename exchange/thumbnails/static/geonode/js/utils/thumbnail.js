@@ -17,6 +17,8 @@ var refreshThumbnail = function() {
         thumb.attr('src', thumb.attr('src').split('?')[0] + '?.ck=' + time_str);
 }
 
+// TODO: This is designed to work with React viewer
+// Needs to be updated to work with MoW
 var createMapThumbnail = function() {
     var canvas = document.getElementsByTagName('canvas')[0];
 
