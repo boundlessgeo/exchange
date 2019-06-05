@@ -332,12 +332,12 @@
 <script type="text/javascript" src="{{ STATIC_URL}}geonode/js/utils/thumbnail.js"></script>
 <script type="text/javascript">
   $('#set_thumbnail').click(function(){
-    createMapThumbnail();
     $('#edit-map').modal('toggle');
+    createMapThumbnail();
   });
   $('#set_thumbnail_from_file').click(function() {
-    uploadThumbnail('thumbnail-file');
     $('#edit-map').modal('toggle');
+    uploadThumbnail('thumbnail-file');
   });
 </script>
  
