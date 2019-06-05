@@ -578,8 +578,8 @@ def generate_thumbnail_task(instance_id, class_name):
                                'image/png', thumb_png, True)
         else:
             logger.debug(
-                'Thumbnail: Unable to get thumbnail image from '
-                'GeoServer for \'%s\'.',
+                'Thumbnail: Unable to get thumbnail image '
+                'for \'%s\'.',
                 instance_id)
 
 
