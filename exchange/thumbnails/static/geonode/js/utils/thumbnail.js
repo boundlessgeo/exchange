@@ -82,7 +82,21 @@ var createMapThumbnail = function() {
         data: png_data,
         success: function(data, status, jqXHR) {
             refreshThumbnail();
-            return true;
+            var title = 'Success';
+            var body = 'Thumbnail was successfully set';
+            $("#thumbnail_feedback").find('.modal-title').text(title);
+            $("#thumbnail_feedback").find('.modal-body').text(body);
+            // TODO: Modals currently will conflict with MoW
+            $("#thumbnail_feedback").modal("show");
+        },
+        error: function(data, status, jqXHR) {
+            var title = 'Failure';
+            var body = 'Unable to set thumbnail: HTTP ' + data.status + ' error. ' + data.responseText;
+            console.log(body);
+            $("#thumbnail_feedback").find('.modal-title').text(title);
+            $("#thumbnail_feedback").find('.modal-body').text(body);
+            // TODO: Modals currently will conflict with MoW
+            $("#thumbnail_feedback").modal("show");
         }
     });
     return true;
@@ -104,7 +118,21 @@ var createDocumentThumbnail = function() {
         data: 'refresh',
         success: function(data, status, jqXHR) {
             refreshThumbnail();
-            return true;
+            var title = 'Success';
+            var body = 'Thumbnail was successfully set';
+            $("#thumbnail_feedback").find('.modal-title').text(title);
+            $("#thumbnail_feedback").find('.modal-body').text(body);
+            // TODO: Modals currently will conflict with MoW
+            $("#thumbnail_feedback").modal("show");
+        },
+        error: function(data, status, jqXHR) {
+            var title = 'Failure';
+            var body = 'Unable to set thumbnail: HTTP ' + data.status + ' error. ' + data.responseText;
+            console.log(body);
+            $("#thumbnail_feedback").find('.modal-title').text(title);
+            $("#thumbnail_feedback").find('.modal-body').text(body);
+            // TODO: Modals currently will conflict with MoW
+            $("#thumbnail_feedback").modal("show");
         }
     });
     return true;
@@ -136,6 +164,21 @@ var uploadThumbnail = function(inputId) {
             processData: false,
             success: function(data, status, jqXHR) {
                 refreshThumbnail();
+                var title = 'Success';
+                var body = 'Thumbnail was successfully set';
+                $("#thumbnail_feedback").find('.modal-title').text(title);
+                $("#thumbnail_feedback").find('.modal-body').text(body);
+                // TODO: Modals currently will conflict with MoW
+                $("#thumbnail_feedback").modal("show");
+            },
+            error: function(data, status, jqXHR) {
+                var title = 'Failure';
+                var body = 'Unable to set thumbnail: HTTP ' + data.status + ' error. ' + data.responseText;
+                console.log(body);
+                $("#thumbnail_feedback").find('.modal-title').text(title);
+                $("#thumbnail_feedback").find('.modal-body').text(body);
+                // TODO: Modals currently will conflict with MoW
+                $("#thumbnail_feedback").modal("show");
             }
         });
     }
