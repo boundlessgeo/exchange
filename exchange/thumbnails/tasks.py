@@ -437,9 +437,8 @@ def get_thumbnails(instance):
                         layer.storeType == 'remoteStore' and
                         layer.service.type == 'REST'):
                     rest_layers.append(layer)
-                # TODO: Is this a bad case?
                 else:
-                    local_layers.append(layer)
+                    logger.debug('could not find layer %s', layer.name)
             except:
                 logger.debug('could not find layer %s', layer.name)
         logger.debug('LAYERS: %s      |||    WMS LAYERS: %s',
@@ -464,7 +463,6 @@ def get_thumbnails(instance):
                                                 bbox=bbox, format='image/jpeg')
                 if content:
                     return_images.append(content)
-        # TODO: Does combine_images work with REST layers?
         if len(rest_layers) > 0:
             for rest_layer in rest_layers:
                 thumbnail_create_url = '{0}/info/thumbnail'.format(
