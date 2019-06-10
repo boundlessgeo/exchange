@@ -87,10 +87,11 @@ def thumbnail_view(request, objectType, objectId):
                 document_thumbnail(objectId)
             # This case should not occur but represents a failure to save
             except Exception as e:
-                # TODO: Should we return a fail response here?
-                logger.debug('Thumbnail: Failed to save thumbnail for Document'
-                             ' with id: {0}'.format(objectId))
+                content = 'Thumbnail: Failed to save thumbnail for Document ' \
+                          'with id: {0}'.format(objectId)
+                logger.debug(content)
                 logger.debug('Thumbnail: {0}'.format(e))
+                return HttpResponse(status=400, content=content)
             return HttpResponse(status=201)
 
         body_len = len(request.body)
