@@ -11,12 +11,41 @@ var getThumbnailPathFromUrl = function() {
     return '/thumbnails/' + path_info[0] + '/' + path_info[1];
 }
 
+// TODO: Update this to use js-cookie library instead of this mess
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+var getCsrfToken = function() {
+    // return Cookies.get('csrftoken');
+    return getCookie('csrftoken');
+}
+
+var csrfSafeMethod = function(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
 var refreshThumbnail = function() {
         var thumb = $('#thumbnail');
         var time_str = (new Date()).getTime();
         thumb.attr('src', thumb.attr('src').split('?')[0] + '?.ck=' + time_str);
 }
 
+// TODO: This is designed to work with React viewer
+// Needs to be updated to work with MoW
 var createMapThumbnail = function() {
     var canvas = document.getElementsByTagName('canvas')[0];
 
@@ -40,13 +69,34 @@ var createMapThumbnail = function() {
 
     var url = getThumbnailPathFromUrl();
 
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", getCsrfToken());
+            }
+        }
+    });
     $.ajax({
         type: "POST",
         url: url,
         data: png_data,
         success: function(data, status, jqXHR) {
             refreshThumbnail();
-            return true;
+            var title = 'Success';
+            var body = 'Thumbnail was successfully set';
+            $("#thumbnail_feedback").find('.modal-title').text(title);
+            $("#thumbnail_feedback").find('.modal-body').text(body);
+            // TODO: Modals currently will conflict with MoW
+            $("#thumbnail_feedback").modal("show");
+        },
+        error: function(data, status, jqXHR) {
+            var title = 'Failure';
+            var body = 'Unable to set thumbnail: HTTP ' + data.status + ' error. ' + data.responseText;
+            console.log(body);
+            $("#thumbnail_feedback").find('.modal-title').text(title);
+            $("#thumbnail_feedback").find('.modal-body').text(body);
+            // TODO: Modals currently will conflict with MoW
+            $("#thumbnail_feedback").modal("show");
         }
     });
     return true;
@@ -55,13 +105,34 @@ var createMapThumbnail = function() {
 var createDocumentThumbnail = function() {
     var url = getThumbnailPathFromUrl();
 
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", getCsrfToken());
+            }
+        }
+    });
     $.ajax({
         type: "POST",
         url: url,
         data: 'refresh',
         success: function(data, status, jqXHR) {
             refreshThumbnail();
-            return true;
+            var title = 'Success';
+            var body = 'Thumbnail was successfully set';
+            $("#thumbnail_feedback").find('.modal-title').text(title);
+            $("#thumbnail_feedback").find('.modal-body').text(body);
+            // TODO: Modals currently will conflict with MoW
+            $("#thumbnail_feedback").modal("show");
+        },
+        error: function(data, status, jqXHR) {
+            var title = 'Failure';
+            var body = 'Unable to set thumbnail: HTTP ' + data.status + ' error. ' + data.responseText;
+            console.log(body);
+            $("#thumbnail_feedback").find('.modal-title').text(title);
+            $("#thumbnail_feedback").find('.modal-body').text(body);
+            // TODO: Modals currently will conflict with MoW
+            $("#thumbnail_feedback").modal("show");
         }
     });
     return true;
@@ -79,6 +150,13 @@ var uploadThumbnail = function(inputId) {
     //  send it up to the server.
     //reader.onload = function(e) {
     var upload = function() {
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", getCsrfToken());
+                }
+            }
+        });
         $.ajax({
             type: "POST",
             url: url,
@@ -86,6 +164,21 @@ var uploadThumbnail = function(inputId) {
             processData: false,
             success: function(data, status, jqXHR) {
                 refreshThumbnail();
+                var title = 'Success';
+                var body = 'Thumbnail was successfully set';
+                $("#thumbnail_feedback").find('.modal-title').text(title);
+                $("#thumbnail_feedback").find('.modal-body').text(body);
+                // TODO: Modals currently will conflict with MoW
+                $("#thumbnail_feedback").modal("show");
+            },
+            error: function(data, status, jqXHR) {
+                var title = 'Failure';
+                var body = 'Unable to set thumbnail: HTTP ' + data.status + ' error. ' + data.responseText;
+                console.log(body);
+                $("#thumbnail_feedback").find('.modal-title').text(title);
+                $("#thumbnail_feedback").find('.modal-body').text(body);
+                // TODO: Modals currently will conflict with MoW
+                $("#thumbnail_feedback").modal("show");
             }
         });
     }

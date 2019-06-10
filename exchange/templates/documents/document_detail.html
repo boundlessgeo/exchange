@@ -226,6 +226,8 @@
 
       {% include "base/_resourcebase_contact_snippet.html" %}
 
+      {% include "thumbnail_feedback.html" %}
+
     </ul>
   </div>
 </div>
@@ -255,12 +257,12 @@
     {% include "_permissions_form_js.html" %}
     <script type="text/javascript">
         $('#set_thumbnail').click(function(){
-          createDocumentThumbnail();
           $('#edit-document').modal('toggle');
+          createDocumentThumbnail();
         });
         $('#set_thumbnail_from_file').click(function() {
-          uploadThumbnail('thumbnail-file');
           $('#edit-document').modal('toggle');
+          uploadThumbnail('thumbnail-file');
         });
       </script>
 {% endblock extra_script %}

@@ -27,11 +27,11 @@
   {% elif preview == 'MOW' %}
     {% include "layers/MOW_map.html" %}
   {% elif preview == 'react' %}
-    <script type="text/javascript" src="{{ STATIC_URL}}geonode/js/utils/thumbnail.js"></script>
     {% include 'geonode-client/layer_map.html' %}
   {% else %}
     {% include "layers/layer_leaflet_map.html" %}
   {% endif %}
+<script type="text/javascript" src="{{ STATIC_URL}}geonode/js/utils/thumbnail.js"></script>
 {{ block.super }}
 {% endblock %}
 
@@ -440,7 +440,9 @@
               <div class="col-sm-4">
                 <i class="fa fa-photo fa-3x"></i>
                 <h4>{% trans "Thumbnail" %}</h4>
-                <a class="btn btn-default btn-block btn-xs" href="#" id="set_thumbnail">{% trans "Set" %}</a>
+                {% if preview == 'react' %}
+                  <a class="btn btn-default btn-block btn-xs" href="#" id="set_thumbnail">{% trans "Set" %}</a>
+                {% endif %}
                 <a class="btn btn-default btn-block btn-xs" href="#" id="set_thumbnail_from_file">{% trans "Set from file" %}</a>
                 <input type="file" id="thumbnail-file" style="display:none"/>
               </div>
@@ -608,6 +610,8 @@
     {% endif %}
 
     {% include "base/_resourcebase_contact_snippet.html" %}
+
+    {% include "thumbnail_feedback.html" %}
   </ul>
 
 
@@ -668,12 +672,16 @@
         </script>
     <script type="text/javascript">
       $('#set_thumbnail').click(function(){
-        createMapThumbnail();
         $('#edit-layer').modal('toggle');
+        createMapThumbnail();
       });
       $('#set_thumbnail_from_file').click(function() {
-        uploadThumbnail('thumbnail-file');
         $('#edit-layer').modal('toggle');
+        // TODO: Remove warning when MoW jquery incompatibilities are fixed
+        {% if preview == 'MOW' %}
+          console.log('WARNING: Modals do not load properly with MoW, but thumbnails still set');
+        {% endif %}
+        uploadThumbnail('thumbnail-file');
       });
     </script>
     {% if GEONODE_SECURITY_ENABLED %}
