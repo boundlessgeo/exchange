@@ -16,9 +16,11 @@
   <h2>Version Details</h2>
   <ul>
     {% for project in projects %}
-    <div style="float: left; width: 50%"><li><h4>{{ project.name }} version: v{{ project.version }}</h4></li></div>
-    <!-- TODO: only display link if the Exchange instance can reach open Internet -->
-    <div style="float: left; width: 50%"><li><h4>{% if project.commit %}{{ project.name }} code revision: {% if project.boundless_repo %}<a href="{{ project.boundless_repo }}/commit/{{ project.commit }}">{% else %}<a href="{{ project.repo }}/commit/{{ project.commit }}">{% endif %}{{ project.commit }}</a>{% else %}&nbsp;{% endif %}</h4></li></div>
+      {% if project.version %}
+      <div style="float: left; width: 50%"><li><h4>{{ project.name }} version: v{{ project.version }}</h4></li></div>
+      {% else %}
+      <div style="float: left; width: 50%"><li><h4>{{ project.name }} project</h4></li></div>
+      {% endif %}
     {% endfor %}
   </ul>
 </div>
