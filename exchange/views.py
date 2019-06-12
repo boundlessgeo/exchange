@@ -168,50 +168,35 @@ def about_page(request, template='about.html'):
     exchange_version = get_exchange_version()
     geoserver_version = get_geoserver_version()
     geonode_version = get_geonode_version()
-    maploom_version = get_pip_version('django-exchange-maploom')
     importer_version = get_pip_version('django-osgeo-importer')
-    react_version = get_pip_version('django-geonode-client')
 
     projects = [{
         'name': 'Boundless Exchange',
-        'website': 'https://boundlessgeo.com/boundless-exchange/',
-        'repo': 'https://github.com/boundlessgeo/exchange',
-        'version': exchange_version['version'],
-        'commit': exchange_version['commit']
+        'version': exchange_version['version']
     }, {
         'name': 'GeoNode',
-        'website': 'http://geonode.org/',
-        'repo': 'https://github.com/GeoNode/geonode',
-        'boundless_repo': 'https://github.com/boundlessgeo/geonode',
-        'version': geonode_version['version'],
-        'commit': geonode_version['commit']
+        'version': geonode_version['version']
     }, {
         'name': 'GeoServer',
-        'website': 'http://geoserver.org/',
-        'repo': 'https://github.com/geoserver/geoserver',
-        'boundless_repo': 'https://github.com/boundlessgeo/geoserver',
-        'version': geoserver_version['version'],
-        'commit': geoserver_version['commit']
-    }, {
-        'name': 'MapLoom',
-        'website': 'http://prominentedge.com/projects/maploom.html',
-        'repo': 'https://github.com/ROGUE-JCTD/MapLoom',
-        'boundless_repo': ('https://github.com/boundlessgeo/'
-                           'django-exchange-maploom'),
-        'version': maploom_version['version'],
-        'commit': maploom_version['commit']
+        'version': geoserver_version['version']
     }, {
         'name': 'OSGeo Importer',
-        'repo': 'https://github.com/GeoNode/django-osgeo-importer',
-        'version': importer_version['version'],
-        'commit': importer_version['commit']
-    }, {
-        'name': 'React Viewer',
-        'website': 'http://client.geonode.org',
-        'repo': 'https://github.com/GeoNode/geonode-client',
-        'version': react_version['version'],
-        'commit': react_version['commit']
+        'version': importer_version['version']
     }]
+
+    if settings.GEONODE_CLIENT_ENABLED and not settings.MOW_CLIENT_ENABLED:
+        react_version = get_pip_version('django-geonode-client')
+        projects.append({
+            'name': 'React Viewer',
+            'version': react_version['version']
+        })
+
+    if settings.MAPLOOM_ENABLED:
+        maploom_version = get_pip_version('django-exchange-maploom')
+        projects.append({
+            'name': 'MapLoom',
+            'version': maploom_version['version']
+        })
 
     return render_to_response(template, RequestContext(request, {
         'projects': projects,
