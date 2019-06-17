@@ -1,12 +1,5 @@
-{% extends "layers/layer_base.html" %}
 {% load i18n %}
 {% load bootstrap_tags %}
-
-{% block title %}{{ layer.typename }} — {{ block.super }}{% endblock %}
-
-{% block body_class %}data{% endblock %}
-
-{% block body_outer %}
 
 <style>
 
@@ -20,16 +13,6 @@
     }
 
 </style>
-
-<div class="page-header">
-    {% if layer.doc_file %}
-    <a href="{% url 'document_detail' docid=docid %}" class="btn btn-primary pull-right">{% trans "Return to Document" %}</a>
-    {% else %}
-    <a href="{% url 'layer_detail' layername=layer.typename %}" class="btn btn-primary pull-right">{% trans "Return to Layer" %}</a>
-    {% endif %}
-    <h2 class="page-title">{% trans "Metadata" %} : {{ layer.title }}</h2>
-</div>
-
 
 <article class="description tab-pane active" id="info">
 
@@ -371,6 +354,3 @@
 
 
 </article>
-
-
-{% endblock %}

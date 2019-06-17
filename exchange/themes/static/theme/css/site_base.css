@@ -380,3 +380,8 @@ h1, h2, h3, h4, h5, h6 {
     outline-width: 0;
     text-indent: 32px;
 }
+
+.long-details {
+    max-height: 500px;
+    overflow-y: auto;
+}
