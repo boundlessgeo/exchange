@@ -135,6 +135,16 @@ class GeonodeElasticsearchTest(ExchangeTest):
                 "type": "text"
             },
             "slug": {
+                "fields": {
+                    "english": {
+                        "analyzer": "english",
+                        "type": "text"
+                    },
+                    "pattern": {
+                        "analyzer": "pattern_analyzer",
+                        "type": "text"
+                    }
+                },
                 "type": "text"
             },
             "title": {
