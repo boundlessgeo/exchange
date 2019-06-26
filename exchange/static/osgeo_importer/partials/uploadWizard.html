@@ -207,7 +207,7 @@
                     <p>Click the button below to begin the import.</p></div>
                 <div class="step-title" ng-show="success">
                     <h3><center>Import Complete</center></h3>
-                    <p><b>Congratulations!</b> The {{ layer.configuration_options.name }} dataset has been successfully imported. Click below to view your new Layer.</p>
+                    <p><b>Congratulations!</b> The {{ layer.configuration_options.name }} dataset has been successfully imported. Click below to complete the Layer's metadata.</p>
                 </div>
                 <div ng-show="errors">
                     <h3 align="center">Import Failed</h3>
@@ -215,8 +215,8 @@
                 </div>
                 <div class="row" ng-show="success">
                     <div align="center">
-                        <a href="{{ layer.geonode_layer.url }}" class="btn" target="_self">
-                           View Layer
+                        <a href="{{ layer.geonode_layer.url }}/metadata" class="btn" target="_self">
+                           Complete Layer Metadata
                         </a>
                     </div>
                 </div>
