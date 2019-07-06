@@ -198,6 +198,87 @@
     */
 
 
+    /*
+    * Group resources query and pagination
+    * TODO: This is an ad hoc hacky solution in order to get us a second
+    * set of query results which can be displayed on the page, with pagination,
+    * simultaneously. Only implemented for one instance. In the future,
+    * a more generalized solution should replace effectively duplicating code.
+    */
+    // TODO: What to do for group query?
+    // Need to bind it in front end
+    // Also need to bind something else to scope for search url
+
+
+    //Get data from apis and make them available to the page
+    function group_query_api(data){
+      $http.get('/api/base/search/', {params: data || {}}).then(function(response){
+        $scope.group_results = response.data.objects;
+        $scope.messages = response.data.messages;
+        $scope.group_total_counts = response.data.meta.total_count;
+        $scope.$root.group_query_data = response.data;
+
+        if ($location.search().hasOwnProperty('q')){
+          $scope.group_text_query = $location.search()['q'].replace(/\+/g," ");
+        }
+        console.log($scope.group_results);
+      }, function(response) {
+        var error_message = 'Could not contact url ' + Configs.url + '\nEither elasticsearch is down or SEARCH_URL is misconfigured';
+        console.log(error_message);
+        console.log('Got response: ' + response.status + ' ' + response.statusText);
+        $scope.messages = [{'message': error_message}, {'message': 'Got response: ' + response.status + ' ' + response.statusText}];
+      });
+    };
+    $scope.$watch('group_query', function(){
+        console.log('we got them potates', $scope.group_query);
+        $scope.group_query.limit = $scope.group_query.limit || CLIENT_RESULTS_LIMIT;
+        $scope.group_query.offset = $scope.group_query.offset || 0;
+        $scope.group_page = Math.round(($scope.group_query.offset / $scope.group_query.limit) + 1);
+        group_query_api($scope.group_query);
+    });
+
+    /*
+    * Group Resources Pagination
+    */
+    // Control what happens when the total results change
+    $scope.$watch('group_total_counts', function(){
+      $scope.group_numpages = Math.round(
+        ($scope.group_total_counts / $scope.group_query.limit) + 0.49
+      );
+
+      // In case the user is viewing a page > 1 and a
+      // subsequent query returns less pages, then
+      // reset the page to one and search again.
+      if($scope.group_numpages < $scope.group_page){
+        $scope.group_page = 1;
+        $scope.group_query.offset = 0;
+        group_query_api($scope.group_query);
+      }
+
+      // In case of no results, the number of pages is one.
+      if($scope.group_numpages == 0){$scope.group_numpages = 1};
+    });
+
+    $scope.group_paginate_down = function(){
+      if($scope.group_page > 1){
+        $scope.group_page -= 1;
+        $scope.group_query.offset =  $scope.group_query.limit * ($scope.group_page - 1);
+        group_query_api($scope.group_query);
+      }
+    }
+
+    $scope.group_paginate_up = function(){
+      if($scope.group_numpages > $scope.group_page){
+        $scope.group_page += 1;
+        $scope.group_query.offset = $scope.group_query.limit * ($scope.group_page - 1);
+        group_query_api($scope.group_query);
+      }
+    }
+    /*
+    * End Group Resources pagination
+    */
+
+
     if (!Configs.hasOwnProperty("disableQuerySync")) {
         // Keep in sync the page location with the query object
         $scope.$watch('query', function(){
@@ -285,11 +366,49 @@
       }
     }
 
+    // TODO: Refactor ad hoc group solution into generalized solution
+    $scope.group_choice_listener = function($event){
+      var element = $($event.target).closest("a");
+      var query_entry = [];
+      var data_filter = element.attr('data-filter');
+      var value = element.attr('data-value');
+      // Type of data being displayed, use 'content' instead of 'all'
+      $scope.group_dataValue = (value == 'all') ? 'content' : value;
+
+      // If the query object has the record then grab it
+      if ($scope.group_query.hasOwnProperty(data_filter)){
+        query_entry = $scope.group_query[data_filter];
+      }
+
+      if(!element.hasClass('selected')){
+        // Add the entry in the correct query
+        query_entry = value;
+
+        // clear the active class from it
+        element.parents('ul').find('a').removeClass('selected');
+
+        element.addClass('selected');
+
+        //save back the new query entry to the scope query
+        $scope.group_query[data_filter] = query_entry;
+
+        group_query_api($scope.group_query);
+      }
+    }
+
     $scope.clear_filters = function() {
       // reset query
       $scope.query = {};
       $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
       $scope.query.offset = $scope.query.offset || 0;
+    }
+
+    // TODO: Refactor ad hoc group solution into generalized solution
+    $scope.group_clear_filters = function() {
+      // reset group query
+      $scope.group_query = {'ids': $scope.group_query.ids};
+      $scope.group_query.limit = $scope.group_query.limit || CLIENT_RESULTS_LIMIT;
+      $scope.group_query.offset = $scope.group_query.offset || 0;
     }
 
     $scope.api_query = function(endpoint) {
