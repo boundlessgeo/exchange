@@ -1,0 +1,79 @@
+{% load i18n %}
+{% verbatim %}
+<script src="/static/js/clipboard.min.js"></script>
+<div class="row">
+  <div class="ng-hide" ng-show="group_results.length == 0">
+    <div><h3>No content created yet.</h3></div>
+  </div>
+  <article ng-repeat="item in group_results" resource_id="{{ item.id || item.layer_identifier }}" ng-cloak class="ng-cloak">
+    <div class="col-xs-12 item-container" ng-if="item.detail_url">
+      <div class="col-xs-12 profile-avatar">
+        <div class="col-xs-4 item-thumb">
+            {% endverbatim %}
+            {% if MAPLOOM_ENABLED %}
+            {% verbatim %}
+            <a ng-if="item.type == 'layer'" href="/maps/new?layer={{item.typename}}">
+              <img class="thumbnail" onerror="this.src='/static/geonode/img/missing_thumb.png'" ng-src="/thumbnails/{{item.type}}s/{{item.typename}}"/>
+            </a>
+            <a ng-if="item.type == 'map'" href="/{{item.type}}s/{{item.id}}/view">
+              <img class="thumbnail" onerror="this.src='/static/geonode/img/missing_thumb.png'" ng-src="/thumbnails/{{item.type}}s/{{item.id}}"/>
+            </a>
+            {% endverbatim %}
+            {% else %}
+            {% verbatim %}
+            <a ng-if="item.type == 'layer'" href="{{ item.detail_url }}">
+              <img class="thumbnail" onerror="this.src='/static/geonode/img/missing_thumb.png'" ng-src="/thumbnails/{{item.type}}s/{{item.typename}}"/>
+            </a>
+            <a ng-if="item.type == 'map'" href="{{ item.detail_url }}">
+              <img class="thumbnail" onerror="this.src='/static/geonode/img/missing_thumb.png'" ng-src="/thumbnails/{{item.type}}s/{{item.id}}"/>
+            </a>
+            {% endverbatim %}
+            {% endif %}
+            {% verbatim %}
+           <a ng-if="item.type == 'document'" href="/{{item.type}}s/{{item.id}}">
+              <img class="thumbnail" onerror="this.src='/static/geonode/img/missing_thumb.png'" ng-src="/thumbnails/{{item.type}}s/{{item.id}}"/>
+            </a>
+        </div>
+        <div class="col-xs-8 item-details">
+          {% endverbatim %}
+          <button ng-if="cart && item.detail_url.indexOf('/layers/') > -1" class="btn-ws btn btn-default btn-xs pull-right" ng-click="cart.toggleItem(item)"><i ng-class="cart.getFaClass(item.id)" class="fa fa-lg"></i></button>
+          {% verbatim %}
+          <p class="item-meta"><span class="item-category">{{ item.category__gn_description == '[]' ? '' : item.category__gn_description }}</span></p>
+          <h4>
+            {% endverbatim %}
+            {% if MAPLOOM_ENABLED %}
+            {% verbatim %}
+            <a ng-if="item.detail_url.indexOf('/maps/') > -1" href="/maps/{{item.id}}/view">{{ item.title }}</a>
+            <a ng-if="item.detail_url.indexOf('/story/') > -1" href="/story/{{item.id}}">{{ item.title }}</a>
+            <a ng-if="item.detail_url.indexOf('/layers/') > -1" href="/maps/new?layer={{item.typename}}">{{ item.title }}</a>
+            <a ng-if="item.detail_url.indexOf('/story/') == -1 && item.detail_url.indexOf('/maps/') == -1 && item.detail_url.indexOf('/layers/') == -1" href="{{ item.detail_url }}">{{ item.title }}</a>
+            {% endverbatim %}
+            {% else %}
+            {% verbatim %}
+            <a href="{{ item.detail_url }}">{{ item.title }}</a>
+            {% endverbatim %}
+            {% endif %}
+            {% verbatim %}
+          </h4>
+          <h5 ng-if="item.source_host">{{ item.source_host }}</h5>
+          <p class="owner"><a href="/people/profile/{{ item.owner__username }}"><i class="fa fa-user"></i> {{ item.owner__username }}</a></p>
+          <p class="abstract">{{ item.abstract | limitTo: 300 }}{{ item.abstract.length  > 300 ? '...' : ''}}</p>
+          <div class="row">
+            <div class="col-xs-12 item-items">
+              <ul class="list-inline">
+                <li><a href="{{ item.detail_url }}"><i class="fa fa-info-circle"></i>View Details</a></li>
+                <li ng-if="item.geogig_link">
+                  <a data-toggle="tooltip" data-placement="top" tooltip title="Copy to Clipboard" ngclipboard ngclipboard-success="onCopySuccess(e);" ngclipboard-error="onCopyError(e);" data-clipboard-text="{{ item.geogig_link}}"  class="label copy-button" data-format="geogig" target="_registry">GEOGIG</a>
+                </li>
+                <li ng-repeat="x in item.references">
+                  <a data-toggle="tooltip" data-placement="top" tooltip title="Copy to Clipboard" ngclipboard ngclipboard-success="onCopySuccess(e);" ngclipboard-error="onCopyError(e);" data-clipboard-text="{{ x.url }}"  class="label copy-button" data-format="{{ x.scheme | friendlyScheme | lowercase }}" target="_remote">{{ x.scheme | friendlyScheme }}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+{% endverbatim %}
