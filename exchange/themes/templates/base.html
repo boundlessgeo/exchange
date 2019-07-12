@@ -115,8 +115,8 @@
                     <li><a href="/admin/people/profile/add/">{% trans "Add User" %}</a></li>
                     <li><a href="{% url "account_invite_user" %}">{% trans "Invite User" %}</a></li>
                     {% endif %}
-                    <li><a href="{% url "group_create" %}">{% trans "Create Group" %}</a></li>
                   {% endif %}
+                  <li><a href="{% url "group_create" %}">{% trans "Create Group" %}</a></li>
                   <li role="separator" class="divider"></li>
                   <li><a href="{% url "about" %}" target="_new">{% trans "Exchange" %}</a></li>
                 </ul>
