@@ -50,13 +50,20 @@
       <div id="preview_map" class="details_map">
         {% if preview == 'MOW' %}
         <div class='layerlist'>
-            <div class="layerbutton"><div id="layerselect" class="layerinfo"><i class="fa fa-ellipsis-h ellipsis"></i></div>
+            <div class="layerbutton"><div id="layerselect" class="layerinfo"><i class="fa fa-ellipsis-h fa-ell-button-on-map"></i></div>
               <ul class="mow-layer-list" id="layerlist">
                 <li class='layeroption' id="autoscaleBase"><a class="layerinfo" href="#">Autoscale</a></li>
                 <li class='layeroption' id="canvasgrayBase"><a class="layerinfo" href="#">Grey</a></li>
                 <li class='layeroption' id="streetsBase"><a class="layerinfo" href="#">Streets</a></li>
               </ul>
             </div>
+        </div>
+        <div class='mow-visibility' id='mow-change-visibility'>
+          <div class="layerbutton" >
+            <div class="layerinfo">
+              <i id='mow-vis-eye' class="fa fa-eye fa-eye-button-on-map"></i>
+            </div>
+          </div>
         </div>
         {% endif %}
       </div>   

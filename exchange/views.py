@@ -460,7 +460,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
             'ptype': layer.ptype,
             'url': layer.ows_url,
             'typename': layer.typename,
-            "visibility": layer.visibility
+            'visibility': layer.visibility
         })
     else:
         context_dict["viewer"] = json.dumps(
