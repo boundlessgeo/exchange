@@ -218,11 +218,13 @@ else:
         }
     }
 
+GEONODE_CLIENT_ENABLED = True
 if GEONODE_CLIENT_ENABLED:
     INSTALLED_APPS = ('geonode-client',) + INSTALLED_APPS
     LAYER_PREVIEW_LIBRARY = 'react'
 
-MOW_CLIENT_ENABLED = str2bool(os.getenv('MOW_CLIENT_ENABLED', 'False'))
+MOW_CLIENT_ENABLED = False
+# str2bool(os.getenv('MOW_CLIENT_ENABLED', 'False'))
 
 if MOW_CLIENT_ENABLED:
     LAYER_PREVIEW_LIBRARY = 'MOW'

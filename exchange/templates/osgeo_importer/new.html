@@ -54,7 +54,7 @@ $(document).ready(function () {
         <div class="row">
             <div class="errorlist">
             {% for error in form.file.errors %}
-                <i class="fa fa-warning">  {{ error|escape }}</i>
+                <i class="fa fa-warning">  {{ error|escape }} </i>
             {% endfor %}
                 <div class="col-md-6" style="padding-top: 5px; padding-left: 2px;">
                     Valid file extensions: {{ VALID_EXTENSIONS }}
