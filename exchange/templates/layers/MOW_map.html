@@ -4,7 +4,10 @@
     document.addEventListener("DOMContentLoaded", function (event) {
         const viewer = {{ viewer|safe }};
         let isSelected = false;
-        let isVisible = viewer.visibility || true;
+        let isVisible = true;
+        if (viewer.visibility != null && viewer.visibility != undefined) {
+            isVisible = viewer.visibility;
+        }
 
         $('#layerselect').click(function() {
             if(isSelected) {
