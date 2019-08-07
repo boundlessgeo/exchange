@@ -336,7 +336,8 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
             "remote": True,
             "url": source_url,
             "name": service.name,
-            "use_proxy": use_proxy}
+            "use_proxy": use_proxy,
+            "visibility": layer.visibility}
         if query_params is not None:
             source_params["params"] = query_params
         if layer.alternate is not None:
@@ -458,7 +459,8 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
             'bbox': config['bbox'],
             'ptype': layer.ptype,
             'url': layer.ows_url,
-            'typename': layer.typename
+            'typename': layer.typename,
+            'visibility': layer.visibility
         })
     else:
         context_dict["viewer"] = json.dumps(

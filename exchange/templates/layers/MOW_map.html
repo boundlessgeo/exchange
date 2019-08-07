@@ -2,7 +2,13 @@
 
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
-        var isSelected = false;
+        const viewer = {{ viewer|safe }};
+        let isSelected = false;
+        let isVisible = true;
+        if (viewer.visibility != null && viewer.visibility != undefined) {
+            isVisible = viewer.visibility;
+        }
+
         $('#layerselect').click(function() {
             if(isSelected) {
                 $("#layerlist").removeClass("mow-layer-list-show");
@@ -12,8 +18,27 @@
             isSelected = !isSelected;
         });
         
-        var viewer = {{ viewer|safe }}
-
+        $('#mow-change-visibility').click(function() {
+            // Get list of layers
+            const layers = map.getOverlays();  
+            //Change visibility variable
+            isVisible = !isVisible;  
+            // Find the trgetLayer in list of layers
+            const targetLayer = layers.find(function(layer) {
+                return layer.name === viewer.typename;
+            });
+            // Change the Eye Icon
+            if(isVisible){
+                $("#mow-vis-eye").removeClass("fa-eye-slash");
+                $("#mow-vis-eye").addClass("fa-eye");
+            } else {
+                $("#mow-vis-eye").removeClass("fa-eye");
+                $("#mow-vis-eye").addClass("fa-eye-slash");
+            }
+            // Change Visibility
+            map.setVisibility(targetLayer.id, isVisible);
+        });
+        
         MoW.ready(function() {
                 map = new MoW.Map({target: 'preview_map'});
                 var wmsOverlay;
@@ -21,25 +46,23 @@
                     wmsOverlay = MoW.Factory.createArcGISOverlay({
                         'url': viewer.url,
                         'description': viewer.typename,
-                        'name': viewer.typename
+                        'name': viewer.typename,
                     });
                     map.setExtent(viewer.bbox);
-                    map.addOverlay(wmsOverlay);
+                    map.addOverlay(wmsOverlay, {isVisible: isVisible});
                 } else if (viewer.ptype === 'gxp_wmscsource'){
                     wmsOverlay = MoW.Factory.createWMSOverlay({
                         'url': viewer.url,
                         'layers': [viewer.typename],
-                        'name': viewer.typename
+                        'name': viewer.typename,
                     });
-                    map.addOverlay(wmsOverlay);
+                    map.addOverlay(wmsOverlay, {isVisible: isVisible});
                     map.setExtent(viewer.bbox);
                 } else {
                     var alert = new MoW.Alert(MoW.Alert.TYPE.ERROR, "Not valid layer", "Cannot connect to service");
                     map.showAlert(alert);
                 }
-
                 $('#autoscaleBase').click(function() {
-                    console.log(MoW.Basemap.ID);
                     map.setBasemap(MoW.Basemap.ID.AUTOSCALING);
                     isSelected = false;
                     $("#layerlist").removeClass("mow-layer-list-show");

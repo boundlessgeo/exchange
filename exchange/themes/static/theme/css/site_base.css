@@ -397,7 +397,13 @@ h1, h2, h3, h4, h5, h6 {
       z-index: 1000;
       font-size: 20px;
   }
-  
+  .mow-visibility {
+    padding: 5px;
+    position: absolute;
+    right: 60px;
+    z-index: 1000;
+    font-size: 20px;
+  }
   .mow-layer-list .layerlist {
     background: darkorange;
     list-style: none;
@@ -439,8 +445,13 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 25px;
   }
 
-  .ellipsis {
+  .fa-ell-button-on-map {
       line-height: .9;
+  }
+  .fa-eye-button-on-map {
+      line-height: .8;
+      position: relative;
+      right: 2px;
   }
 
   .layerinfo{
