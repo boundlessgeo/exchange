@@ -509,3 +509,15 @@ h1, h2, h3, h4, h5, h6 {
     max-height: 500px;
     overflow-y: auto;
 }
+
+.avatar_img .selected_avatar {
+    border: 5px solid lightblue;
+}
+
+.avatar_img img:hover {
+    border: 5px solid lightgoldenrodyellow;
+}
+
+.avatar_img img {
+    border: 5px solid transparent;
+}
