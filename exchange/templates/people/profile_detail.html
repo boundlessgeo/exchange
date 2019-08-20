@@ -3,6 +3,7 @@
 {% load friendly_loader %}
 {% friendly_load i18n avatar_tags relationship_tags activity_tags %}
 {% load pagination_tags %}
+{% load bootstrap_tags %}
 
 {% block title %} {% trans "Profile of " %}{{ profile.first_name|default:profile.username }}{% endblock %}
 
@@ -33,6 +34,47 @@
 
 <div class="col-xs-3 col-md-2 profile-image">
   {% avatar profile 240 %}
+  {% if user == profile %}
+  <p style="padding-top: 5px"><a class="btn btn-primary btn-block" href="#change_avatar" data-toggle="modal">{% trans "Change your avatar" %}</a></p>
+  {% endif %}
+</div>
+
+<!-- Change Avatar Modal {% url 'avatar_change' %} -->
+<div id="change_avatar" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title">{% trans 'Choose Your Avatar' %}</h4>
+        </div>
+          <div class="modal-body">
+            <form enctype="multipart/form-data" method="POST" action="{% url 'avatar_add' %}">
+              <label for="id_avatar">Upload a new Avatar:</label>
+              <input id="id_avatar" name="avatar" type="file">
+              <p>{% csrf_token %}<input id="avatar_file" type="submit" class="btn btn-primary" style="visibility: hidden" value="{% trans "Upload New Image" %}" /></p>
+            </form>
+            <p><b>Choose from previous:</b></p>
+            <form method="POST" action="{% url 'avatar_change' %}">
+              {% for avi in avatars %}
+              <span class="avatar_img" id="avatar_{{ avi.avatar.id }}">{{ avi.img }}</span>
+              <input id="avatar_choice_{{ avi.avatar.id }}" name="choice" type="radio" value="{{ avi.avatar.id }}" style="display: none">
+              {% endfor %}
+              <p>{% csrf_token %}<input id="avatar_swap" type="submit" class="btn btn-primary" style="display: none" value="{% trans "Choose new Default" %}" /></p>
+            </form>
+            <form method="POST" action="{% url 'avatar_delete' %}">
+              {% for avi in avatars %}
+              <input id="avatar_delete_{{ avi.avatar.id }}" name="choices" type="checkbox" value="{{ avi.avatar.id }}" style="display: none">
+              {% endfor %}
+              <p>{% csrf_token %}<input id="avatar_delete" type="submit" class="btn btn-primary" style="display: none"/></p>
+            </form>
+            <input id="delete_avatar_btn" class="btn btn-danger" value="{% trans "Delete Avatar" %}" disabled/>
+          </div>
+          <div class="modal-footer">
+              <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans 'Cancel' %}</button>
+              <button id="avatar_change_btn" class="btn btn-primary" disabled>{% trans 'Confirm' %}</button>
+          </div>
+      </div>
+    </div>
 </div>
 
 <div class="col-xs-9 col-md-7 profile-details">
@@ -163,7 +205,9 @@
       {% if not REGISTRYURL and REGISTRY %}
       <li class="list-group-item"><a href="{% url "services" %}"><i class="fa fa-globe"></i> {% trans "Remote Services" %}</a></li>
       {% endif %}
+      {% if INVITES_ENABLED %}
       <li class="list-group-item"><a href="{% url "account_invite_user" %}"><i class="fa fa-edit"></i> {% trans "Invite User" %}</a></li>
+      {% endif %}
       <li class="list-group-item"><a href="{{ GEOSERVER_BASE_URL }}"><i class="fa fa-gears"></i> {% trans "GeoServer" %}</a></li>
       {% endif %}
       {% if user.is_staff %}
@@ -218,4 +262,56 @@
           SEARCH_URL = '{% url 'elastic_search' resourcetype='base' %}?owner__username={{profile.username}}'
   </script>
   {% include 'search/search_scripts.html' %}
+  <!-- Avatar code -->
+  <script type="text/javascript">
+
+    // if a file gets uploaded
+    $('#id_avatar').change(function() {
+      $('#avatar_change_btn').prop('disabled', false);
+    });
+
+    // if an avatar gets selected
+    $('.avatar_img').click(function(e) {
+      // deselect any previously selected
+      $('.selected_avatar').removeClass('selected_avatar');
+      // select this image
+      $(this).children().addClass('selected_avatar');
+      $('#avatar_change_btn').prop('disabled', false);
+      $('#delete_avatar_btn').prop('disabled', false);
+    });
+
+    // change avatar
+    $('#avatar_change_btn').click(function() {
+      // if a file was uploaded, use that
+      if (document.getElementById('id_avatar').value != '') {
+        $('#avatar_file').trigger('click');
+      } else {
+        // use selected avatar
+        if ($('.selected_avatar').length == 0) {
+          console.log('ERROR: Tried to submit avatar change without a selection');
+          return;
+        }
+        // NOTE: This is relying on the name of the selected item's id being of the pattern avatar_{{ avatar_id }}
+        var avatar_id = $('.selected_avatar').parent().attr('id').split('avatar_')[1];
+        var avatar_choice_id = "#avatar_choice_" + avatar_id;
+        $(avatar_choice_id).prop('checked', true);
+        $('#avatar_swap').trigger('click');
+      }
+    });
+
+    // delete avatar
+    $('#delete_avatar_btn').click(function() {
+        // use selected avatar
+        if ($('.selected_avatar').length == 0) {
+          console.log('ERROR: Tried to delete an avatar without a selection');
+          return;
+        }
+        // NOTE: This is relying on the name of the selected item's id being of the pattern avatar_{{ avatar_id }}
+        var avatar_id = $('.selected_avatar').parent().attr('id').split('avatar_')[1];
+        var avatar_delete_id = "#avatar_delete_" + avatar_id;
+        $(avatar_delete_id).prop('checked', true);
+        $('#avatar_delete').trigger('click');
+    });
+
+  </script>
 {% endblock %}

@@ -3,6 +3,7 @@ import logging
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.shortcuts import render, render_to_response, redirect
+from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.views.generic.base import TemplateView
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
@@ -44,6 +45,8 @@ from geonode.contrib.createlayer.utils import create_layer
 from geonode.contrib.createlayer.forms import NewLayerForm
 from django.utils.translation import ugettext as _
 from geonode.people.models import Profile
+from avatar.views import _get_avatars
+from avatar.forms import avatar_img
 from exchange.remoteservices.serviceprocessors.handler \
     import get_service_handler
 
@@ -1050,3 +1053,17 @@ def layer_create(request, template='createlayer/layer_create.html'):
     }
 
     return render_to_response(template, RequestContext(request, ctx))
+
+
+def profile_detail(request, username):
+    profile = get_object_or_404(Profile, username=username)
+    avatar, avatars = _get_avatars(profile)
+    avis = []
+    for avi in avatars:
+        avis.append({'avatar': avi, 'img': avatar_img(avi, 100)})
+    # combined queryset from each model content type
+
+    return render(request, "people/profile_detail.html", {
+        "profile": profile,
+        "avatars": avis
+    })

@@ -59,6 +59,9 @@ urlpatterns = patterns(
     url(r'^proxy/', views.proxy),
 
     (r'^services/', include('exchange.remoteservices.urls')),
+
+    url(r"^people/profile/(?P<username>[^/]*)/$", views.profile_detail,
+        name="profile_detail"),
 )
 
 if settings.MAPLOOM_ENABLED:
