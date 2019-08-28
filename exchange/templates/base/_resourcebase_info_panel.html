@@ -72,9 +72,7 @@
     <dt>{% trans "Regions" %}</dt>
     <dd itemprop="keywords">
       {% for region in resource.regions.all %}
-        <a itemscope itemtype="http://schema.org/Text" href="{% url "search" %}?regions={{ region.name }}">
           {{ region.name }}
-        </a>
         {% if not forloop.last %},{% endif %}
       {% endfor %}
     </dd>

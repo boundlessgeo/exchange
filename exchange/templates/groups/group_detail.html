@@ -86,31 +86,52 @@
                   </form>
                 {% else %}
                   <a class="btn btn-block btn-danger" href="#leave_group" data-toggle="modal">{% trans "Leave group" %}</a>
-
-                  <div id="leave_group" class="modal fade" tabindex="-1" role="dialog">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                          <h4 class="modal-title">{% trans 'Error' %}</h4>
-                        </div>
-                        <div class="modal-body">
-                          Cannot leave group - you are the final group manager.
-                          You must assign a new group manager or delete the group.
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans 'Close' %}</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 {% endif %}
               {% endif %}
           {% else %} {% if object.access == "public-invite" %}
-            {% trans "Anyone may view this group but membership is by invitation only." %}
+            {% if not is_member %}
+              {% trans "Anyone may view this group but membership is by invitation only." %}
+            {% else %}
+              {% if not last_manager %}
+                <form style="display: inline;" method="POST" action="{% url "group_member_remove" object.slug user.username %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-block btn-md btn-danger">{% trans 'Leave group' %}</button>
+                </form>
+              {% else %}
+                <a class="btn btn-block btn-danger" href="#leave_group" data-toggle="modal">{% trans "Leave group" %}</a>
+              {% endif %}
+            {% endif %}
           {% else %} {% if object.access == "private" %}
-            {% trans "Membership is by invitation only." %}
+            {% if not is_member %}
+              {% trans "Membership is by invitation only." %}
+            {% else %}
+              {% if not last_manager %}
+                <form style="display: inline;" method="POST" action="{% url "group_member_remove" object.slug user.username %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-block btn-md btn-danger">{% trans 'Leave group' %}</button>
+                </form>
+              {% else %}
+                <a class="btn btn-block btn-danger" href="#leave_group" data-toggle="modal">{% trans "Leave group" %}</a>
+              {% endif %}
+            {% endif %}
           {% endif %} {% endif %} {% endif %}
+          <div id="leave_group" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                  <h4 class="modal-title">{% trans 'Error' %}</h4>
+                </div>
+                <div class="modal-body">
+                  Cannot leave group - you are the final group manager.
+                  You must assign a new group manager or delete the group.
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans 'Close' %}</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </p>
       </li>
       <li class="list-group-item">
