@@ -35,7 +35,7 @@ social-auth-app-django==1.2.0
 mock==2.0.0
 Django==1.8.18
 six==1.10.0
-cryptography==2.3
+cryptography==3.3.2
 urllib3==1.23
 regex==2018.11.03
 
