@@ -50,3 +50,4 @@ requests==2.20.0
 # cryptography==2.1.4
 # for user-ordering of wildcard hostname:port mappings
 django-ordered-model==1.4.3
+pillow>=8.2.0 # not directly required, pinned by Snyk to avoid a vulnerability
